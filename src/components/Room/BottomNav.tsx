@@ -3,10 +3,12 @@ import ThemeSwitch from '../ThemeSwitch'
 
 const BottomNav = () => {
     return (
-        <div className="fixed bottom-0 left-0 z-50 grid w-full h-12 grid-cols-1 px-8 bg-white border-t border-gray-200 md:grid-cols-3 dark:bg-gray-700 dark:border-gray-600">
+        <div className="fixed bottom-0 left-0 z-50 grid w-full h-16 grid-cols-1 px-8 bg-white border-t border-gray-200 md:grid-cols-3 dark:bg-[#1e272d] dark:border-gray-600">
             <div className="items-center justify-center hidden mr-auto text-gray-500 dark:text-gray-400 md:flex">
+            <span className="text-sm">Created At: </span>
+
                 <svg
-                    className="w-3 h-3 mr-2"
+                    className="w-3 h-3 mx-2"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="currentColor"
@@ -69,7 +71,6 @@ const BottomNav = () => {
                     </svg>
                     <span className="sr-only">Hide camera</span>
                 </button>
-                {/* <ThemeSwitch /> */}
                 <div
                     id="tooltip-camera"
                     role="tooltip"

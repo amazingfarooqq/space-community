@@ -1,69 +1,104 @@
 import React from 'react'
 
+const alphabets = ['a', 'b', 'c', 'd', 'e']
+
+const randomAlp = () => {
+    return "faroqq"
+}
+
+const sampleData = [
+    {
+        name: `Farooq Dad`,
+        imageUrl: "https://pbs.twimg.com/profile_images/1689670708862107648/YBrrroVQ_400x400.jpg",
+        followers: 32,
+        pro: true
+    },
+    {
+        name: `${randomAlp()}${randomAlp()}${randomAlp()}${randomAlp()}`,
+        imageUrl: "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+        followers: 32,
+        pro: true
+    },
+    {
+        name: `Farooq Dad Khansadsadsadsadsadasdasdasdsad`,
+        imageUrl: "https://pbs.twimg.com/profile_images/1689670708862107648/YBrrroVQ_400x400.jpg",
+        followers: 32,
+        pro: true
+    },
+    {
+        name: `${randomAlp()}${randomAlp()}${randomAlp()}${randomAlp()}`,
+        imageUrl: "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+        followers: 32,
+        pro: true
+    },
+    {
+        name: `Farooq Dad Khansadsadsadsadsadasdasdasdsad`,
+        imageUrl: "https://pbs.twimg.com/profile_images/1689670708862107648/YBrrroVQ_400x400.jpg",
+        followers: 32,
+        pro: true
+    },
+    {
+        name: `${randomAlp()}${randomAlp()}${randomAlp()}${randomAlp()}`,
+        imageUrl: "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+        followers: 32,
+        pro: true
+    },
+    {
+        name: `Farooq Dad Khansadsadsadsadsadasdasdasdsad`,
+        imageUrl: "https://pbs.twimg.com/profile_images/1689670708862107648/YBrrroVQ_400x400.jpg",
+        followers: 32,
+        pro: true
+    },
+    {
+        name: `${randomAlp()}${randomAlp()}${randomAlp()}${randomAlp()}`,
+        imageUrl: "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+        followers: 32,
+        pro: true
+    },
+
+
+]
 const RightSide = () => {
     return (
-        <div className="w-3/4 flex flex-col justify-between h-[calc(100vh-3rem)]">
-            <div className="">
-                {/* Audio Call Icon */}
-
+        <>
+            <div
+                className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl dark:opacity-0 sm:-top-80 "
+                aria-hidden="true"
+            >
+                <div
+                    className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
+                    style={{
+                        clipPath:
+                            'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
+                    }}
+                />
             </div>
-            <div className="p-4 flex flex-wrap justify-center">
-                <div className="m-1 mr-2 w-14 h-14 relative flex justify-center items-center rounded-full text-xl text-white">
-                    <img
-                        src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                        className="rounded-full"
-                    />
-                    <div className="absolute right-0 bottom-0  rounded-full bg-red-100 " >
+            <div className="w-3/4 flex flex-col justify-between dark:bg-[#191D20] h-[calc(100vh-3rem)] ">
+                <div className="">
+                    {/* Audio Call Icon */}
 
-                        <svg
-                            className=" w-5 h-5 text-black  m-1 "
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="currentColor"
-                            viewBox="0 0 16 19"
-                        >
-                            <path d="M15 5a1 1 0 0 0-1 1v3a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V6a1 1 0 0 0-2 0v3a6.006 6.006 0 0 0 6 6h1v2H5a1 1 0 0 0 0 2h6a1 1 0 0 0 0-2H9v-2h1a6.006 6.006 0 0 0 6-6V6a1 1 0 0 0-1-1Z" />
-                            <path d="M9 0H7a3 3 0 0 0-3 3v5a3 3 0 0 0 3 3h2a3 3 0 0 0 3-3V3a3 3 0 0 0-3-3Z" />
-                        </svg>
-                    </div>
                 </div>
+                <div className="">
+                    {/* Audio Call Icon */}
 
-                <div className="m-1 mr-2 border border-red-400 border-4 w-14 h-14 relative flex justify-center items-center rounded-full text-xl text-white">
-                    <img
-                        src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                        className="rounded-full"
-                    />
-                    <div className="absolute right-0 bottom-0  rounded-full bg-red-100 " >
-
-                        <svg
-                            className=" w-5 h-5 text-black  m-1 "
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="currentColor"
-                            viewBox="0 0 16 19"
-                        >
-                            <path d="M15 5a1 1 0 0 0-1 1v3a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V6a1 1 0 0 0-2 0v3a6.006 6.006 0 0 0 6 6h1v2H5a1 1 0 0 0 0 2h6a1 1 0 0 0 0-2H9v-2h1a6.006 6.006 0 0 0 6-6V6a1 1 0 0 0-1-1Z" />
-                            <path d="M9 0H7a3 3 0 0 0-3 3v5a3 3 0 0 0 3 3h2a3 3 0 0 0 3-3V3a3 3 0 0 0-3-3Z" />
-                        </svg>
-                    </div>
                 </div>
+                <div className="h-96  dark:bg-[#1e272d]">
+                    {/* Audio Call Icon */}
 
-                <div className="m-1 mr-2 w-14 h-14 relative flex justify-center items-center rounded-full text-xl text-white">
-                    <img
-                        src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                        className="rounded-full"
-                    />
-                    <div className="absolute right-0 bottom-0  rounded-full bg-red-100 " >
-
-                        <svg className=" w-5 h-5 text-black  m-1 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 20">
-                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 7v3a5.006 5.006 0 0 1-5 5H6a5.006 5.006 0 0 1-5-5V7m7 9v3m-3 0h6M7 1h2a3 3 0 0 1 3 3v5a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V4a3 3 0 0 1 3-3Z" />
-                        </svg>
-                    </div>
                 </div>
+                <div className="flex flex-wrap justify-center pb-6">
+
+                    {sampleData?.map((user, imgIndex) => (
+                        <div className='flex flex-col justify-center align-center items-center'>
+                            <img key={imgIndex} className={`opacity-90 dark:opacity-70 border border-purple-900 inline-block h-24 w-24 rounded-lg ml-2  ring-white ${user.name == "Farooq Dad" && "ring-4"} dark:ring-[#272F34]`} src={user.imageUrl} alt="" />
+                            <span title={user.name} className=' text-purple-400 mt-1' style={{ fontSize: "0.6rem" }}>{user.pro && "⭐"}   {user.name.length > 9 ? `${user.name?.slice(0, 9)}...` : user.name}</span>
+                        </div>
+                    ))}
 
 
+                </div>
             </div>
-        </div>
+        </>
     )
 }
 

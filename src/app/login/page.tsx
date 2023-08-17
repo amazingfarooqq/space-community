@@ -15,6 +15,7 @@ const page = () => {
 
   useEffect(() => {
     if (session?.status === 'authenticated') {
+      toast.success('Login Succesfull!');
       router.push('/')
     }
   }, [session?.status, router]);
@@ -30,6 +31,7 @@ const page = () => {
         }
 
         if (callback?.ok) {
+          toast.success('Login Succesfull!');
           router.push('/')
         }
       })
@@ -38,9 +40,10 @@ const page = () => {
 
   return (
     <>
+    <div className='h-screen dark:bg-[#191D20] '>
       <Header />
-      <div className="mt-16 flex justify-center items-center">
-        <div className="py-12 px-12 bg-white dark:bg-gray-700 rounded-2xl shadow-xl z-20 border dark:border-gray-700">
+      <div className="pt-16 flex justify-center items-center ">
+        <div className="py-12 px-12 bg-white dark:bg-[#1e272d] rounded-xl shadow-xl z-20 border dark:border-gray-700">
           <div>
             <h1 className="text-3xl font-bold text-center mb-4 cursor-pointer">
               Create An Account
@@ -91,6 +94,8 @@ const page = () => {
           </div>
         </div>
       </div>
+
+    </div>
 
     </>
 
