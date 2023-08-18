@@ -27,7 +27,7 @@ const RoomCard: React.FC<RoomCardProps> = ({ item, index }) => {
         <div className="flex -space-x-2 overflow-hidden mt-6 bg-transparent">
           {item.users?.map((user, imgIndex) => (
             imgIndex < 6 && (
-              <img key={imgIndex} className="inline-block h-10 w-10 rounded-full ring-2 ring-white" src={user.imageUrl} alt="" />
+              <img key={user.toString() + imgIndex + imgIndex} className="inline-block h-10 w-10 rounded-full ring-2 ring-white" src={user.imageUrl} alt="" />
             )
           ))}
           {item.users?.length && item.users.length > 6 &&

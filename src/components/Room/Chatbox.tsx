@@ -93,9 +93,9 @@ const Chatbox = () => {
                     id="messages"
                     className="flex flex-col space-y-3 p-2 overflow-y-auto"
                 >
-                    {[1, 2, 3, 4, 5, 3, 321, 1231, 5654, 4345, 2423, 445, 564, 736, 31256, 54523, 63231, 4123].map((item, index) => {
+                    {[736, 31256, 54523, 6322132, 4123,736, 31256, 54523, 6322132, 4123,736, 31256, 54523, 6322132, 4123,736, 31256, 54523, 6322132, 4123,736, 31256, 54523, 6322132, 4123,736, 31256, 54523, 6322132, 4123,736, 31256, 54523, 6322132, 4123].map((item, index) => {
                         return (
-                            <div className="chat-message py-2">
+                            <div key={item + index + index + index+index} className="chat-message pt-2">
                                 <div className="flex ">
                                     <div className="space-y-2 w-full text-xs mx-1 order-2 items-start">
                                         <div className={`px-2 rounded-lg`}>
@@ -127,11 +127,11 @@ const Chatbox = () => {
 
                 </div>
                 <div>
-                    <div className=''>
+                    <div className='pt-1'>
 
                         <button
                             type="button"
-                            className="inline-flex items-center justify-center rounded-full h-10 w-10 transition duration-500 ease-in-out text-gray-500 focus:outline-none"
+                            className="inline-flex items-center justify-center rounded-full w-8 transition duration-500 ease-in-out text-gray-500 focus:outline-none"
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -156,7 +156,7 @@ const Chatbox = () => {
                         </button>
                         <button
                             type="button"
-                            className="inline-flex items-center justify-center rounded-full h-10 w-10 transition duration-500 ease-in-out text-gray-500 0 focus:outline-none"
+                            className="inline-flex items-center justify-center rounded-full w-8 transition duration-500 ease-in-out text-gray-500 0 focus:outline-none"
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -177,7 +177,7 @@ const Chatbox = () => {
                     </div>
                     <div className="flex">
                         <textarea
-                            className="w-full p-2 border dark:bg-[#1e272d] dark:border-gray-700 rounded-l-lg resize-none focus:outline-none dark:text-gray-200"
+                            className="w-full p-2 border dark:bg-[#1e272d] dark:border-gray-700  rounded-l-lg resize-none  dark:text-gray-200 "
                             placeholder="Enter your message..."
                             rows={2}
                         />

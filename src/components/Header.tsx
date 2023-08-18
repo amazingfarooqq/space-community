@@ -15,7 +15,7 @@ const Header = () => {
             <div className="max-w-7xl px-4 mx-auto flex justify-between items-center ">
                 <Link href="/" className="flex items-center ">
                     {/* <img src="https://pbs.twimg.com/profile_images/1689670708862107648/YBrrroVQ_400x400.jpg" alt="Logo" className="h-10 w-10 mr-2" /> */}
-                    <h1 className="text-white text-lg font-semibold">Space Community</h1>
+                    <h1 className="text-white text-lg font-semibold">Spark talk</h1>
                 </Link>
                 <div className="flex items-center ">
                     <ThemeSwitch />
@@ -31,7 +31,7 @@ const Header = () => {
                             className="text-white dark:bg-[#1e272f] ml-3 border border-gray-700 hover:bg-gray-700   font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800  dark:text-white dark:hover:bg-gray-700 mr-2 text-sm font-medium  inline-flex items-center transition duration-150 ease-in-out group"
                         >
                             Sign in
-                            <svg className="w-4 h-4 ml-1 tracking-normal text-purple-500 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                            <svg className="w-4 h-4 ml-1 tracking-normal text-purple-400 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                                 <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
                             </svg>
 
