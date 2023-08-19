@@ -1,7 +1,11 @@
 "use client"
 
+import BGGradient from '@/components/BGGradient'
 import Header from '@/components/Header'
 import Sidebar from '@/components/sidebar/Sidebar'
+import { useRoom } from '@/contexts/RoomContext'
+import { useSocket } from '@/contexts/SocketContext'
+import { useUser } from '@/contexts/UserContext'
 import { pusherClient } from '@/libs/pusher'
 import axios from 'axios'
 import { Button, Modal } from 'flowbite-react'
@@ -9,68 +13,79 @@ import React, { useEffect, useRef, useState } from 'react'
 
 const page = () => {
     const [isNicknameOpen, setIsNicknameOpen] = useState(true)
-    const [nickname, setNickname] = useState("")
-
-    const [messages, setMessages] = useState([])
-
     const bottomRef = useRef<HTMLDivElement>(null);
+
+
+
+    // const { username, setUsername } = useUser()
+
+
+    const [username, setUsername] = useState("")
+    const { rooms, myRooms } = useRoom();
+    const { messages, socket, roomUsers, enterChatroom } = useSocket();
+    console.log(messages);
 
     useEffect(() => {
         bottomRef?.current?.scrollIntoView();
-    }, [])
+    }, [messages])
 
-    console.log({ nickname });
-
-    const getConnected = async () => {
-        try {
-            console.log("wait");
-            
-            const result = await axios.post('/api/messages/publicMessages')
-            console.log({result});
-            
-        } catch (error) {
-            console.log({error});
-            
+    const globalRoomFun = () => {
+        if (!username) {
+            return;
         }
-        
+
+        // if ("1"?.includes(socket?.id)) return;
+        socket?.emit("send_message", {
+            text: username + " joined the room.",
+            socketId: "kurakani",
+            roomId: 1,
+        });
+        socket?.emit("join_room", 1);
+        setIsNicknameOpen(false)
+        enterChatroom()
+
     }
-    // const triggerUseEffect = () => {
-    //     pusherClient.subscribe("abcd")
 
 
-    //     const messageHandler = () => {
-      
-    //         setMessages((current) => {
-    //           return [...current, {username: nickname, message: "test"}]
-    //         });
-            
-    //         bottomRef?.current?.scrollIntoView();
-    //       };
+    const [textArea, settextArea] = useState("")
 
-    //     pusherClient.bind('messages:new', messageHandler)
-    // }
+    const handleSendMessage = () => {
+        if (textArea.trim()) {
+            console.log({ textArea });
+
+            socket?.emit("send_message", {
+                text: textArea,
+                name: username,
+                time: new Date(),
+                socketId: socket.id,
+                roomId: "1",
+            });
+        }
+        settextArea("");
+    };
 
     return (
         <>
             <Sidebar />
 
+            
             {/* <button onClick={triggerUseEffect}>See chats</button> */}
             <Modal size="lg" show={isNicknameOpen}>
-                <Modal.Header>Enter your nickname to Continue</Modal.Header>
+                <Modal.Header>Enter your username to Continue</Modal.Header>
                 <Modal.Body>
                     <div className="">
                         <label htmlFor="">Space Title</label>
                         <input
                             type="text"
-                            value={nickname}
-                            onChange={(e) => setNickname(e.target.value)}
-                            placeholder="Lets talk in English"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            placeholder="Enter your username"
                             className="block mt-2 text-sm py-3 px-4 rounded-lg w-full border outline-none dark:border-gray-600 dark:bg-gray-700"
                         />
                     </div>
                 </Modal.Body>
                 <Modal.Footer className='pt-0 border-none'>
-                    <Button color="purple" onClick={() => setIsNicknameOpen(true)}>Create Space</Button>
+                    <Button color="purple" onClick={globalRoomFun}>Enter Chatroom</Button>
                     <Button color="gray" onClick={() => setIsNicknameOpen(false)}>
                         Go to home
                     </Button>
@@ -89,21 +104,20 @@ const page = () => {
                 />
             </div>
             <Header />
- 
- 
-            <div className=" mx-auto flex justify-between  ml-20">
+
+
+            <div className=" mx-auto flex justify-between  ml-20 z-10">
                 <div className="flex flex-row justify-between w-full">
                     <div className=" w-full ">
                         <div className='flex flex-row justify-between h-[calc(100vh-5rem)]'>
                             <div className='border  dark:border-gray-800 flex flex-col w-1/5  overflow-y-auto overflow-x-hidden '>
-            <button className='btn' onClick={getConnected}>Connect</button>
                                 <div className="flex sm:items-center justify-between border-b-2 py-4 mb-3 border-gray-200 dark:border-gray-800 p-2 text-md">
                                     Online users
                                 </div>
                                 <div className="w-100 p-0 m-0">
-                                    {[1, 2, 3, 4, 5, 12, 321, 23, 213, 213, 3123, 3, 123, 1312312, 31313, 13, 13, 12, 312, 312, 312, 3213, 235, 545, 125, 54353, 5346, 6, 3463, 34, 5, 5345, 52, 453, 53, 45, 5345,].map(item => {
+                                    {rooms.map(item => {
                                         return (
-                                            <div className='border-b dark:border-gray-800 hover:bg-gray-700 cursor-pointer my-1 p-2'>Guest{item}</div>
+                                            <div className='border-b dark:border-gray-800 hover:bg-gray-700 cursor-pointer my-1 p-2' onClick={globalRoomFun}>{item.title}</div>
                                             // <img className="w-14 h-14 -mr-5 border-2 border-white rounded-full dark:border-gray-800" src="https://pbs.twimg.com/profile_images/1689670708862107648/YBrrroVQ_400x400.jpg" alt="" />
                                         )
                                     })}
@@ -203,23 +217,23 @@ const page = () => {
                                     className="flex flex-col space-y-3 p-2 overflow-y-auto"
                                 >
 
-                                    {[736, 23, 232321, 32, 736, 23, 232321, 32, 736, 23, 232321, 32, 736, 23, 232321, 32, 736, 23, 232321, 32, 736, 23, 232321, 32, 736, 23, 232321, 32].map((item, index) => {
+                                    {messages[1]?.map((item, index) => {
                                         return (
                                             <div key={item + index + index + index + index} className="chat-message pt-2">
                                                 <div className="flex ">
                                                     <div className="space-y-2 w-full text-xs mx-1 order-2 items-start">
                                                         <div className={`px-2 rounded-lg`}>
                                                             <div className='flex justify-between'>
-                                                                <h2 className='mb-1 text-purple-400 text-sm'>Farooq dad</h2>
+                                                                <h2 className='mb-1 text-purple-400 text-sm'>{item.name}</h2>
                                                                 <h2>
                                                                     <div className=" justify-center hidden mr-auto text-gray-500 dark:text-gray-400 md:flex">
-                                                                        <span className="text-xs">12:43 PM</span>
+                                                                        <span className="text-xs">{item.time}</span>
                                                                     </div>
                                                                 </h2>
 
                                                             </div>
                                                             <div className='dark:text-gray-300 pb-1'>
-                                                                I was working on that
+                                                                {item.text}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -287,11 +301,13 @@ const page = () => {
                                     </div>
                                     <div className="flex">
                                         <textarea
+                                            value={textArea}
+                                            onChange={(e) => settextArea(e.target.value)}
                                             className="w-full p-2 border dark:bg-[#1e272d] dark:border-gray-800  rounded-l-lg resize-none  dark:text-gray-200 "
                                             placeholder="Enter your message..."
                                             rows={2}
                                         />
-                                        <button className="bg-purple-500 text-white p-2 rounded-r-lg">
+                                        <button onClick={handleSendMessage} className="bg-purple-500 text-white p-2 rounded-r-lg">
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 className="h-6 w-6"
@@ -331,6 +347,7 @@ const page = () => {
                     </div> */}
                 </div>
             </div>
+            <BGGradient />
         </>
 
     )

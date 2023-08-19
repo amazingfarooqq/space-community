@@ -110,7 +110,7 @@ const AuthForm = () => {
   }
 
   return (
-    <div className='pb-8 dark:bg-[#191D20] mt-8 sm:mx-auto sm:w-full sm:max-w-md ml-20'>
+    <div className='pb-8 dark:bg-[#191D20] mt-8 sm:mx-auto sm:w-full sm:max-w-md ml-20 '>
       <div
         className="py-12 px-12 bg-white dark:bg-[#1e272d] rounded-xl shadow-xl z-20 border dark:border-gray-700"
       >

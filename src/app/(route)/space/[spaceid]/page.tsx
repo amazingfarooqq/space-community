@@ -12,13 +12,15 @@ const ChatComponent = () => {
 
 
     return (
-        <div className="h-screen flex">
+        <>
+            
+            <div className="h-screen flex">
+                <BottomNav />
+                <RightSide />
+                <Chatbox />
 
-            <BottomNav />
-            <RightSide />
-            <Chatbox/>
-
-        </div>
+            </div>
+        </>
     );
 };
 

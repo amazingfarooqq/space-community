@@ -9,16 +9,14 @@ import { Avatar, Dropdown } from 'flowbite-react';
 const Header = () => {
     const session = useSession();
 
-    console.log({ session });
-
     return (
         <div className="py-3 ml-20">
 
 
-            <div className="px-4 h-12 mx-auto flex justify-between items-center ">
+            <div className="px-10 h-12 mx-auto flex justify-between items-center ">
                 <Link href="/" className="flex items-center ">
                     {/* <img src="https://pbs.twimg.com/profile_images/1689670708862107648/YBrrroVQ_400x400.jpg" alt="Logo" className="h-10 w-10 mr-2" /> */}
-                    <h1 className="text-lg font-semibold">Spark talk</h1>
+                    <h1 className="text-gray-600 dark:text-white  text-lg font-semibold">Spark talk</h1>
                 </Link>
                 <div className="flex items-center ">
                     <ThemeSwitch />

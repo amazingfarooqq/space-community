@@ -8,6 +8,7 @@ import React from 'react'
 import { toast } from 'react-hot-toast';
 import AuthForm from '@/components/AuthForm';
 import Sidebar from '@/components/sidebar/Sidebar';
+import BGGradient from '@/components/BGGradient';
 
 const page = () => {
   const session = useSession();
@@ -42,7 +43,7 @@ const page = () => {
 
   return (
     <>
-    <Sidebar />
+      <Sidebar />
       <div>
         <div
           className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl dark:opacity-0 sm:-top-80 "
@@ -59,7 +60,9 @@ const page = () => {
         <Header />
         <AuthForm />
 
+        <BGGradient />
       </div>
+
 
     </>
 
