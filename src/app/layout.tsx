@@ -4,7 +4,6 @@ import { Inter } from 'next/font/google'
 import { ThemeProviders } from './theme.provider'
 import AuthContext from '@/context/AuthContext'
 import ToasterContext from '@/context/ToasterContext'
-
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -19,10 +18,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head>
-      <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css" rel="stylesheet" />
-      </head>
-      <body className={inter.className}>
+
+      <body className={`dark:bg-[#191D20] ${inter.className}`}>
         <AuthContext>
           <ThemeProviders>
             <ToasterContext />
@@ -30,8 +27,6 @@ export default function RootLayout({
             {children}
           </ThemeProviders>
         </AuthContext>
-        
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
       </body>
     </html >
   )

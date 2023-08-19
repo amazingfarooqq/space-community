@@ -5,8 +5,19 @@ import { useState } from 'react';
 import Link from 'next/link';
 import ThemeSwitch from '@/components/ThemeSwitch';
 import Header from '@/components/Header';
-import ProfileToolTip from '@/components/ProfileToolTip';
 import ModalToCreateSpace from '@/components/ModalToCreateSpace';
+import { Button, Dropdown, Tooltip } from 'flowbite-react';
+import type { CustomFlowbiteTheme } from 'flowbite-react';
+import { Flowbite } from 'flowbite-react';
+import Sidebar from '@/components/sidebar/Sidebar';
+const customTheme: CustomFlowbiteTheme = {
+  button: {
+    color: {
+      primary: 'bg-red-500 hover:bg-red-600',
+    },
+  },
+};
+
 
 
 const sampleData = [
@@ -39,7 +50,7 @@ const sampleData = [
     inviting: false,
     users: [
       { id: "512412", name: "Farooq Dad", imageUrl: "https://pbs.twimg.com/profile_images/1689670708862107648/YBrrroVQ_400x400.jpg" },
-      { id: "1232512",name: "Ahmed", imageUrl: "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" },
+      { id: "1232512", name: "Ahmed", imageUrl: "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" },
     ],
   },
   {
@@ -51,6 +62,24 @@ const sampleData = [
     users: [
       { id: "612g4", name: "Farooq dad", imageUrl: "https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" },
       { id: "8657", name: "Ahmed", imageUrl: "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" },
+      { id: "98989", name: "Ahmed", imageUrl: "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" },
+      { id: "98989", name: "Ahmed", imageUrl: "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" },
+      { id: "98989", name: "Ahmed", imageUrl: "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" },
+      { id: "98989", name: "Ahmed", imageUrl: "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" },
+      { id: "98989", name: "Ahmed", imageUrl: "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" },
+      { id: "98989", name: "Ahmed", imageUrl: "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" },
+    ],
+  },
+  {
+    id: "a2cc6564",
+    title: "Gym guide",
+    host: "Farooq Dad",
+    language: "Spanish",
+    inviting: false,
+    users: [
+      { id: "612g4", name: "Farooq dad", imageUrl: "https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" },
+      { id: "8657", name: "Ahmed", imageUrl: "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" },
+      { id: "98989", name: "Ahmed", imageUrl: "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" },
       { id: "98989", name: "Ahmed", imageUrl: "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" },
     ],
   },
@@ -132,13 +161,17 @@ const spaceData = {
 
 export default function Home() {
   const [showRoomWidget, setShowRoomWidget] = useState(false)
+
+
+  const [isCreateSpaceModal, setIsCreateSpaceModal] = useState("hide")
   return (
     <>
       <Header />
 
-      <main className="flex min-h-screen flex-col items-center dark:bg-[#191D20] pb-56">
+      <main className="flex min-h-screen flex-col pb-56 ml-20">
 
 
+        <Sidebar />
 
         <div
           className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl dark:opacity-0 sm:-top-80 "
@@ -153,88 +186,99 @@ export default function Home() {
           />
         </div>
 
-
-        <div className="mx-auto max-w-2xl  pt-10">
+        {/* <div className="mx-auto max-w-2xl  pt-10">
           <div className="text-center ">
-            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-              Explore Spaces
+            <h1 className="text-3xl tracking-tight sm:text-2xl">
+              Language Practice Community
             </h1>
           </div>
         </div>
 
+        <div className='mt-4 flex flex-wrap gap-x-2 gap-y-2 justify-center items-center '>
+          <ModalToCreateSpace id="popup-modal" isCreateSpaceModal={isCreateSpaceModal} setIsCreateSpaceModal={setIsCreateSpaceModal} />
+          <button type="button" className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-500 dark:hover:bg-purple-400 dark:focus:ring-purple-900">Community</button>
 
-        <div className='flex  items-start  '>
-          <ModalToCreateSpace id="popup-modal" />
-        </div>
+        </div> */}
 
-        <div className="mt-6 py-10 flex flex-wrap gap-x-6 gap-y-5 sm:flex-col lg:flex-row xl:gap-x-8  justify-center items-center ">
+        <div className="py-6 flex flex-wrap gap-x-6 ml-10 gap-y-5 flex-col lg:flex-row xl:gap-x-8   ">
 
           {sampleData.map((item, index) => (
-            <div key={index} className="relative rounded-md bg-white dark:bg-[#272F34] dark:border-gray-700 w-96 h-60 border overflow-hidden">
+            <div key={index} className="relative rounded-md bg-white dark:bg-[#272F34] dark:border-gray-700 mr-10 lg:mr-0 lg:w-96 h-auto py-2 lg:h-80 border overflow-hidden">
 
 
-              <div className="flex flex-col p-6 ">
+              <div className="flex flex-col px-6 py-3 ">
 
-                <div className="grow ">
-                  <div className=" mb-1">{item.language}
-                    <span className='text-sm opacity-40 '> Upper Advance</span>
+
+
+                <div className="flex ">
+                  <div className="w-full text-sm order-2 items-start">
+                    <div className={`rounded-lg`}>
+                      <div className='flex justify-between'>
+                        <div className="grow ">
+                          <div className=" mb-1">{item.language}
+                            <span className='text-sm opacity-40 '> Upper Advance</span>
+                          </div>
+                          <div className="mb-3 text-purple-500 dark:text-purple-400  " title={item.title}>
+                            {item.title.length > 35 ? `${item.title.slice(0, 35)}...` : item.title}
+                          </div>
+                        </div>
+                        <h2>
+                          <div className="text-right ">
+                            {item.users.length % 2 ?
+                              <Link href="/space/21323"
+                                className="text-sm font-medium hover:text-purple-500 inline-flex items-center transition duration-150 ease-in-out group "
+                              >
+                                Join{/* */}{" "}
+                                <svg className="w-4 h-4 ml-2 tracking-normal text-purple-500 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                                  <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
+                                </svg>
+                              </Link> :
+                              <div
+                                className="text-sm font-medium inline-flex items-center transition duration-150 ease-in-out group opacity-70"
+                              >
+                                Space is limited
+                              </div>
+                            }
+                          </div>
+                        </h2>
+
+                      </div>
+                    </div>
                   </div>
-                  <div className="mb-3 text-purple-400  " title={item.title}>
-                    {item.title.length > 35 ? `${item.title.slice(0, 35)}...` : item.title}
-                  </div>
 
-                  
                 </div>
 
-                <div className="flex -space-x-2 overflow-hidden mb-2 ">
+
+
+
+
+                <div className="flex flex-wrap overflow-hidden mb-2 ">
                   {item.users?.length > 0 &&
                     <>
                       {item.users?.map((user, imgIndex) => (
-                        imgIndex < 6 && (
-                          <>
-                            <div  key={user.toString() + imgIndex} className='flex flex-col justify-center align-center items-center '>
-                              <img key={imgIndex} data-tooltip-target={`tooltip-${user?.id || "00"}`} className={`cursor-pointer ${user.name == "Farooq Dad" ? "border border-purple-400 z-10 border-2 inline-block" : ""}  ${item.users?.length <= 4 ? "h-20 w-20" : item.users?.length <= 5 ? "h-16 w-16 mt-3" : "h-14 w-14 mt-3 "}  rounded-full ring-2 ring-white dark:ring-[#272F34]`} src={user.imageUrl} alt="" />
-                              <span className={' text-purple-400 mt-1'} style={{ fontSize: "0.6rem" }}>{user.name.length % 2 ? <span className=''>⭐</span> : ""} {user.name == "Farooq Dad" ? "Sparktalk" : ""} {user.name !== "Farooq Dad" && user.name.length}</span>
+                        imgIndex < 9 && (
+                          <Tooltip animation="duration-500" content={user.name}>
+                            <div key={user.toString() + imgIndex} className='flex flex-col justify-center align-center items-center '>
+                              <img key={imgIndex} className={`cursor-pointer ${item.users?.length <= 3 ? "h-24 w-24" : item.users?.length <= 8 ? "h-22 w-22" : "h-16 w-16"}  rounded-full ring-2 ring-white dark:ring-[#272F34]`} src={user.imageUrl} alt="" />
+                              <span className={'  text-purple-500 dark:text-purple-400 mt-1'} style={{ fontSize: "0.6rem" }}> {user.name == "Farooq Dad" ? "Sparktalk" : ""} {user.name !== "Farooq Dad" && user.name.length}</span>
                             </div>
 
-                            <ProfileToolTip name={user.name} id={`tooltip-${user?.id || "00"}`} />
-                          </>
+                          </Tooltip>
                         )
                       ))}
 
 
 
 
-                      {item.users?.length && item.users.length > 7 &&
-                        <div data-tooltip-target={`tooltip-3412-${item.users.length}`} className="inline-block h-10 w-10 rounded-full ring-2 ring-white flex items-center justify-center dark:ring-[#272F34] bg-slate-100 dark:bg-gray-600  dark:text-gray-200" style={{ fontSize: '0.8rem' }}>
+                      {item.users?.length && item.users.length > 8 &&
+                        <div className="inline-block h-10 w-10 rounded-full ring-2 ring-white flex items-center justify-center dark:ring-[#272F34] bg-slate-100 dark:bg-gray-600  dark:text-gray-200" style={{ fontSize: '0.8rem' }}>
                           {item.users.length}
                         </div>
                       }
-
-
-                      <ProfileToolTip name="Total Users" id={`tooltip-3412-${item.users.length}`} />
-
-
                     </>
                   }
                 </div>
-                <div className="text-right ">
-                  {item.users.length % 2 ?
-                    <Link href="/space/21323"
-                      className="text-sm font-medium hover:text-purple-400 inline-flex items-center transition duration-150 ease-in-out group"
-                    >
-                      <svg className="w-4 h-4 ml-1 mr-2 tracking-normal text-purple-400 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
-                      </svg>
-                      Join{/* */}{" "}
-                    </Link> :
-                    <div
-                      className="text-sm font-medium inline-flex items-center transition duration-150 ease-in-out group opacity-70"
-                    >
-                      Space is limited
-                    </div>
-                  }
-                </div>
+
               </div>
             </div>
           ))}

@@ -5,6 +5,7 @@ const config: Config = {
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    "./node_modules/flowbite-react/**/*.js"
   ],
   darkMode: ["class"],
   theme: {
@@ -14,8 +15,12 @@ const config: Config = {
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
+      height: {
+        '20': '4.5rem',
+        '22': '5rem',
+      }
     },
   },
-  plugins: [],
+  plugins: [require("flowbite/plugin")],
 }
 export default config
