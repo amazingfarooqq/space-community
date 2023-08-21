@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google'
 import { ThemeProviders } from './theme.provider'
 import AuthContext from '@/context/AuthContext'
 import ToasterContext from '@/context/ToasterContext'
+import SpacesSocketProvider from '@/contexts/SpacesSocketContext'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -23,8 +24,10 @@ export default function RootLayout({
         <AuthContext>
           <ThemeProviders>
             <ToasterContext />
-            {/* <ActiveStatus /> */}
+            <SpacesSocketProvider>
+              {/* <ActiveStatus /> */}
             {children}
+            </SpacesSocketProvider>
           </ThemeProviders>
         </AuthContext>
       </body>

@@ -1,5 +1,6 @@
 'use client';
 
+import { useSpacesSocket } from '@/contexts/SpacesSocketContext';
 import { Button, Modal } from 'flowbite-react';
 import { useState } from 'react';
 
@@ -12,6 +13,10 @@ interface ModalToCreateSpaceProps {
 import React from 'react'
 
 const ModalToCreateSpace: React.FC<ModalToCreateSpaceProps> = ({ id, isCreateSpaceModal, setIsCreateSpaceModal }) => {
+
+
+  const { createSpace } = useSpacesSocket()
+
     return (
         <>
             <button type="button" onClick={() => setIsCreateSpaceModal('show')} className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-500 dark:hover:bg-purple-400 dark:focus:ring-purple-900">Create Space</button>
@@ -28,7 +33,7 @@ const ModalToCreateSpace: React.FC<ModalToCreateSpaceProps> = ({ id, isCreateSpa
                     </div>
                 </Modal.Body>
                 <Modal.Footer className='pt-0 border-none'>
-                    <Button color="purple" onClick={() => setIsCreateSpaceModal("show")}>Create Space</Button>
+                    <Button color="purple" onClick={createSpace}>Create Space</Button>
                     <Button color="gray" onClick={() => setIsCreateSpaceModal("hide")}>
                         Close
                     </Button>

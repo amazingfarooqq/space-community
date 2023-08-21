@@ -8,78 +8,103 @@ import { useSocket } from '@/contexts/SocketContext'
 import { useUser } from '@/contexts/UserContext'
 import { pusherClient } from '@/libs/pusher'
 import axios from 'axios'
-import { Button, Modal } from 'flowbite-react'
+import { Avatar, Button, Modal } from 'flowbite-react'
 import React, { useEffect, useRef, useState } from 'react'
+import { v4 as uuidv4 } from 'uuid';
 
 const page = () => {
     const [isNicknameOpen, setIsNicknameOpen] = useState(true)
     const bottomRef = useRef<HTMLDivElement>(null);
+    const [nickname, setNickname] = useState("")
+    const { messages, socket, roomUsers, enterChatroom, logoutFunc } = useSocket();
+
+    console.log({roomUsers});
+    
+
+    const enterAsGuest = () => {
+        let generateuuid = uuidv4()
+        let generate = generateuuid.split("-")
+        let user = "Guest-" + generate[0].slice(0, 2) + generate[1].slice(0, 2) + generate[1].slice(0, 2)
+
+        setNickname(user)
+        setIsNicknameOpen(false)
+        enterChatroom(user)
+    }
 
 
+    const logout = () => {
+        setIsNicknameOpen(true)
+        logoutFunc()
+        socket?.emit("logout")
 
-    // const { username, setUsername } = useUser()
+    }
 
-
-    const [username, setUsername] = useState("")
-    const { rooms, myRooms } = useRoom();
-    const { messages, socket, roomUsers, enterChatroom } = useSocket();
-    console.log(messages);
 
     useEffect(() => {
         bottomRef?.current?.scrollIntoView();
     }, [messages])
 
     const globalRoomFun = () => {
-        if (!username) {
+
+        if (!nickname) {
             return;
         }
-
         // if ("1"?.includes(socket?.id)) return;
-        socket?.emit("send_message", {
-            text: username + " joined the room.",
-            socketId: "kurakani",
-            roomId: 1,
-        });
-        socket?.emit("join_room", 1);
         setIsNicknameOpen(false)
-        enterChatroom()
+        enterChatroom(nickname)
 
     }
 
 
+
     const [textArea, settextArea] = useState("")
 
-    const handleSendMessage = () => {
+    const handleSendMessage = (e: any) => {
+        e.preventDefault()
         if (textArea.trim()) {
             console.log({ textArea });
 
             socket?.emit("send_message", {
                 text: textArea,
-                name: username,
-                time: new Date(),
+                name: nickname,
+                time: new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds(),
                 socketId: socket.id,
                 roomId: "1",
+                status: "new_message"
             });
         }
         settextArea("");
+    };
+
+    const onEnterPress = (e: any) => {
+        if (e.keyCode == 13 && e.shiftKey == false) {
+            handleSendMessage(e)
+        }
+    }
+
+
+    const handleTyping = () => {
+        socket?.emit("typing", textArea ? nickname + " is typing ..." : "");
     };
 
     return (
         <>
             <Sidebar />
 
-            
             {/* <button onClick={triggerUseEffect}>See chats</button> */}
             <Modal size="lg" show={isNicknameOpen}>
-                <Modal.Header>Enter your username to Continue</Modal.Header>
+                <Modal.Header>Enter your nickname to Continue</Modal.Header>
                 <Modal.Body>
                     <div className="">
-                        <label htmlFor="">Space Title</label>
+
+                        <button className="focus:outline-none w-full text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-500 dark:hover:bg-purple-400 dark:focus:ring-purple-900" onClick={enterAsGuest}>Enter as guest</button>
+                        <div>OR</div>
+                        <label htmlFor="">Enter your nickname</label>
                         <input
                             type="text"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            placeholder="Enter your username"
+                            value={nickname}
+                            onChange={(e) => setNickname(e.target.value)}
+                            placeholder="Enter your nickname"
                             className="block mt-2 text-sm py-3 px-4 rounded-lg w-full border outline-none dark:border-gray-600 dark:bg-gray-700"
                         />
                     </div>
@@ -106,7 +131,7 @@ const page = () => {
             <Header />
 
 
-            <div className=" mx-auto flex justify-between  ml-20 z-10">
+            <div className=" mx-auto flex justify-between  ml-12 z-10 xl:ml-20 ">
                 <div className="flex flex-row justify-between w-full">
                     <div className=" w-full ">
                         <div className='flex flex-row justify-between h-[calc(100vh-5rem)]'>
@@ -114,136 +139,78 @@ const page = () => {
                                 <div className="flex sm:items-center justify-between border-b-2 py-4 mb-3 border-gray-200 dark:border-gray-800 p-2 text-md">
                                     Online users
                                 </div>
+
                                 <div className="w-100 p-0 m-0">
-                                    {rooms.map(item => {
+                                    {/* {rooms.map(item => {
+                                        console.log({ item });
+
                                         return (
-                                            <div className='border-b dark:border-gray-800 hover:bg-gray-700 cursor-pointer my-1 p-2' onClick={globalRoomFun}>{item.title}</div>
-                                            // <img className="w-14 h-14 -mr-5 border-2 border-white rounded-full dark:border-gray-800" src="https://pbs.twimg.com/profile_images/1689670708862107648/YBrrroVQ_400x400.jpg" alt="" />
+                                            <>
+                                                <div className='border-b dark:border-gray-800 cursor-pointer my-1 p-2'>{item.title}</div>
+                                                <img className="w-14 h-14 -mr-5 border-2 border-white rounded-full dark:border-gray-800" src="https://pbs.twimg.com/profile_images/1689670708862107648/YBrrroVQ_400x400.jpg" alt="" />
+                                            </>
                                         )
+                                    })} */}
+
+
+                                    {roomUsers?.map((item: {name: string}) => {
+                                        return <div>
+                                            <span className='text-xs'>{item.name}</span>
+                                        </div>
                                     })}
                                 </div>
 
                             </div>
                             <div className='border dark:border-gray-800 flex-1 p:2 sm:px-1 justify-between flex flex-col'>
-                                {/* <div className="flex sm:items-center justify-between border-b-2 py-2 border-gray-200 dark:border-gray-800">
-                                    <button
-                                        type="button"
-                                        className="inline-flex items-center justify-center rounded-lg border dark:border-gray-800 h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none"
-                                    >
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            stroke="currentColor"
-                                            className="h-6 w-6"
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                                            />
-                                        </svg>
-                                    </button>
-                                    <div className="flex items-center space-x-2">
-
-                                        <button
-                                            type="button"
-                                            className="inline-flex items-center justify-center rounded-lg border dark:border-gray-800 h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none"
-                                        >
-                                        </button>
-                                        <button
-                                            type="button"
-                                            className="inline-flex items-center justify-center rounded-lg border dark:border-gray-800 h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none"
-                                        >
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                stroke="currentColor"
-                                                className="h-6 w-6"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth={2}
-                                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                                                />
-                                            </svg>
-                                        </button>
-                                        <button
-                                            type="button"
-                                            className="inline-flex items-center justify-center rounded-lg border dark:border-gray-800 h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none"
-                                        >
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                stroke="currentColor"
-                                                className="h-6 w-6"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth={2}
-                                                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                                                />
-                                            </svg>
-                                        </button>
-                                        <button
-                                            type="button"
-                                            className="inline-flex items-center justify-center rounded-lg border dark:border-gray-800 h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-gray-300 focus:outline-none"
-                                        >
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                stroke="currentColor"
-                                                className="h-6 w-6"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth={2}
-                                                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                                                />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div> */}
 
                                 <div
                                     id="messages"
                                     className="flex flex-col space-y-3 p-2 overflow-y-auto"
                                 >
 
-                                    {messages[1]?.map((item, index) => {
+                                    {messages[1]?.map((message: any, index: number) => {
                                         return (
-                                            <div key={item + index + index + index + index} className="chat-message pt-2">
-                                                <div className="flex ">
-                                                    <div className="space-y-2 w-full text-xs mx-1 order-2 items-start">
-                                                        <div className={`px-2 rounded-lg`}>
-                                                            <div className='flex justify-between'>
-                                                                <h2 className='mb-1 text-purple-400 text-sm'>{item.name}</h2>
-                                                                <h2>
-                                                                    <div className=" justify-center hidden mr-auto text-gray-500 dark:text-gray-400 md:flex">
-                                                                        <span className="text-xs">{item.time}</span>
-                                                                    </div>
-                                                                </h2>
-
-                                                            </div>
-                                                            <div className='dark:text-gray-300 pb-1'>
-                                                                {item.text}
+                                            <div key={message + index + index + index + index} className="chat-message pt-2">
+                                                {message.status == "user_joined" || message.status == "user_left" ?
+                                                    <div className="flex items-center">
+                                                        <div className="space-y-2 w-full text-xs mx-1 order-2 items-start">
+                                                            <div className={`px-2 rounded-lg`}>
+                                                                <div className={` ${message.status == "user_joined" ? "text-green-400 pb-0 mb-0" : message.status == "user_left" ? "text-red-400 pb-0 mb-0" : ""}`}>
+                                                                    {message.text}
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    {/* <img
-                                                        src={item % 2 ? "https://images.unsplash.com/photo-1549078642-b2ba4bda0cdb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=144&h=144" : "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"}
-                                                        alt="My profile"
-                                                        className="w-10 h-10 rounded-lg order-1"
-                                                    /> */}
-                                                </div>
+                                                        {/* <Avatar size="sm" rounded bordered/> */}
+                                                        {/* <img
+                                                            src={index % 2 ? "https://images.unsplash.com/photo-1549078642-b2ba4bda0cdb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=144&h=144" : "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"}
+                                                            alt="My profile"
+                                                            className="w-6 h-6 rounded-lg order-1"
+                                                        /> */}
+                                                    </div> :
+                                                    <div className="flex ">
+                                                        <div className="space-y-2 w-full text-xs mx-1 order-2 items-start">
+                                                            <div className={`px-2 rounded-lg`}>
+                                                                <div className='flex justify-between'>
+                                                                    <h2 className='mb-1 text-purple-500 dark:text-purple-400 text-sm'>{message.name}</h2>
+                                                                    <h2>
+                                                                        <div className=" justify-center hidden mr-auto text-gray-500 dark:text-gray-400 md:flex">
+                                                                            <span className="text-xs">{message.time}</span>
+                                                                        </div>
+                                                                    </h2>
 
+                                                                </div>
+                                                                <div className={`dark:text-gray-300`}>
+                                                                    {message.text}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        {/* <img
+                                                            src={index % 2 ? "https://images.unsplash.com/photo-1549078642-b2ba4bda0cdb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=144&h=144" : "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"}
+                                                            alt="My profile"
+                                                            className="w-10 h-10 rounded-lg order-1"
+                                                        /> */}
+                                                    </div>
+                                                }
                                             </div>
                                         )
                                     })}
@@ -252,6 +219,15 @@ const page = () => {
                                 </div>
                                 <div>
                                     <div className='pt-1'>
+                                        <button
+                                            onClick={logout}
+                                            type="button"
+                                            className="inline-flex items-center justify-center rounded-full w-8 transition duration-500 ease-in-out text-gray-500 0 focus:outline-none"
+                                        >
+                                            <svg className="h-6 w-6 text-purple-500 dark:text-purple-400 transition duration-300 ease-in-out" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 18">
+                                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 1v11m0 0 4-4m-4 4L4 8m11 4v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-3" />
+                                            </svg>
+                                        </button>
 
                                         <button
                                             type="button"
@@ -262,7 +238,7 @@ const page = () => {
                                                 fill="none"
                                                 viewBox="0 0 24 24"
                                                 stroke="currentColor"
-                                                className="h-6 w-6 text-gray-600 hover:text-purple-400 transition duration-300 ease-in-out"
+                                                className="h-6 w-6 text-gray-600 hover:text-purple-500 transition duration-300 ease-in-out"
                                             >
                                                 <path
                                                     strokeLinecap="round"
@@ -287,7 +263,7 @@ const page = () => {
                                                 fill="none"
                                                 viewBox="0 0 24 24"
                                                 stroke="currentColor"
-                                                className="h-6 w-6 text-gray-600 hover:text-purple-400 transition duration-300 ease-in-out"
+                                                className="h-6 w-6 text-gray-600 hover:text-purple-500 transition duration-300 ease-in-out"
                                             >
                                                 <path
                                                     strokeLinecap="round"
@@ -299,15 +275,17 @@ const page = () => {
                                         </button>
 
                                     </div>
-                                    <div className="flex">
+                                    <form className="flex">
                                         <textarea
+                                            onKeyUp={handleTyping}
+                                            onKeyDown={onEnterPress}
                                             value={textArea}
                                             onChange={(e) => settextArea(e.target.value)}
                                             className="w-full p-2 border dark:bg-[#1e272d] dark:border-gray-800  rounded-l-lg resize-none  dark:text-gray-200 "
                                             placeholder="Enter your message..."
                                             rows={2}
                                         />
-                                        <button onClick={handleSendMessage} className="bg-purple-500 text-white p-2 rounded-r-lg">
+                                        <button onClick={handleSendMessage} type='submit' className="bg-purple-500 text-white p-2 rounded-r-lg">
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 className="h-6 w-6"
@@ -323,7 +301,7 @@ const page = () => {
                                                 />
                                             </svg>
                                         </button>
-                                    </div>
+                                    </form>
                                 </div>
 
                             </div>
