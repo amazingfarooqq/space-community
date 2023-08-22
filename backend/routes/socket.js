@@ -36,17 +36,17 @@ io.on("connection", (socket) => {
 
   // spaces
   socket.on("create_space", (data) => {
-    spaces.push(data)
+    // spaces.push(data)
     io.emit("create_space_response", data);
 
 
-    setTimeout(() => {
-      const createdSpace = spaces.find((space) => space.spaceid === data.spaceid);
-      if (createdSpace && createdSpace.spaceusers.length === 0) {
-        removeSpace(data.spaceid); // Remove the space from the list
-        io.emit("receive_spaces", spaces); // Update the spaces list on all clients
-      }
-    }, remove_space_in); // 10 seconds
+    // setTimeout(() => {
+    //   const createdSpace = spaces.find((space) => space.spaceid === data.spaceid);
+    //   if (createdSpace && createdSpace.spaceusers.length === 0) {
+    //     removeSpace(data.spaceid); // Remove the space from the list
+    //     io.emit("receive_spaces", spaces); // Update the spaces list on all clients
+    //   }
+    // }, remove_space_in); // 10 seconds
 
   })
 
