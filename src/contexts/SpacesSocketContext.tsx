@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useSession } from "next-auth/react";
 import { toast } from "react-hot-toast";
 import client from "@/libs/prismadb";
+import axios from "axios";
 
 interface ISocketContext {
     spacesSocket: Socket | undefined;
@@ -41,8 +42,31 @@ export default function SpacesSocketProvider({
 
     console.log("spaces", spaces);
 
+    const getSpaces = async () => {
+        try {
+            let data = await axios.get("/api/spaces/getSpaces")
+            console.log({ data });
+
+            if (data?.data) {
+                console.log("data");
+
+                setSpaces(data.data)
+            } else {
+                console.log("nothing");
+
+            }
+
+        } catch (error) {
+            console.log({ error });
+
+        }
+    }
+
     useEffect(() => {
         const clientid = uuidv4()
+
+        getSpaces()
+
 
         setClientId(clientid)
         const socket_io = socketIO?.connect(process.env.NEXT_PUBLIC_BASE_URL!, {
@@ -50,11 +74,12 @@ export default function SpacesSocketProvider({
         });
         setSpacesSocket(socket_io);
 
-        socket_io?.on("receive_spaces", (data: any) => {
-            console.log("receive_spaces", {data });
-            setClientId(data.socketid)
-            setSpaces(data.spaces);
-        });
+
+        // socket_io?.on("receive_spaces", (data: any) => {
+        //     console.log("receive_spaces", { data });
+        //     setClientId(data.socketid)
+        //     setSpaces(data.spaces);
+        // });
 
         socket_io.on("create_space_response", (data: any) => {
             console.log("create_space_response", { spaces, data });
@@ -75,52 +100,60 @@ export default function SpacesSocketProvider({
     }, []);
 
 
-    const createSpace = () => {
-        let ownerid = uuidv4();
-        let userid = uuidv4();
-
-
-        console.log(session);
-
+    const createSpace = async (setIsCreateSpaceModal: any) => {
         if (session.status == "authenticated") {
-            const newSpace = {
-                spaceid: uuidv4(),
-                owner: session.data.user?.id,
-                title: space.title || "Lets talk in english",
-                language: space.language || "English",
-                level: space.level || "Begineer",
-                limit: 4,
-                coowners: [],
-                spaceusers: [],
-            };
+            try {
+                const newSpace = {
+                    owner: session.data.user?.id,
+                    title: space.title || "Lets talk in english",
+                    language: space.language || "English",
+                    level: space.level || "Begineer",
+                    limit: "4",
+                };
+                const createNewSpace = await axios.post('/api/spaces/createSpace', {
+                    newSpace
+                })
+                console.log({ createNewSpace });
+                spacesSocket?.emit("create_space", {...createNewSpace.data, spaceusers: []});
+                toast.success('Space created!');
+                setIsCreateSpaceModal("hide")
 
-            spacesSocket?.emit("create_space", newSpace);
-            toast.success('Space created!');
-
+            } catch (error) {
+                toast.error('There was some error, try again');
+            }
         }
         if (session.status == "unauthenticated") {
             toast.error('Login to create a space');
         }
     }
 
-    const joinSpace = (spaceId: any) => {
-        // Find the previous space the user is in
+    const joinSpace = async (spaceId: any) => {
         if (session.status == "authenticated") {
-            
-            const previousSpace = spaces.find(space => space.spaceusers.some(user => user.id === clientId));
 
-            if (previousSpace) {
-                console.log({ previousSpace });
-                console.log("session.data.user", session.data.user);
-                
-
-                // Remove the user from the previous space
-                previousSpace.spaceusers = previousSpace.spaceusers.filter(user => user.id !== clientId);
-                spacesSocket?.emit("space_joined_response", previousSpace); // Update the previous space on all clients
+            const updatingObj = {
+                title: "new one"
             }
 
-            // Emit the "join_space" event to join the new space
-            spacesSocket?.emit("join_space", { spaceId, joinedUserData: { ...session.data.user } });
+            const updateSpace = await axios.post('/api/spaces/joinSpace', {
+                spaceId, updatingObj
+            })
+
+            console.log({updateSpace});
+            
+            // const previousSpace = spaces.find(space => space.spaceusers.some(user => user.id === clientId));
+
+            // if (previousSpace) {
+            //     console.log({ previousSpace });
+            //     console.log("session.data.user", session.data.user);
+
+
+            //     // Remove the user from the previous space
+            //     previousSpace.spaceusers = previousSpace.spaceusers.filter(user => user.id !== clientId);
+            //     spacesSocket?.emit("space_joined_response", previousSpace); // Update the previous space on all clients
+            // }
+
+            // // Emit the "join_space" event to join the new space ss
+            // spacesSocket?.emit("join_space", { spaceId, joinedUserData: { ...session.data.user } });
 
         }
     }

@@ -1,4 +1,6 @@
 
+"use client"
+
 import { Avatar } from 'flowbite-react';
 import Link from 'next/link';
 import ThemeSwitch from '../ThemeSwitch';
