@@ -2,13 +2,19 @@ import prisma from "@/app/libs/prismadb";
 import { NextResponse } from "next/server";
 
 
-export async function GET(
+export async function POST(
     req: Request
 ) {
     try {
-        const data = await prisma.space.findMany({
+        const body = await req.json();
+
+        const {spaceid} = body;
+        const data = await prisma.space.findUnique({
+            where: {
+                id:spaceid
+            },
             include: {
-                users: true // Include the related users data
+                users: true
             }
         });
         return NextResponse.json(data);

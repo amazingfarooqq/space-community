@@ -20,11 +20,10 @@ const Spaces = () => {
 
 
             {spaces.map((item: any, index: any) => {
-                console.log({item});
-                
+
                 return <div key={index} className={`  dark:shadow-md border-2 relative rounded-md  bg-white dark:bg-gray-800 dark:border-gray-700 mr-3 lg:mr-0 lg:w-96 h-auto py-2 lg:h-80 border overflow-hidden`}>
 
-                    {item.spaceusers?.length < item.limit ?
+                    {item.users?.length < item.limit ?
                         <>
                             <div className="absolute z-100 top-0 right-0  mt-1 mr-1 w-2 h-2 rounded-full bg-purple-300 animate-ping"></div>
                             <div className="absolute top-0 right-0 mt-1 mr-1 w-2 h-2 rounded-full bg-purple-400"></div>
@@ -45,7 +44,7 @@ const Spaces = () => {
                                     </div>
                                     <h2>
                                         <div className="text-right ">
-                                            {item.spaceusers?.length < item.limit ?
+                                            {item.users?.length < item.limit ?
                                                 <button onClick={() => joinSpace(item.id)}
                                                     className="text-sm font-medium hover:text-purple-500 inline-flex items-center transition duration-150 ease-in-out group "
                                                 >
@@ -68,13 +67,13 @@ const Spaces = () => {
                         </div>
 
                         <div className="flex flex-wrap overflow-hidden mb-2 ">
-                            {item.spaceusers?.length > 0 &&
+                            {item.users?.length > 0 &&
                                 <>
-                                    {item.spaceusers?.map((user: any, imgIndex: any) => (
+                                    {item.users?.map((user: any, imgIndex: any) => (
                                         imgIndex < 9 && (
                                             <Tooltip animation="duration-500" content={user.name}>
                                                 <div key={user.toString() + imgIndex} className='flex flex-col justify-center align-center items-center '>
-                                                    <img key={imgIndex} className={`cursor-pointer ${item.spaceusers?.length <= 3 ? "h-24 w-24" : item.spaceusers?.length <= 8 ? "h-22 w-22" : "h-16 w-16"}  rounded-full ring-2 ring-white dark:ring-[#272F34]`} src={user.image} alt="" />
+                                                    <img key={imgIndex} className={`cursor-pointer ${item.users?.length <= 3 ? "h-24 w-24" : item.users?.length <= 8 ? "h-22 w-22" : "h-16 w-16"}  rounded-full ring-2 ring-white dark:ring-[#272F34]`} src={user.image} alt="" />
                                                     <span className={'  text-purple-500 dark:text-purple-400 mt-1'} style={{ fontSize: "0.6rem" }}> {item.owner == user.id && "Host"} {user.name.length}</span>
                                                 </div>
                                             </Tooltip>
@@ -84,9 +83,9 @@ const Spaces = () => {
 
 
 
-                                    {item.spaceusers?.length && item.spaceusers.length > 8 &&
+                                    {item.users?.length && item.users.length > 8 &&
                                         <div className="inline-block h-10 w-10 rounded-full ring-2 ring-white flex items-center justify-center dark:ring-[#272F34] bg-slate-100 dark:bg-gray-600  dark:text-gray-200" style={{ fontSize: '0.8rem' }}>
-                                            {item.spaceusers.length}
+                                            {item.users.length}
                                         </div>
                                     }
                                 </>

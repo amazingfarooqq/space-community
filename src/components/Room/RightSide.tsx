@@ -58,7 +58,8 @@ const sampleData = [
 
 
 ]
-const RightSide = () => {
+const RightSide = ({currentUsers}) => {
+
     return (
         <>
             <div
@@ -88,9 +89,9 @@ const RightSide = () => {
                 </div>
                 <div className="flex flex-wrap justify-center pb-6">
 
-                    {sampleData?.map((user, imgIndex) => (
-                        <div key={user.toString() + 1} className='flex flex-col justify-center align-center items-center'>
-                            <img key={imgIndex} className={`opacity-90 dark:opacity-70 border border-purple-900 inline-block h-24 w-24 rounded-lg ml-2  ring-white ${user.name == "Farooq Dad" && "ring-4"} dark:ring-[#272F34]`} src={user.imageUrl} alt="" />
+                    {currentUsers?.map((user, imgIndex) => (
+                        <div key={user.id} className='flex flex-col justify-center align-center items-center'>
+                            <img key={imgIndex} className={`opacity-90 dark:opacity-70 border border-purple-900 inline-block h-24 w-24 rounded-lg ml-2  ring-white ${user.name == "Farooq Dad" && "ring-4"} dark:ring-[#272F34]`} src={user.image} alt="" />
                             <span title={user.name} className=' text-purple-400 mt-1' style={{ fontSize: "0.6rem" }}>{user.pro && "⭐"}   {user.name.length > 9 ? `${user.name?.slice(0, 9)}...` : user.name}</span>
                         </div>
                     ))}

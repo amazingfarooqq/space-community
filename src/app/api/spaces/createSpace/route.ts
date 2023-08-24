@@ -17,7 +17,8 @@ export async function POST(
         try {
 
            createdSpace = await prisma.space.create({
-                data: newSpace
+                data: newSpace,
+                include: { users: true }
             });
 
 

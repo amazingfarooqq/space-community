@@ -1,45 +1,40 @@
-import getCurrentUser from "@/app/actions/getCurrentUser";
+import prisma from "@/app/libs/prismadb";
 import { NextResponse } from "next/server";
 
-import prisma from "@/app/libs/prismadb";
-import { pusherServer } from "@/app/libs/pusher";
-
-export async function POST(
-    request: Request,
-) {
-    let updatedSpace
+export async function POST(request: Request) {
     try {
-        const currentUser = await getCurrentUser();
         const body = await request.json();
+        const { spaceId, userId } = body;
 
+        const allSpaces = await prisma.space.findMany({ include: { users: true } });
 
-        const { updatingObj, spaceId } = body;
+        const spacesWithUserData = allSpaces.filter(space => space.userIds.includes(userId));
 
-        console.log("spaceId: ", spaceId);
-        
+        let spacesWithUser = []
 
-        try {
-
-            updatedSpace = await prisma.space.update({
-                where: {
-                    id: spaceId
-                },
-                data: updatingObj
+        for (const space of spacesWithUserData) {
+            const updatedUserIds = space.userIds.filter(id => id !== userId);
+            if (space.id === spaceId) return
+            const up = await prisma.space.update({
+                where: { id: space.id },
+                data: { userIds: { set: updatedUserIds } },
+                include: { users: true }
             });
-
-            console.log({updatedSpace});
-            
-
-
-
-        } catch (error) {
-            console.log({ error });
-
+            spacesWithUser.push(up);
         }
 
+        const updatedSpace = await prisma.space.update({
+            where: { id: spaceId },
+            data: {
+                userIds: { push: userId },
+            },
+            include: { users: true }
+        });
 
-        return NextResponse.json({ updatedSpace })
+
+        return NextResponse.json({ updatedSpace, spacesWithUser });
     } catch (error) {
+        console.error("Error:", error);
         return new NextResponse('Internal Error', { status: 500 });
     }
 }

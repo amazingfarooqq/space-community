@@ -1,7 +1,7 @@
 'use client';
 
 import { useSpacesSocket } from '@/contexts/SpacesSocketContext';
-import { Button, Modal } from 'flowbite-react';
+import { Button, Modal, Spinner } from 'flowbite-react';
 import { useState } from 'react';
 
 interface ModalToCreateSpaceProps {
@@ -15,17 +15,33 @@ import React from 'react'
 const ModalToCreateSpace: React.FC<ModalToCreateSpaceProps> = ({ id, isCreateSpaceModal, setIsCreateSpaceModal }) => {
 
 
-  const { createSpace } = useSpacesSocket()
+    const { createSpace } = useSpacesSocket()
 
+    const [spaceDate, setSpaceDate] = useState({title: "", language: "", level: ""})
 
+    console.log({spaceDate});
+    
+    const handleOnChange = (e: any) => {
+        if (e.target.value.length > 50) {
+            return
+        }
+        setSpaceDate({ ...spaceDate, [e.target.name]: e.target.value })
+    }
 
-  const createSpaceFunc = async () => {
-    createSpace(setIsCreateSpaceModal)
-  }
+    const [loading, setLoading] = useState(false)
+
+    const createSpaceFunc = async () => {
+        setLoading(true)
+        await createSpace(spaceDate, setIsCreateSpaceModal)
+        setLoading(false)
+    }
 
     return (
         <>
             <button type="button" onClick={() => setIsCreateSpaceModal('show')} className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-500 dark:hover:bg-purple-400 dark:focus:ring-purple-900">Create Space</button>
+
+
+
             <Modal size="lg" dismissible show={isCreateSpaceModal === 'show'} onClose={() => setIsCreateSpaceModal("hide")}>
                 <Modal.Header>Create new space</Modal.Header>
                 <Modal.Body>
@@ -33,13 +49,21 @@ const ModalToCreateSpace: React.FC<ModalToCreateSpaceProps> = ({ id, isCreateSpa
                         <label htmlFor="">Space Title</label>
                         <input
                             type="text"
+                            value={spaceDate.title}
+                            name='title'
+                            onChange={handleOnChange}
                             placeholder="Lets talk in English"
                             className="block mt-2 text-sm py-3 px-4 rounded-lg w-full border outline-none dark:border-gray-600 dark:bg-gray-700"
                         />
                     </div>
+
                 </Modal.Body>
                 <Modal.Footer className='pt-0 border-none'>
-                    <Button color="purple" onClick={createSpaceFunc}>Create Space</Button>
+                    {loading ? <Spinner aria-label="Alternate spinner button example" />
+                        :
+                        <Button color="purple" onClick={createSpaceFunc}>Create Space</Button>
+                    }
+
                     <Button color="gray" onClick={() => setIsCreateSpaceModal("hide")}>
                         Close
                     </Button>

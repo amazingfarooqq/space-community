@@ -1,7 +1,7 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
 import socketIO, { Socket } from "socket.io-client"; // Import Socket directly from socket.io-client
-import { useRouter } from "next/router"; // Correct import for useRouter
+import { useRouter } from "next/navigation"; // Correct import for useRouter
 import { v4 as uuidv4 } from 'uuid';
 import { useSession } from "next-auth/react";
 import { toast } from "react-hot-toast";
@@ -36,20 +36,14 @@ export default function SpacesSocketProvider({
     const [spaces, setSpaces] = useState<any[]>([]); // Assuming spaces will be an array of any type
     const [space, setSpace] = useState<any>({}); // Assuming space will be of any type
 
-
+    const router = useRouter();
     const [clientId, setClientId] = useState("")
-
-
-    console.log("spaces", spaces);
 
     const getSpaces = async () => {
         try {
             let data = await axios.get("/api/spaces/getSpaces")
-            console.log({ data });
 
             if (data?.data) {
-                console.log("data");
-
                 setSpaces(data.data)
             } else {
                 console.log("nothing");
@@ -81,6 +75,8 @@ export default function SpacesSocketProvider({
         //     setSpaces(data.spaces);
         // });
 
+
+
         socket_io.on("create_space_response", (data: any) => {
             console.log("create_space_response", { spaces, data });
             // Update the spaces array with the new space data
@@ -88,33 +84,65 @@ export default function SpacesSocketProvider({
         });
 
         socket_io.on("space_joined_response", (data) => {
-            console.log("space_joined_response", { data });
+            console.log("Join space response received:", { data });
             // Update the spaces array with the updated space data
-            setSpaces(prevSpaces => prevSpaces.map(space => space.spaceid === data.spaceid ? data : space));
+            // setSpaces(prevSpaces => prevSpaces.map(space => space.id === data.id ? data : space));
+        });
+
+        socket_io.on("join_space_updated_response", updatedSpaceData => {
+            console.log("join_space_updated_response", { updatedSpaceData: updatedSpaceData.data });
+
+            console.log({ updatedSpaceData });
+
+            // Update the UI with the updated space data received from the server
+            // Assuming updatedSpaceData has properties like id, name, image, etc.
+
+            setSpaces(prevSpaces => {
+                // Find the index of the updated space in the previous spaces array
+
+                console.log({ prevSpaces, updatedSpaceData });
+
+                const updatedIndex = prevSpaces.findIndex(space => space.id === updatedSpaceData.id);
+
+                console.log({ updatedIndex });
+
+                // If the updated space is found in the array, update the array with the new updatedSpaceData
+                if (updatedIndex !== -1) {
+                    const updatedSpaces = [...prevSpaces];
+                    updatedSpaces[updatedIndex] = updatedSpaceData;
+                    return updatedSpaces;
+                }
+
+                // If the updated space is not found, return the previous state
+                return prevSpaces;
+            });
         });
 
         return () => {
-            socket_io?.off("receive_spaces");
+            // socket_io?.off("receive_spaces");
             socket_io.disconnect();
         };
     }, []);
 
 
-    const createSpace = async (setIsCreateSpaceModal: any) => {
+    const createSpace = async (spaceDate:any, setIsCreateSpaceModal: any) => {
         if (session.status == "authenticated") {
+            console.log({spaceDate});
+            
             try {
                 const newSpace = {
                     owner: session.data.user?.id,
-                    title: space.title || "Lets talk in english",
-                    language: space.language || "English",
-                    level: space.level || "Begineer",
+                    title: spaceDate.title || "Lets talk in english",
+                    language: spaceDate.language || "English",
+                    level: spaceDate.level || "Begineer",
                     limit: "4",
                 };
                 const createNewSpace = await axios.post('/api/spaces/createSpace', {
                     newSpace
                 })
-                console.log({ createNewSpace });
-                spacesSocket?.emit("create_space", {...createNewSpace.data, spaceusers: []});
+                // console.log({ createNewSpace });
+                spacesSocket?.emit("create_space", { ...createNewSpace.data });
+
                 toast.success('Space created!');
                 setIsCreateSpaceModal("hide")
 
@@ -128,34 +156,49 @@ export default function SpacesSocketProvider({
     }
 
     const joinSpace = async (spaceId: any) => {
+        console.log({ spaceId });
+        
         if (session.status == "authenticated") {
-
+            console.log("join space");
+            
+            const currentSpace = spaces.find((space: any) => space.id === spaceId);
+            
+            if(currentSpace?.userIds?.includes(session.data.user?.id)){
+                toast.error('You are already in this space');
+                return
+            }
             const updatingObj = {
-                title: "new one"
+                title: "new one",
+                userIds: {
+                    push: session.data.user?.id
+                }
+
             }
 
-            const updateSpace = await axios.post('/api/spaces/joinSpace', {
-                spaceId, updatingObj
+            const data = await axios.post('/api/spaces/joinSpace', {
+                spaceId, updatingObj, userId: session.data.user?.id
+
             })
 
-            console.log({updateSpace});
+            spacesSocket?.emit("join_space", data.data.updatedSpace);
+
+            if (data.data.spacesWithUser.length > 0) {
+                data.data.spacesWithUser.map((space: any) => {
+                    console.log({space});
+                    
+                    spacesSocket?.emit("join_space", space);
+                })
+
+            }
             
-            // const previousSpace = spaces.find(space => space.spaceusers.some(user => user.id === clientId));
-
-            // if (previousSpace) {
-            //     console.log({ previousSpace });
-            //     console.log("session.data.user", session.data.user);
-
-
-            //     // Remove the user from the previous space
-            //     previousSpace.spaceusers = previousSpace.spaceusers.filter(user => user.id !== clientId);
-            //     spacesSocket?.emit("space_joined_response", previousSpace); // Update the previous space on all clients
-            // }
-
-            // // Emit the "join_space" event to join the new space ss
-            // spacesSocket?.emit("join_space", { spaceId, joinedUserData: { ...session.data.user } });
-
+            
+            // router.push("/space/" + spaceId)
+        }else {
+            console.log("login");
+            toast.error('Login to join a space');
         }
+
+        
     }
 
     return (
