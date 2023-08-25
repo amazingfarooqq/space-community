@@ -10,7 +10,7 @@ const Chatbox = () => {
 
     return (
         <>
-            <div className="  border dark:bg-[#1e272d] dark:border-gray-700 flex-1 p:2 pb-10 sm:px-1 justify-between flex flex-col h-[calc(100vh-2rem)]">
+            <div className=" border dark:bg-[#1e272d] dark:border-gray-700 flex-1 p:2 pb-10 sm:px-1 justify-between flex flex-col h-[calc(100vh-2rem)]">
                 {/* <div className="flex sm:items-center justify-between border-b-2 py-2 border-gray-200">
                     <div className="relative flex items-center space-x-4">
                         <div className="flex flex-col leading-tight">

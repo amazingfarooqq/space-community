@@ -6,9 +6,10 @@ import React from 'react'
 
 
 
-const Spaces = () => {
+const Spaces = ({spaces, setSpaces, joinSpace}) => {
 
-    const { spaces, spacesSocket, joinSpace } = useSpacesSocket()
+    // const { spaces, spacesSocket, joinSpace } = useSpacesSocket()
+
     return (
         <div className="py-6 flex flex-wrap gap-x-6 ml-1 lg:ml-10 gap-y-5 flex-col lg:flex-row xl:gap-x-8   ">
 
@@ -21,7 +22,7 @@ const Spaces = () => {
 
             {spaces.map((item: any, index: any) => {
 
-                return <div key={index} className={`  dark:shadow-md border-2 relative rounded-md  bg-white dark:bg-gray-800 dark:border-gray-700 mr-3 lg:mr-0 lg:w-96 h-auto py-2 lg:h-80 border overflow-hidden`}>
+                return <div key={index} className={`  dark:shadow-md border-2 relative rounded-md  bg-white dark:bg-[#191D20] dark:border-gray-800 mr-3 lg:mr-0 lg:w-96 h-auto py-2 lg:h-80 border overflow-hidden`}>
 
                     {item.users?.length < item.limit ?
                         <>
@@ -45,7 +46,7 @@ const Spaces = () => {
                                     <h2>
                                         <div className="text-right ">
                                             {item.users?.length < item.limit ?
-                                                <button onClick={() => joinSpace(item.id)}
+                                                <button onClick={() => joinSpace(item)}
                                                     className="text-sm font-medium hover:text-purple-500 inline-flex items-center transition duration-150 ease-in-out group "
                                                 >
                                                     Join{/* */}{" "}

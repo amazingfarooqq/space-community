@@ -8,15 +8,22 @@ export async function POST(
     try {
         const body = await req.json();
 
-        const {spaceid} = body;
+        const {spaceId} = body;
+
+        console.log({spaceId});
+        
         const data = await prisma.space.findUnique({
             where: {
-                id:spaceid
+                id:spaceId
             },
             include: {
                 users: true
             }
         });
+        
+
+        console.log({data});
+        
         return NextResponse.json(data);
     } catch (error) {
         console.log('[CATEGORIES_GET]', error);

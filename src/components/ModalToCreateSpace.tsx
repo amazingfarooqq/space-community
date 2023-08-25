@@ -12,15 +12,12 @@ interface ModalToCreateSpaceProps {
 
 import React from 'react'
 
-const ModalToCreateSpace: React.FC<ModalToCreateSpaceProps> = ({ id, isCreateSpaceModal, setIsCreateSpaceModal }) => {
+const ModalToCreateSpace: React.FC<ModalToCreateSpaceProps> = ({ id, isCreateSpaceModal, setIsCreateSpaceModal, createSpace }) => {
 
 
-    const { createSpace } = useSpacesSocket()
 
     const [spaceDate, setSpaceDate] = useState({title: "", language: "", level: ""})
 
-    console.log({spaceDate});
-    
     const handleOnChange = (e: any) => {
         if (e.target.value.length > 50) {
             return

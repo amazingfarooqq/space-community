@@ -56,73 +56,73 @@ export default function SpacesSocketProvider({
         }
     }
 
-    useEffect(() => {
-        const clientid = uuidv4()
+    // useEffect(() => {
+    //     const clientid = uuidv4()
 
-        getSpaces()
-
-
-        setClientId(clientid)
-        const socket_io = socketIO?.connect(process.env.NEXT_PUBLIC_BASE_URL!, {
-            query: { clientId: clientid },
-        });
-        setSpacesSocket(socket_io);
+    //     getSpaces()
 
 
-        // socket_io?.on("receive_spaces", (data: any) => {
-        //     console.log("receive_spaces", { data });
-        //     setClientId(data.socketid)
-        //     setSpaces(data.spaces);
-        // });
+    //     setClientId(clientid)
+    //     const socket_io = socketIO?.connect(process.env.NEXT_PUBLIC_BASE_URL!, {
+    //         query: { clientId: clientid },
+    //     });
+    //     setSpacesSocket(socket_io);
+
+
+    //     // socket_io?.on("receive_spaces", (data: any) => {
+    //     //     console.log("receive_spaces", { data });
+    //     //     setClientId(data.socketid)
+    //     //     setSpaces(data.spaces);
+    //     // });
 
 
 
-        socket_io.on("create_space_response", (data: any) => {
-            console.log("create_space_response", { spaces, data });
-            // Update the spaces array with the new space data
-            setSpaces(prevSpaces => [...prevSpaces, data]);
-        });
+    //     socket_io.on("create_space_response", (data: any) => {
+    //         console.log("create_space_response", { spaces, data });
+    //         // Update the spaces array with the new space data
+    //         setSpaces(prevSpaces => [...prevSpaces, data]);
+    //     });
 
-        socket_io.on("space_joined_response", (data) => {
-            console.log("Join space response received:", { data });
-            // Update the spaces array with the updated space data
-            // setSpaces(prevSpaces => prevSpaces.map(space => space.id === data.id ? data : space));
-        });
+    //     socket_io.on("space_joined_response", (data) => {
+    //         console.log("Join space response received:", { data });
+    //         // Update the spaces array with the updated space data
+    //         // setSpaces(prevSpaces => prevSpaces.map(space => space.id === data.id ? data : space));
+    //     });
 
-        socket_io.on("join_space_updated_response", updatedSpaceData => {
-            console.log("join_space_updated_response", { updatedSpaceData: updatedSpaceData.data });
+    //     socket_io.on("join_space_updated_response", updatedSpaceData => {
+    //         console.log("join_space_updated_response", { updatedSpaceData: updatedSpaceData.data });
 
-            console.log({ updatedSpaceData });
+    //         console.log({ updatedSpaceData });
 
-            // Update the UI with the updated space data received from the server
-            // Assuming updatedSpaceData has properties like id, name, image, etc.
+    //         // Update the UI with the updated space data received from the server
+    //         // Assuming updatedSpaceData has properties like id, name, image, etc.
 
-            setSpaces(prevSpaces => {
-                // Find the index of the updated space in the previous spaces array
+    //         setSpaces(prevSpaces => {
+    //             // Find the index of the updated space in the previous spaces array
 
-                console.log({ prevSpaces, updatedSpaceData });
+    //             console.log({ prevSpaces, updatedSpaceData });
 
-                const updatedIndex = prevSpaces.findIndex(space => space.id === updatedSpaceData.id);
+    //             const updatedIndex = prevSpaces.findIndex(space => space.id === updatedSpaceData.id);
 
-                console.log({ updatedIndex });
+    //             console.log({ updatedIndex });
 
-                // If the updated space is found in the array, update the array with the new updatedSpaceData
-                if (updatedIndex !== -1) {
-                    const updatedSpaces = [...prevSpaces];
-                    updatedSpaces[updatedIndex] = updatedSpaceData;
-                    return updatedSpaces;
-                }
+    //             // If the updated space is found in the array, update the array with the new updatedSpaceData
+    //             if (updatedIndex !== -1) {
+    //                 const updatedSpaces = [...prevSpaces];
+    //                 updatedSpaces[updatedIndex] = updatedSpaceData;
+    //                 return updatedSpaces;
+    //             }
 
-                // If the updated space is not found, return the previous state
-                return prevSpaces;
-            });
-        });
+    //             // If the updated space is not found, return the previous state
+    //             return prevSpaces;
+    //         });
+    //     });
 
-        return () => {
-            // socket_io?.off("receive_spaces");
-            socket_io.disconnect();
-        };
-    }, []);
+    //     return () => {
+    //         // socket_io?.off("receive_spaces");
+    //         socket_io.disconnect();
+    //     };
+    // }, []);
 
 
     const createSpace = async (spaceDate:any, setIsCreateSpaceModal: any) => {

@@ -4,35 +4,25 @@ import { NextResponse } from "next/server";
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { spaceId, userId } = body;
+        const { space } = body;
 
-        const allSpaces = await prisma.space.findMany({ include: { users: true } });
-
-        const spacesWithUserData = allSpaces.filter(space => space.userIds.includes(userId));
-
-        let spacesWithUser = []
-
-        for (const space of spacesWithUserData) {
-            const updatedUserIds = space.userIds.filter(id => id !== userId);
-            if (space.id === spaceId) return
-            const up = await prisma.space.update({
-                where: { id: space.id },
-                data: { userIds: { set: updatedUserIds } },
-                include: { users: true }
-            });
-            spacesWithUser.push(up);
-        }
+        console.log("Space id:", space.id);
+        console.log("User ids:", space.userIds);
+        
 
         const updatedSpace = await prisma.space.update({
-            where: { id: spaceId },
+            where: { id: space.id },
             data: {
-                userIds: { push: userId },
+                userIds: { set: space.userIds }, // Update user IDs
+                // users: { connect: space.userIds.map((userId: any) => ({ id: userId })) } // Connect users based on IDs
             },
             include: { users: true }
         });
 
 
-        return NextResponse.json({ updatedSpace, spacesWithUser });
+
+
+        return NextResponse.json(updatedSpace);
     } catch (error) {
         console.error("Error:", error);
         return new NextResponse('Internal Error', { status: 500 });

@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
 
-      <body className={`dark:bg-[#191D20] ${inter.className}`}>
+      <body className={`dark:bg-[#121212] ${inter.className}`}>
         <AuthContext>
           <ThemeProviders>
             <ToasterContext />

@@ -58,7 +58,7 @@ const sampleData = [
 
 
 ]
-const RightSide = ({currentUsers}) => {
+const RightSide = ({ isChatBox, currentUsers }) => {
 
     return (
         <>
@@ -74,7 +74,7 @@ const RightSide = ({currentUsers}) => {
                     }}
                 />
             </div>
-            <div className="w-3/4 flex flex-col justify-between dark:bg-[#191D20] h-[calc(100vh-3rem)] ">
+            <div className={` ${isChatBox ? "w-3/4" : "w-full"}   flex flex-col justify-between dark:bg-[#191D20] h-[calc(100vh-3rem)]`}>
                 <div className="">
                     {/* Audio Call Icon */}
 

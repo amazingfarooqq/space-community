@@ -1,7 +1,6 @@
 "use client"
 import React, { useState, useEffect } from 'react';
 import io, { Socket } from 'socket.io-client';
-import { v4 as uuidv4 } from 'uuid';
 
 interface User {
   id: string;
@@ -16,7 +15,6 @@ interface Space {
   users: User[];
 }
 const Component: React.FC = () => {
-  let userid = uuidv4()
   const [socket, setSocket] = useState<Socket | undefined>(undefined);
   const [spaces, setSpaces] = useState<Space[]>([]);
   const [user, setuser] = useState({ id: "", name: "", currentSpaceId: "" })

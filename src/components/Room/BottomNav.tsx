@@ -1,7 +1,7 @@
 import React from 'react'
 import ThemeSwitch from '../ThemeSwitch'
 
-const BottomNav = () => {
+const BottomNav = ({isChatBox, setIsChatBox, handleParticipants}) => {
     return (
         <div className="fixed bottom-0 left-0 z-50 grid w-full h-16 grid-cols-1 px-8 bg-white border-t border-gray-200 md:grid-cols-3 dark:bg-[#1e272d] dark:border-gray-600">
             <div className="items-center justify-center hidden mr-auto text-gray-500 dark:text-gray-400 md:flex">
@@ -211,6 +211,7 @@ const BottomNav = () => {
                     <div className="tooltip-arrow" data-popper-arrow="" />
                 </div>
                 <button
+                onClick={handleParticipants}
                     data-tooltip-target="tooltip-volume"
                     type="button"
                     className="p-2.5 group rounded-full hover:bg-gray-100 mr-1 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-600 dark:hover:bg-gray-600"
@@ -236,6 +237,7 @@ const BottomNav = () => {
                 </div>
                 <button
                     data-tooltip-target="tooltip-information"
+                    onClick={() => setIsChatBox(!isChatBox)}
                     type="button"
                     className="p-2.5 group rounded-full hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-600 dark:hover:bg-gray-600"
                 >
@@ -252,6 +254,7 @@ const BottomNav = () => {
                 </button>
                 <div
                     id="tooltip-information"
+                    
                     role="tooltip"
                     className="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
                 >

@@ -17,10 +17,14 @@ const io = new Server(server, {
 
 
 const currentSpace = {}
+const userid = {}
 
 io.on("connection", (socket) => {
+  const socketId = socket.handshake.query.socketId ? socket.handshake.query.socketId : socket.id;
 
-  debugPrint(`User Connected: ${socket.id}`);
+  
+
+  debugPrint(`User Connected: ${socketId}`);
 
   // spaces
   socket.on("create_space", (data) => {
@@ -28,9 +32,10 @@ io.on("connection", (socket) => {
   })
 
   socket.on("join_space", (data) => {
-    console.log("Join space event received with data:", data);
-    currentSpace[socket.id] = data.id
-    io.emit("space_updated_response", data);
+    console.log("join currentSpace[socketId]:", socketId, data.userid);
+    currentSpace[socketId] = data.updatedSpace.id
+    userid[socketId] = data.userid
+    io.emit("space_updated_response", data.updatedSpace);
 
     // socket.join(socket.io)
 
@@ -39,35 +44,19 @@ io.on("connection", (socket) => {
   });
 
   socket.on("leave_space", (data) => {
-    currentSpace[socket.id] = data.id
+    currentSpace[socketId] = data.id
     io.emit("space_updated_response", data);
   });
 
-  socket.on("leave_space", () => {
-    debugPrint("User Disconnected", socket);
-    debugPrint("out");
-
-    const disconnectedUserId = socket.id;
-
-    for (const spaceId in currentSpace) {
-      if (currentSpace[spaceId].includes(disconnectedUserId)) {
-        currentSpace[spaceId] = currentSpace[spaceId].filter(id => id !== disconnectedUserId);
-        break;
-      }
-    }
-
-    io.emit("on_disconnected", {
-      userid: socket.id,
-      currentSpace: currentSpace[socket.id]
-    });
-  });
 
   socket.on("disconnect", () => {
     debugPrint("User Disconnected", socket);
-    debugPrint("out");
+    debugPrint("out", socketId);
 
-    const disconnectedUserId = socket.id;
-
+    const disconnectedUserId = socketId;
+    
+    if(!currentSpace[socketId]) return
+    console.log("disconnect currentSpace[socketId]:", socketId, currentSpace[socketId]);
     for (const spaceId in currentSpace) {
       if (currentSpace[spaceId].includes(disconnectedUserId)) {
         currentSpace[spaceId] = currentSpace[spaceId].filter(id => id !== disconnectedUserId);
@@ -76,8 +65,9 @@ io.on("connection", (socket) => {
     }
 
     io.emit("on_disconnected", {
-      userid: socket.id,
-      currentSpace: currentSpace[socket.id]
+      socketid: socketId,
+      userid: userid[socketId],
+      currentSpace: currentSpace[socketId]
     });
   });
   // socket.on("logout", () => {
@@ -85,7 +75,7 @@ io.on("connection", (socket) => {
   //   debugPrint("out");
 
   //   io.emit("on_disconneted", {
-  //     userid: socket.id,
+  //     userid: socketId,
   //     currentSpace: 123
   //   });
 
