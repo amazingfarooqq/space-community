@@ -1,64 +1,7 @@
 import React from 'react'
+import BottomNav from './BottomNav'
 
-const alphabets = ['a', 'b', 'c', 'd', 'e']
-
-const randomAlp = () => {
-    return "faroqq"
-}
-
-const sampleData = [
-    {
-        name: `Farooq Dad`,
-        imageUrl: "https://pbs.twimg.com/profile_images/1689670708862107648/YBrrroVQ_400x400.jpg",
-        followers: 32,
-        pro: true
-    },
-    {
-        name: `${randomAlp()}${randomAlp()}${randomAlp()}${randomAlp()}`,
-        imageUrl: "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-        followers: 32,
-        pro: true
-    },
-    {
-        name: `Farooq Dad Khansadsadsadsadsadasdasdasdsad`,
-        imageUrl: "https://pbs.twimg.com/profile_images/1689670708862107648/YBrrroVQ_400x400.jpg",
-        followers: 32,
-        pro: true
-    },
-    {
-        name: `${randomAlp()}${randomAlp()}${randomAlp()}${randomAlp()}`,
-        imageUrl: "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-        followers: 32,
-        pro: true
-    },
-    {
-        name: `Farooq Dad Khansadsadsadsadsadasdasdasdsad`,
-        imageUrl: "https://pbs.twimg.com/profile_images/1689670708862107648/YBrrroVQ_400x400.jpg",
-        followers: 32,
-        pro: true
-    },
-    {
-        name: `${randomAlp()}${randomAlp()}${randomAlp()}${randomAlp()}`,
-        imageUrl: "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-        followers: 32,
-        pro: true
-    },
-    {
-        name: `Farooq Dad Khansadsadsadsadsadasdasdasdsad`,
-        imageUrl: "https://pbs.twimg.com/profile_images/1689670708862107648/YBrrroVQ_400x400.jpg",
-        followers: 32,
-        pro: true
-    },
-    {
-        name: `${randomAlp()}${randomAlp()}${randomAlp()}${randomAlp()}`,
-        imageUrl: "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-        followers: 32,
-        pro: true
-    },
-
-
-]
-const RightSide = ({ isChatBox, currentUsers }) => {
+const RightSide = ({ handleChatBox, handleParticipants }) => {
 
     return (
         <>
@@ -74,31 +17,10 @@ const RightSide = ({ isChatBox, currentUsers }) => {
                     }}
                 />
             </div>
-            <div className={` ${isChatBox ? "w-3/4" : "w-full"}   flex flex-col justify-between dark:bg-[#191D20] h-[calc(100vh-3rem)]`}>
-                <div className="">
-                    {/* Audio Call Icon */}
 
-                </div>
-                <div className="">
-                    {/* Audio Call Icon */}
-
-                </div>
-                <div className="h-96  dark:bg-[#1e272d]">
-                    {/* Audio Call Icon */}
-
-                </div>
-                <div className="flex flex-wrap justify-center pb-6">
-
-                    {currentUsers?.map((user, imgIndex) => (
-                        <div key={user.id} className='flex flex-col justify-center align-center items-center'>
-                            <img key={imgIndex} className={`opacity-90 dark:opacity-70 border border-purple-900 inline-block h-24 w-24 rounded-lg ml-2  ring-white ${user.name == "Farooq Dad" && "ring-4"} dark:ring-[#272F34]`} src={user.image} alt="" />
-                            <span title={user.name} className=' text-purple-400 mt-1' style={{ fontSize: "0.6rem" }}>{user.pro && "⭐"}   {user.name.length > 9 ? `${user.name?.slice(0, 9)}...` : user.name}</span>
-                        </div>
-                    ))}
-
-
-                </div>
-            </div>
+            <div className=""></div>
+            <div className="h-96  dark:bg-[#1e272d]"></div>
+            <BottomNav handleChatBox={handleChatBox} handleParticipants={handleParticipants} />
         </>
     )
 }

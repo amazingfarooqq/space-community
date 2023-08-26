@@ -19,10 +19,15 @@ const io = new Server(server, {
 const currentSpace = {}
 const userid = {}
 
-io.on("connection", (socket) => {
-  const socketId = socket.handshake.query.socketId ? socket.handshake.query.socketId : socket.id;
+const messages = []
 
-  
+io.on("connection", (socket) => {
+  const socketId = socket.handshake.query !== undefined ? socket.handshake.query.socketId : socket.id;
+
+  console.log({socketId});
+  // socket.on("connect", () => {
+  //   socket.join(socketId);
+  // })
 
   debugPrint(`User Connected: ${socketId}`);
 
@@ -41,6 +46,23 @@ io.on("connection", (socket) => {
 
     // Emit a response back to the client (if needed)
     socket.emit("join_space_response", { message: "Join space request processed" });
+  });
+
+
+  socket.on("new_message", (data) => {
+    const { spaceId, message } = data;
+    console.log({spaceId, message});
+    if (!messages[spaceId]) {
+      messages[spaceId] = [];
+    }
+    messages[spaceId].push(message);
+
+    console.log(`Socket ${socket.id} emitted new message in room ${spaceId}`);
+
+    // Emit the new message to all users in the space
+    console.log("io.sockets.sockets[socket.id]:", io.sockets.sockets[socketId]);
+    io.to(spaceId).emit("new_message", message);
+    io.emit("receive_new_message", {test: "test"});
   });
 
   socket.on("leave_space", (data) => {

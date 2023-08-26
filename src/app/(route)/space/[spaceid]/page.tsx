@@ -24,12 +24,14 @@ const page = ({
 
     const router = useRouter()
 
-    const [isChatBox, setIsChatBox] = useState(false)
-
-    const [isParticipants, setIsParticipants] = useState(true)
+    const [isChatBox, setIsChatBox] = useState(true)
+    const [isParticipants, setIsParticipants] = useState(false)
 
     const handleParticipants = () => {
         setIsParticipants(!isParticipants)
+    }
+    const handleChatBox = () => {
+        setIsChatBox(!isChatBox)
     }
 
     const [socketIo, setSocketIo] = useState<Socket>()
@@ -116,34 +118,33 @@ const page = ({
     return (
         <div>
             <div className="h-screen flex">
-                <BottomNav isChatBox={isChatBox} setIsChatBox={setIsChatBox} handleParticipants={handleParticipants} />
-                <RightSide isChatBox={isChatBox} currentUsers={space?.users} />
+                <div className={`${!isChatBox && !isParticipants ? "w-full" : "w-3/4"} flex flex-col justify-between dark:bg-[#191D20] h-[calc(100vh)]`}>
+                    <RightSide handleParticipants={handleParticipants} handleChatBox={handleChatBox} />
+                </div>
+
+
                 {isChatBox &&
-                    <Chatbox />
+                    <div className={`${isChatBox && isParticipants ? "w-2/4" : "w-1/4"}  border dark:bg-[#1e272d] dark:border-gray-700  pb-2 sm:px-1 justify-between flex flex-col h-[calc(100vh)]`}>
+                        <Chatbox userdata={user} socketIo={socketIo} spaceId={space.id}/>
+                    </div>
                 }
 
-
-            </div>
                 {isParticipants &&
-                    <div className="w-96 border dark:bg-[#1e272d] dark:border-gray-700 flex-1 p:2 pb-10 sm:px-1 justify-between flex flex-col h-[calc(100vh-2rem)]">
-                        <div className="grid grid-cols-2 gap-4">
-                            {space?.users?.map((participant, index) => (
-                                <div
-                                    key={index}
-                                    className="bg-white p-4 rounded shadow-md flex flex-col items-center w-full"
-                                >
-                                    <img
-                                        src={participant.image}
-                                        alt={`Profile of ${participant.name}`}
-                                        className="w-24 h-24 rounded-full mb-2"
-                                    />
-                                    <h3 className="text-lg font-semibold">{participant.name}</h3>
-                                    <p className="text-gray-600">Followers: {participant.followers}</p>
+                    <div className={`${isChatBox && isParticipants ? "w-2/4" : "w-1/4"}   border dark:bg-[#1e272d] dark:border-gray-700 h-[calc(100vh)]`}>
+                        <h1 className="p-5 px-2 text-purple-400 ">Users {space?.users?.length}</h1>
+                        <div className="flex flex-wrap justify-start pb-6 overflow-y-auto">
+
+                            {space?.users?.map((user, imgIndex) => (
+                                <div key={user.id} className='flex flex-col justify-center align-center items-center'>
+                                    <img key={imgIndex} className={`opacity-90 dark:opacity-70 border border-purple-900 inline-block h-24 w-24 rounded-lg ml-2  ring-white  && "ring-4"} dark:ring-[#272F34]`} src={user.image} alt="" />
+                                    <span title={user.name} className=' text-purple-400 mt-1' style={{ fontSize: "0.6rem" }}>{imgIndex % 3 && "⭐"}   {user.name.length > 9 ? `${user.name?.slice(0, 9)}...` : user.name}</span>
                                 </div>
                             ))}
                         </div>
                     </div>
                 }
+
+            </div>
         </div>
     );
 };

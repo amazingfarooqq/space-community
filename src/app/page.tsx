@@ -81,16 +81,21 @@ export default function Home() {
     const existingSocketId = localStorage.getItem('socketId');
     const existingSpace = localStorage.getItem('spaceid');
 
-    console.log(existingSpace);
 
-    if (existingSocketId) {
+    // if (session.status == "loading") return toast.error('Loading')
+    // if (session.status == "unauthenticated") return toast.error('Please login first')
+    // if (session.status !== "authenticated") return toast.error('Please login first')
+    
+    console.log({existingSocketId});
+
+    if (existingSocketId !== null || existingSocketId !== undefined) {
 
       const socket = io("http://localhost:4000", {
         query: { socketId: existingSocketId },
       });
       s = socket;
 
-      console.log({ socketid: socket, s: s });
+      console.log({ socketid: socket.id, s: s.id });
 
       setSocket(socket)
       setuser(prevUser => ({ ...prevUser, id: existingSocketId, currentSpaceId: existingSpace || "" }))
@@ -99,7 +104,7 @@ export default function Home() {
       const socket = io("http://localhost:4000");
       s = socket;
 
-      console.log({ socketid: socket.io, s: s.id });
+      console.log({ socketid: socket.id, s: s.id });
       const socketId = socket.id;
       localStorage.setItem('socketId', socketId);
       setSocket(socket)
