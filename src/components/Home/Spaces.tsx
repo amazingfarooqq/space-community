@@ -1,17 +1,20 @@
 "use client"
 
+import { useSocket } from '@/contexts/SocketContext'
 import { useSpacesSocket } from '@/contexts/SpacesSocketContext'
 import { Tooltip } from 'flowbite-react'
 import React from 'react'
 
 
 
-const Spaces = ({spaces, setSpaces, joinSpace}) => {
+const Spaces = ({ setSpaces, joinSpace }: { setSpaces: any, joinSpace: any }) => {
 
     // const { spaces, spacesSocket, joinSpace } = useSpacesSocket()
 
+    const { spaces } = useSocket()
+
     return (
-        <div className="py-6 flex flex-wrap gap-x-6 ml-1 lg:ml-10 gap-y-5 flex-col lg:flex-row xl:gap-x-8   ">
+        <div className="py-6 flex flex-wrap  gap-y-5 flex-col lg:flex-row ">
 
             {/* {spaces.map((item: any, index: any) => {
             console.log("spaceid", item.spaceid);
@@ -22,7 +25,7 @@ const Spaces = ({spaces, setSpaces, joinSpace}) => {
 
             {spaces.map((item: any, index: any) => {
 
-                return <div key={index} className={`  dark:shadow-md border-2 relative rounded-md  bg-white dark:bg-[#191D20] dark:border-gray-800 mr-3 lg:mr-0 lg:w-96 h-auto py-2 lg:h-80 border overflow-hidden`}>
+                return <div key={index} className={`  dark:shadow-md border-2 relative rounded-md  bg-white dark:bg-[#191D20] dark:border-gray-800 mr-3 lg:mr-0 lg:w-96 h-auto py-2 lg:h-80 border overflow-hidden ml-0 lg:ml-6`}>
 
                     {item.users?.length < item.limit ?
                         <>
@@ -45,8 +48,8 @@ const Spaces = ({spaces, setSpaces, joinSpace}) => {
                                     </div>
                                     <h2>
                                         <div className="text-right ">
-                                            {item.users?.length < item.limit ?
-                                                <button onClick={() => joinSpace(item)}
+                                            {true ?
+                                                <button onClick={() => joinSpace(item.id)}
                                                     className="text-sm font-medium hover:text-purple-500 inline-flex items-center transition duration-150 ease-in-out group "
                                                 >
                                                     Join{/* */}{" "}
@@ -70,16 +73,21 @@ const Spaces = ({spaces, setSpaces, joinSpace}) => {
                         <div className="flex flex-wrap overflow-hidden mb-2 ">
                             {item.users?.length > 0 &&
                                 <>
-                                    {item.users?.map((user: any, imgIndex: any) => (
-                                        imgIndex < 9 && (
-                                            <Tooltip animation="duration-500" content={user.name}>
-                                                <div key={user.toString() + imgIndex} className='flex flex-col justify-center align-center items-center '>
-                                                    <img key={imgIndex} className={`cursor-pointer ${item.users?.length <= 3 ? "h-24 w-24" : item.users?.length <= 8 ? "h-22 w-22" : "h-16 w-16"}  rounded-full ring-2 ring-white dark:ring-[#272F34]`} src={user.image} alt="" />
-                                                    <span className={'  text-purple-500 dark:text-purple-400 mt-1'} style={{ fontSize: "0.6rem" }}> {item.owner == user.id && "Host"} {user.name.length}</span>
-                                                </div>
-                                            </Tooltip>
+                                    {item.users?.map((user: any, imgIndex: any) => {
+                                        console.log(user);
+
+                                        return (
+                                            imgIndex < 9 && (
+                                                <Tooltip animation="duration-500" content={user.username}>
+                                                    <div key={user.toString() + imgIndex} className='flex flex-col justify-center align-center items-center py-1'>
+                                                        
+                                                        <img key={imgIndex} className={`cursor-pointer ${item.users?.length <= 3 ? "h-24 w-24" : item.users?.length <= 8 ? "h-22 w-22" : "h-16 w-16"}  rounded-full ring-2 ring-white dark:ring-[#272F34]`} src={user.image} alt="" />
+                                                        <span className={'  text-purple-500 dark:text-purple-400 mt-1'} style={{ fontSize: "0.6rem" }}>{user.username?.slice(0,6)}..</span>
+                                                    </div>
+                                                </Tooltip>
+                                            )
                                         )
-                                    ))}
+                                    })}
 
 
 

@@ -9,7 +9,7 @@ function Sidebar() {
 
   return (
     <div className="h-full">
-      <div className=" fixed  inset-y-0  left-0   w-100  xl:px-4 overflow-y-auto pb-4 flex flex-col justify-between  border-r border-gray-200 dark:border-gray-800">
+      <div className=" fixed  inset-y-0  left-0   w-100 px-2 overflow-y-auto pb-4 flex flex-col justify-between  border-r border-gray-200 dark:border-gray-800">
         <nav className="mt-4 flex flex-col justify-between">
           <ul role="list" className="flex flex-col items-center space-y-1">
             <li >

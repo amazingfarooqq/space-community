@@ -10,7 +10,7 @@ const Header = () => {
     const session = useSession();
 
     return (
-        <div className="py-3 lg:ml-20 ml-12 z-10 xl:ml-20">
+        <div className="py-3 ml-24 z-10">
 
 
             <div className="px-2 h-12 mx-auto flex justify-between items-center ">

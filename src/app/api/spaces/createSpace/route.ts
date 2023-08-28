@@ -12,13 +12,14 @@ export async function POST(
         const body = await request.json();
         let createdSpace
 
-        const {newSpace} = body;
+        const { newSpace } = body;
 
+        console.log(newSpace);
+        
         try {
 
-           createdSpace = await prisma.space.create({
-                data: newSpace,
-                include: { users: true }
+            createdSpace = await prisma.space.create({
+                data: newSpace
             });
 
 

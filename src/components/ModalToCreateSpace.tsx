@@ -7,29 +7,30 @@ import { useState } from 'react';
 interface ModalToCreateSpaceProps {
     id: string,
     isCreateSpaceModal: string,
-    setIsCreateSpaceModal: (value: string) => void
+    setIsCreateSpaceModal: (value: string) => void,
+    createSpace: (spaceData: any, setIsCreateSpaceModal: any) => void
 }
 
 import React from 'react'
 
-const ModalToCreateSpace: React.FC<ModalToCreateSpaceProps> = ({ id, isCreateSpaceModal, setIsCreateSpaceModal, createSpace }) => {
+const ModalToCreateSpace: React.FC<ModalToCreateSpaceProps> = ({ id, isCreateSpaceModal, setIsCreateSpaceModal, createSpace }: any) => {
 
 
 
-    const [spaceDate, setSpaceDate] = useState({title: "", language: "", level: ""})
+    const [spaceData, setSpaceData] = useState({title: "", language: "", level: ""})
 
     const handleOnChange = (e: any) => {
         if (e.target.value.length > 50) {
             return
         }
-        setSpaceDate({ ...spaceDate, [e.target.name]: e.target.value })
+        setSpaceData({ ...spaceData, [e.target.name]: e.target.value })
     }
 
     const [loading, setLoading] = useState(false)
 
     const createSpaceFunc = async () => {
         setLoading(true)
-        await createSpace(spaceDate, setIsCreateSpaceModal)
+        await createSpace(spaceData)
         setLoading(false)
     }
 
@@ -46,7 +47,7 @@ const ModalToCreateSpace: React.FC<ModalToCreateSpaceProps> = ({ id, isCreateSpa
                         <label htmlFor="">Space Title</label>
                         <input
                             type="text"
-                            value={spaceDate.title}
+                            value={spaceData.title}
                             name='title'
                             onChange={handleOnChange}
                             placeholder="Lets talk in English"

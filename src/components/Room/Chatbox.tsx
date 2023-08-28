@@ -3,97 +3,85 @@ import React, { useEffect, useState } from 'react'
 import ThemeSwitch from '../ThemeSwitch'
 import { toast } from 'react-hot-toast'
 
-const Chatbox = ({ userdata, socketIo, spaceId }: { userdata: any, socketIo: any, spaceId: any }) => {
+const Chatbox = ({ messages, sendMessage }: { messages: any, sendMessage: any }) => {
 
-    const [messages, setMessages] = useState<any>([])
+
+    console.log({messages});
+    
 
     console.log({ messages });
-
-
     const [txt, setTxt] = useState("")
 
-    useEffect(() => {
-        if (!socketIo) return
-        socketIo.on("new_message", (message) => {
-            // Update messages state with the new message
-            setMessages((prevMessages) => [...prevMessages, message]);
-        });
-
-
-        socketIo.on("receive_new_message", (message) => {
-            console.log("receive_new_message", message);
-        });
-
-        return () => {
-            // Cleanup socketIo listeners
-            socketIo.off("new_message");
-        };
-    }, [socketIo]);
 
     const handleOnChange = (e: any) => {
         setTxt(e.target.value)
     }
 
 
-    const sendMessage = (e: any) => {
+    const sendMessageFunc = (e: any) => {
         e.preventDefault()
         const text = txt.trim()
         if (text === "") return
-        console.log("sendMessage", txt);
+
+        sendMessage(text, setTxt)
 
 
-        const newMessage = {
-            spaceId: spaceId,
-            message: txt,
-        };
-
-        console.log({ newMessage });
-
-        socketIo.emit("new_message", {
-            spaceId: spaceId,
-            message: newMessage
-        });
-        setTxt("")
     }
+
 
 
     const onEnterPress = (e: any) => {
         if (e.keyCode == 13 && e.shiftKey == false) {
-            sendMessage(e)
+            sendMessageFunc(e)
         }
     }
     return (
         <>
 
-            <div id="messages" className="flex flex-col space-y-3 p-2 pr-0 overflow-y-auto">
+            <div id="messages" className="flex flex-col py-2 pr-0 overflow-y-auto h-full" >
                 {messages?.map((item: any) => {
                     return (
-                        <div key={item?.id} className="chat-message pt-2">
-                            <div className="flex ">
-                                <div className="space-y-2 w-full text-xs mx-1 order-2 items-start">
-                                    <div className={`px-2 rounded-lg`}>
-                                        <div className='flex justify-between'>
-                                            <h2 className='mb-1 text-purple-400 text-sm'>{item % 2 ? "⭐" : ""} {item?.name}</h2>
-                                            <h2>
-                                                <div className=" justify-center hidden mr-auto text-gray-500 dark:text-gray-400 md:flex">
-                                                    <span className="text-xs">{item?.createdAt}</span>
-                                                </div>
-                                            </h2>
-
-                                        </div>
-                                        <div className='dark:text-gray-300 pb-1'>
-                                            {item?.text}
+                        <>
+                            {(item.status == "joined" || item.status == "left") &&
+                                <div className="flex items-center py-2">
+                                    <div className="space-y-2 w-full text-xs items-start">
+                                        <div className={`px-2 rounded-lg`}>
+                                            <div className={`break-all ${item.status == "joined" ? "text-green-400 pb-0 mb-0" : item.status == "left" ? "text-red-400 pb-0 mb-0" : ""}`}>
+                                                {item.text}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <img
-                                    src={item?.image}
-                                    alt="My profile"
-                                    className="w-10 h-10 rounded-lg order-1"
-                                />
-                            </div>
+                            }
+                            {item.status == "sent" &&
+                                <div key={item?.id} className="chat-message p-2">
+                                    <div className="flex ">
+                                        <div className="space-y-2 w-full text-xs mx-1 order-2 items-start">
+                                            <div className={`px-2 rounded-lg`}>
+                                                <div className='flex justify-between'>
+                                                    <h2 className='mb-1 text-purple-400 text-sm'>{item % 2 ? "⭐" : ""} {item?.username} </h2>
+                                                    <h2>
+                                                        <div className=" justify-center hidden mr-auto text-gray-500 dark:text-gray-400 md:flex">
+                                                            <span className="text-xs break-all">{item?.createdAt}</span>
+                                                        </div>
+                                                    </h2>
 
-                        </div>
+                                                </div>
+                                                <div className='dark:text-gray-300 pb-1 text-sm'>
+                                                    {item?.text}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <img
+                                            src={item?.image}
+                                            alt="My profile"
+                                            className="w-10 h-10 rounded-lg order-1"
+                                        />
+                                    </div>
+
+                                </div>
+                            }
+                        </>
                     )
                 })}
 
@@ -157,7 +145,7 @@ const Chatbox = ({ userdata, socketIo, spaceId }: { userdata: any, socketIo: any
                         placeholder="Enter your message..."
                         rows={2}
                     />
-                    <button className="bg-purple-500 text-white p-2 rounded-r-lg" onClick={sendMessage}>
+                    <button className="bg-purple-500 text-white p-2 rounded-r-lg" onClick={sendMessageFunc}>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="h-6 w-6"

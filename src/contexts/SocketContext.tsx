@@ -1,99 +1,136 @@
-"use client";
-import IMessage from "@/interfaces/IMessage";
-import ISocketContext from "@/interfaces/ISocketContext";
+"use client"
+
 import { createContext, useContext, useEffect, useState } from "react";
-import * as socketIO from "socket.io-client";
+import io from "socket.io-client"; // Import the socket.io-client library directly
 import { useUser } from "./UserContext";
 import { useRouter } from "next/navigation";
+import { getUserDataFromCookie, setUserDataInCookie } from "@/libs/functions";
+import axios from "axios";
 
-
-
-const intialData: ISocketContext = {
-  socket: undefined,
-  roomUsers: {},
-  messages: {},
+const initialData = {
+    socket: undefined,
+    spaceUsers: {},
+    messages: {},
+    spaces: [],
 };
 
-const SocketContext = createContext<ISocketContext>(intialData);
+const SocketContext = createContext(initialData);
 
 export function useSocket() {
-  return useContext(SocketContext);
+    return useContext(SocketContext);
 }
 
-export default function SocketProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const [roomUsers, setRoomUsers] = useState([]);
-  const [socket, setSocket] = useState<socketIO.Socket>();
-  const [messages, setMessages] = useState<{ [key: string]: IMessage[] }>({});
-
-  const router = useRouter()
-  
 
 
-  const logoutFunc = () => {
-    setMessages({})
-    setSocket(undefined)
-    setRoomUsers([])
-  }
+
+export default function SocketProvider({ children }: { children: any }) {
+    const [spaceUsers, setSpaceUsers] = useState<any>({});
+    const [chatid, setChatid] = useState<any>("");
+    const [socket, setSocket] = useState<any>();
+    const [messages, setMessages] = useState<any>([]);
+    const [spaces, setSpaces] = useState<any>([]);
 
 
-  const enterChatroom = (nickname: string) => {
-    let socket_io = socketIO.connect(process.env.NEXT_PUBLIC_BASE_URL!);
-    socket_io.on("receive_message", (data: IMessage) => {
-      console.log({ data });
+    console.log("Context Space:", { spaces });
+    
 
-      setMessages((prev) => {
-        const newMessages = { ...prev };
-        newMessages[data.roomId] = [...(newMessages[data.roomId] ?? []), data];
-        return newMessages;
-      });
-    });
-    socket_io.on("users_response", (data) => {
-      console.log(data);
+    const connectSocket = (userData: any) => {
+        console.log("run1");
+        if (!userData?.username) return
+        console.log("run2");
 
-      let global_room_data = data[1]
+        const newSocket = io.connect(process.env.NEXT_PUBLIC_BASE_URL, {
+            query: { username: userData.username, socketid: userData.socketid },
+        });
 
-      setRoomUsers(global_room_data)
-    });
+        newSocket.on("receive_socketid", (id: any) => {
+            const data = { socketid: userData.socketid, username: userData.username, image: userData.image };
+            setUserDataInCookie(data);
+        });
+        newSocket.on("receive_message", (data: any) => {
+            console.log("receive_message", data);
 
-    socket_io?.emit("send_message", {
-      text: nickname + " joined the room at " + `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`,
-      socketId: "kurakani",
-      roomId: 1,
-      status: "user_joined"
-    });
-    socket_io?.emit("join_room", {
-      roomId: 1,
-      name: nickname,
-      joinedAt: `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
-    });
+            setMessages((prev: any) => [...prev, data]);
+        });
 
-    socket_io?.on("typing_response", (data) => {
-      console.log("typing_response", { data });
-    });
+        newSocket.on("receive_space", (data: any) => {
+            setSpaces((prev: any) => {
+                const updatedSpaces = [...prev, data];
+                updateSpaces(updatedSpaces);
+                return updatedSpaces;
+            });
+        });
 
+        newSocket.on("users_response", (data: any) => {
+            const status = data.status;
+            console.log("users_response Socket Context",{status});
+            
+            if (status === "joined") {
+                const newUsers = data.joinedUser;
+                setSpaces((prevSpaces: any[]) => {
+                    return prevSpaces.map((space: any) => {
+                        if (space.id === data.spaceId) {
+                            return {
+                                ...space,
+                                users: [...space.users, newUsers]
+                            };
+                        }
+                        return space;
+                    });
+                });
+            }
+            if (status === "left") {
+                const leftUserId = data.leftUserId; // ID of the user who left
+              
+                setSpaces((prevSpaces: any[]) => {
+                  return prevSpaces.map((space: any) => {
+                    if (space.id === data.spaceId) {
+                      const updatedUsers = space.users.filter((user: any) => user.id !== leftUserId);
+                      return {
+                        ...space,
+                        users: updatedUsers
+                      };
+                    }
+                    return space;
+                  });
+                });
+              }
 
-    socket_io.on("receivemsgs", (data) => {
-      console.log("Received receivemsgs event");
+        });
+        setSocket(newSocket);
 
-      // ... (handling 'receivemsgs' event)
-      console.log("receivemsgs", { data });
+    }
 
-      setMessages({ 1: data })
+    useEffect(() => {
+        const userData = getUserDataFromCookie()
+        console.log({ userData });
 
-    });
+        console.log("run");
 
-    console.log({ socket_io });
+        connectSocket(userData)
+    }, []);
 
-    setSocket(socket_io);
+    useEffect(() => {
+        fetchSpaces();
+    }, [])
+    async function fetchSpaces() {
+        const storedSpaces = await axios.get("/api/spaces/getSpaces")
+        console.log({ storedSpaces });
+        setSpaces(storedSpaces.data || []);
 
-  }
-  return (
-    <SocketContext.Provider value={{ socket, roomUsers, messages, enterChatroom, logoutFunc }}>
-      {children}
-    </SocketContext.Provider>
-  );
+        // if (storedSpaces) {
+        // }
+    }
+
+    function updateSpaces(updatedSpaces: any) {
+        localStorage.setItem("spaces", JSON.stringify(updatedSpaces));
+    }
+
+    return (
+        <SocketContext.Provider
+            value={{ socket, spaceUsers, messages, setMessages, setChatid, spaces, setSpaces, connectSocket }}
+        >
+            {children}
+        </SocketContext.Provider>
+    );
 }

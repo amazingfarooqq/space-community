@@ -5,6 +5,8 @@ import { ThemeProviders } from './theme.provider'
 import AuthContext from '@/context/AuthContext'
 import ToasterContext from '@/context/ToasterContext'
 import SpacesSocketProvider from '@/contexts/SpacesSocketContext'
+import SocketProvider from '@/contexts/SocketContext'
+import UserProvider from '@/contexts/UserContext'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -17,17 +19,22 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+
+  
   return (
+
     <html lang="en">
 
-      <body className={`dark:bg-[#121212] ${inter.className}`}>
+      <body className={`dark:bg-[#121212] ${inter.className}`} >
         <AuthContext>
           <ThemeProviders>
             <ToasterContext />
-            <SpacesSocketProvider>
-              {/* <ActiveStatus /> */}
-            {children}
-            </SpacesSocketProvider>
+            <UserProvider>
+              <SocketProvider>
+                {/* <ActiveStatus /> */}
+                {children}
+              </SocketProvider>
+            </UserProvider>
           </ThemeProviders>
         </AuthContext>
       </body>

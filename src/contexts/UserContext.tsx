@@ -1,8 +1,8 @@
 "use client";
 
 import IUserContext from "@/interfaces/IUserContext";
-import { createContext, useContext, useState } from "react";
-
+import { getUserDataFromCookie } from "@/libs/functions";
+import { createContext, useContext, useEffect, useState } from "react";
 const intialData: IUserContext = {
   username: "",
   setUsername: () => {},
@@ -16,17 +16,24 @@ export function useUser() {
 
 export default function UserProvider({
   children,
-}: {
-  children: React.ReactNode;
 }) {
-  const [username, setUsername] = useState<string>("");
-  
+  const [userData, setUserData] = useState({})
+
+  useEffect(() => {
+
+    const data = getUserDataFromCookie()
+    if (data) {
+      setUserData(data);
+    } else {
+      setUserData({})
+    }
+  }, []);
 
   return (
     <UserContext.Provider
       value={{
-        username,
-        setUsername,
+        userData,
+        setUserData
       }}
     >
       {children}

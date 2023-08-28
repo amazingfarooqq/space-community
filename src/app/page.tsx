@@ -5,13 +5,18 @@ import Sidebar from '@/components/sidebar/Sidebar';
 import BGGradient from '@/components/BGGradient';
 import Spaces from '@/components/Home/Spaces';
 import ModalToCreateSpace from '@/components/ModalToCreateSpace';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Socket, io } from 'socket.io-client';
 import { useSession } from 'next-auth/react';
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
 import { set } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
+import { v4 as uuidv4 } from "uuid";
+import { useUser } from '@/contexts/UserContext';
+import { useSocket } from '@/contexts/SocketContext';
+import FormElements from '@/components/ModalToLogin';
+
 interface User {
   id: string;
   name: string;
@@ -29,292 +34,103 @@ interface Space {
 
 
 export default function Home() {
-
-
-  const [showRoomWidget, setShowRoomWidget] = useState(false)
-
-
-  const [isCreateSpaceModal, setIsCreateSpaceModal] = useState("hide")
-
-  const [socket, setSocket] = useState<Socket | undefined>(undefined);
-  const [spaces, setSpaces] = useState<Space[]>([]);
-  const [user, setuser] = useState({ id: "", userid: "", name: "", email: "", image: "", currentSpaceId: "" })
-  console.log({ user });
-  console.log({ spaces });
-
-
+  const { socket, setSpaces }: any = useSocket()
+  const [spacetitle, setSpaceTitle] = useState("")
+  const { userData }: any = useUser()
   const router = useRouter()
 
-  const session = useSession()
 
+  // const [spaceData, setSpaceData] = useState({
+  //   title: "",
+  //   language: "",
+  //   level: "",
+  //   limit: "",
+  // })
 
-  const getSpaces = async () => {
-    try {
-      let data = await axios.get("/api/spaces/getSpaces")
+  const [isCreateSpaceModal, setIsCreateSpaceModal] = useState("hide")
+  const [isLoginModal, setIsLoginModal] = useState<string | undefined>();
 
-      if (data?.data) {
-        setSpaces(data.data)
-      } else {
-        console.log("nothing");
+  const createSpace = async (spaceData: any) => {
 
-      }
-
-    } catch (error) {
-      console.log({ error });
-
-    }
-  }
-  useEffect(() => {
-    console.log({ session });
-
-    if (session.status == "loading") return;
-    if (session.status == "unauthenticated") return setuser({ id: "", userid: "", name: "", email: "", image: "", currentSpaceId: "" });
-    if (session.status == "authenticated") return setuser({ ...user, userid: session.data.user?.id || "", email: session.data?.user?.email || "", image: session.data.user?.image || "" });
-
-  }, [session.status])
-
-  useEffect(() => {
-
-    getSpaces()
-    if (socket) return
-    let s;
-    const existingSocketId = localStorage.getItem('socketId');
-    const existingSpace = localStorage.getItem('spaceid');
-
-
-    // if (session.status == "loading") return toast.error('Loading')
-    // if (session.status == "unauthenticated") return toast.error('Please login first')
-    // if (session.status !== "authenticated") return toast.error('Please login first')
-    
-    console.log({existingSocketId});
-
-    if (existingSocketId !== null || existingSocketId !== undefined) {
-
-      const socket = io("http://localhost:4000", {
-        query: { socketId: existingSocketId },
-      });
-      s = socket;
-
-      console.log({ socketid: socket.id, s: s.id });
-
-      setSocket(socket)
-      setuser(prevUser => ({ ...prevUser, id: existingSocketId, currentSpaceId: existingSpace || "" }))
-    } else {
-
-      const socket = io("http://localhost:4000");
-      s = socket;
-
-      console.log({ socketid: socket.id, s: s.id });
-      const socketId = socket.id;
-      localStorage.setItem('socketId', socketId);
-      setSocket(socket)
-      setuser(prevUser => ({ ...prevUser, id: socket.id, currentSpaceId: existingSpace || "" }))
-    }
-
-    // s.on('connect', () => {
-    //   console.log("connect");
-    //   setuser(prevUser => ({ ...prevUser, id: s.id }))
-    // });
-
-
-    s.on('create_space_response', (newSpace: Space) => {
-      setSpaces((prevSpaces) => [...prevSpaces, newSpace]);
-    });
-
-    s.on('space_updated_response', (updatedSpace: Space) => {
-      setSpaces((prevSpaces: any) => {
-
-        return prevSpaces.map((space: any) => {
-          return space.id === updatedSpace.id ? updatedSpace : space
-        })
-
-      });
-    });
-
-
-    s.on('on_disconnected', (data) => {
-      const disconnectedUserId = data.userid;
-      const currentSpaceId = data.currentSpace;
-
-      if (!currentSpaceId) return
-      const getSpace = async () => {
-        const currentSpace = await axios.post(`/api/spaces/getSpace`, { spaceId: currentSpaceId })
-        const spacedata = currentSpace.data
-        spacedata.userIds = spacedata.userIds.filter((id: any) => id !== disconnectedUserId);
-        const updatespaceSpace = await axios.post(`/api/spaces/joinSpace`, { space: spacedata })
-
-        const join_space_data = {
-          userid: user.userid,
-          updatedSpace: updatespaceSpace.data
-        }
-
-        s?.emit('join_space', join_space_data);
-
-      }
-
-      getSpace()
-    });
-
-
-    return () => {
-      s.off('create_space_response');
-      s.off('space_updated_response');
-    };
-  }, []);
-
-  const logout = () => {
-    // console.log(socket?.connected);
-
-    // // Find the space the user was in
-    // const userSpace = spaces.find(space => space.id === user.currentSpaceId);
-    // console.log({ userSpace });
-
-    // if (userSpace) {
-    //   // Remove the user from the space
-    //   userSpace.userIds = userSpace.userIds.filter(id => id !== user.id);
-    //   userSpace.users = userSpace.users.filter(u => u.id !== user.id);
-
-    //   // Emit the updated space to the server
-    //   socket?.emit('leave_space', userSpace);
-
-    //   // Update the state
-    //   setSpaces(prevSpaces =>
-    //     prevSpaces.map(space =>
-    //       space.id === user.currentSpaceId ? userSpace : space
-    //     )
-    //   );
-
-
-    //   // Clear the user's current space
-    //   setuser(prevUser => ({ ...prevUser, currentSpaceId: '' }));
-    // }
-
-    // // socket?.disconnect();
-    // // console.log(socket?.connected);
-  }
-
-  const connect = () => {
-    socket?.connect();
-  }
-
-  const createSpace = async (spaceDate, setIsCreateSpaceModal) => {
-    console.log({ spaceDate });
-
-    if (session.status === 'unauthenticated') return toast.error('Please login first')
-
-    const newSpace: Space = {
-      owner: user.userid,
-      title: spaceDate.title || "New Space",
-      language: spaceDate.language || "English",
-      level: spaceDate.level || "Beginner",
-      limit: spaceDate.limit || "4",
-    };
-    const createNewSpace = await axios.post('/api/spaces/createSpace', {
-      newSpace
-    })
-
-    const newspacedata = { ...createNewSpace.data }
-
-    console.log({ newspacedata });
-
-    socket?.emit('create_space', newspacedata);
-
-    setIsCreateSpaceModal(false)
-
-  };
-
-
-  const handleSpaceUpdate = (response: any) => {
-    console.log({ response });
-
-    if (response.status === 200) {
-      const updatedSpace = response.data;
-      console.log({ updatedSpace });
-
-      const join_space_data = {
-        userid: user.userid,
-        updatedSpace: updatedSpace
-      }
-
-      // Emit the updated new space through Socket.IO
-      socket?.emit('join_space', join_space_data);
-    } else {
-      console.error('Failed to update space');
-    }
-  };
-
-  const joinSpace = async (space: any) => {
-    console.log("spaceid", space.id);
-
-    if (!user.userid) {
-      return toast.error('Please login first');
-    }
-
-    if (space.id === user.currentSpaceId) {
-      return toast.error('You are already in this space');
-    }
-
-    localStorage.setItem('spaceid', space.id);
-    const newUser = {
-      ...user,
-      currentSpaceId: space.id,
-    };
-    setuser(newUser);
-
-    const prevSpaceIndex = spaces.findIndex((s: any) => s.id === user.currentSpaceId);
-
-    if (prevSpaceIndex !== -1) {
-      const prevSpace = { ...spaces[prevSpaceIndex] };
-      prevSpace.userIds = prevSpace.userIds.filter(id => id !== user.userid);
-
-      try {
-        const response = await axios.post('/api/spaces/joinSpace', { space: prevSpace });
-        handleSpaceUpdate(response);
-      } catch (error) {
-        console.error('Failed to update space:', error);
-      }
-    }
-
-    space.userIds = Array.from(new Set([...space.userIds, user.userid]));
+    !userData?.socketid && toast.error('You need to login first');
 
     try {
-      const response = await axios.post('/api/spaces/joinSpace', { space });
-      handleSpaceUpdate(response);
-
-    router.push(`/space/${response.data.id}?from=home`)
+      const newSpace = {
+        owner: userData.socketid,
+        title: spaceData.title || "Lets talk in english",
+        language: spaceData.language || "English",
+        level: spaceData.level || "Begineer",
+        limit: "4",
+      };
+      const createNewSpace = await axios.post('/api/spaces/createSpace', {
+        newSpace
+      })
+      // console.log({ createNewSpace });
+      socket?.emit("send_space", { ...createNewSpace.data, spaceId: createNewSpace.data.id });
+      // socket?.emit("send_space", newSpace)
+      toast.success('Space created!');
+      setIsCreateSpaceModal("hide")
 
     } catch (error) {
-      console.error('Failed to update space:', error);
+      console.log(error);
+
+      toast.error('There was some error, try again');
     }
-  };
+  }
+
+  // const createSpace = () => {
+  //   let spaceid = uuidv4()
+  //   const newSpace = {
+  //     id: spaceid,
+  //     title: spacetitle || "new space title"
+  //   }
+  //   socket?.emit("send_space", newSpace)
+  // }
+
+  const joinSpace = (spaceId: any) => {
+
+    if(!userData?.username) {
+      toast.error('Hey, you magnificent human! Just give me a snazzy nickname!')
+      setIsLoginModal("show")
+      return
+    }
+
+    console.log(spaceId);
+    // socket?.emit("join_space", spaceId)
+    router.push(`/space/${spaceId}`)
+  }
 
   return (
     <>
-      <Header />
-      <main className="flex min-h-screen flex-col pb-56 ml-20">
-        <BGGradient />
-        <Sidebar />
-
-        <div
-          className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl dark:opacity-0 sm:-top-80 "
-          aria-hidden="true"
+      <div >
+        <Header />
+        <main className="flex min-h-screen flex-col pb-56 ml-24"
         >
+          <BGGradient />
+          <Sidebar />
           <div
-            className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
-            style={{
-              clipPath:
-                'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
-            }}
-          />
-        </div>
-        <div className='mt-4 flex flex-wrap gap-x-2 gap-y-2 justify-center items-center '>
-          <ModalToCreateSpace id="popup-modal" isCreateSpaceModal={isCreateSpaceModal} setIsCreateSpaceModal={setIsCreateSpaceModal} createSpace={createSpace} />
-          <button type="button" className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-500 dark:hover:bg-purple-400 dark:focus:ring-purple-900">Community</button>
-        </div>
-        <div className="py-6 flex flex-wrap gap-x-6 ml-1 lg:ml-10 gap-y-5 flex-col lg:flex-row xl:gap-x-8   ">
-          <Spaces spaces={spaces} setSpaces={setSpaces} joinSpace={joinSpace} />
-        </div>
-      </main >
+            className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl dark:opacity-0 sm:-top-80 "
+            aria-hidden="true"
+          >
+            <div
+              className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
+              style={{
+                clipPath:
+                  'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
+              }}
+            />
+          </div>
+          <div className='mt-4 flex flex-wrap gap-x-2 gap-y-2 justify-center items-center '>
+            <FormElements isLoginModal={isLoginModal} setIsLoginModal={setIsLoginModal} />
+            <ModalToCreateSpace id="popup-modal" isCreateSpaceModal={isCreateSpaceModal} setIsCreateSpaceModal={setIsCreateSpaceModal} createSpace={createSpace} />
+            <button type="button" className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-500 dark:hover:bg-purple-400 dark:focus:ring-purple-900">Community</button>
+          </div>
+          <div className=" ">
+            <Spaces setSpaces={setSpaces} joinSpace={joinSpace} />
+          </div>
+        </main >
+
+      </div>
 
 
     </>
