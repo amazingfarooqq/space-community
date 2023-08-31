@@ -2,18 +2,21 @@ import prisma from "@/libs/prismadb";
 import { NextResponse } from "next/server";
 
 
-export async function GET(
+export async function POST(
     req: Request
 ) {
     try {
-        const data = await prisma.space.findMany({
-            orderBy: {
-                createdAt: "desc" // Order by the createdAt field in descending (reverse) order
-            },
-            include: {
-                users: true // Include the related users data
+        const body = await req.json();
+
+        const {uuid} = body;
+
+        const data = await prisma.user.findUnique({
+            where: {
+                id:uuid
             }
         });
+        
+
         return NextResponse.json(data);
     } catch (error) {
         console.log('[CATEGORIES_GET]', error);

@@ -16,9 +16,16 @@ const config: Config = {
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
       height: {
-        '20': '4.5rem',
-        '22': '5rem',
-      }
+        '22': '5.5rem',
+        '18': '4.2rem',
+        '98': '27rem'
+      },
+      width: {
+        '22': '5.5rem',
+        '18': '4.2rem',
+        '98': '27rem'
+
+      },
     },
   },
   plugins: [require("flowbite/plugin")],

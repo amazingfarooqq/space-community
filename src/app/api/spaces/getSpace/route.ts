@@ -1,4 +1,4 @@
-import prisma from "@/app/libs/prismadb";
+import prisma from "@/libs/prismadb";
 import { NextResponse } from "next/server";
 
 
@@ -10,8 +10,6 @@ export async function POST(
 
         const {spaceId} = body;
 
-        console.log({spaceId});
-        
         const data = await prisma.space.findUnique({
             where: {
                 id:spaceId
@@ -22,8 +20,6 @@ export async function POST(
         });
         
 
-        console.log({data});
-        
         return NextResponse.json(data);
     } catch (error) {
         console.log('[CATEGORIES_GET]', error);

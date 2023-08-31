@@ -1,6 +1,5 @@
 'use client';
 
-import { useSpacesSocket } from '@/contexts/SpacesSocketContext';
 import { Button, Modal, Spinner } from 'flowbite-react';
 import { useState } from 'react';
 
@@ -15,58 +14,105 @@ import React from 'react'
 
 const ModalToCreateSpace: React.FC<ModalToCreateSpaceProps> = ({ id, isCreateSpaceModal, setIsCreateSpaceModal, createSpace }: any) => {
 
-
-
-    const [spaceData, setSpaceData] = useState({title: "", language: "", level: ""})
+    const [spaceData, setSpaceData] = useState({
+        title: "",
+        language: "", // Adding language property
+        level: "",    // Adding level property
+        limit: 1      // Adding limit property with a default value
+    });
 
     const handleOnChange = (e: any) => {
         if (e.target.value.length > 50) {
-            return
+            return;
         }
-        setSpaceData({ ...spaceData, [e.target.name]: e.target.value })
-    }
+        setSpaceData({ ...spaceData, [e.target.name]: e.target.value });
+    };
 
-    const [loading, setLoading] = useState(false)
+    const handleLimitChange = (e: any) => {
+        const selectedLimit = parseInt(e.target.value);
+        setSpaceData({ ...spaceData, limit: selectedLimit });
+    };
+
+    const [loading, setLoading] = useState(false);
 
     const createSpaceFunc = async () => {
-        setLoading(true)
-        await createSpace(spaceData)
-        setLoading(false)
-    }
+        setLoading(true);
+        await createSpace(spaceData);
+        setLoading(false);
+    };
+
 
     return (
         <>
             <button type="button" onClick={() => setIsCreateSpaceModal('show')} className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-500 dark:hover:bg-purple-400 dark:focus:ring-purple-900">Create Space</button>
 
-
-
             <Modal size="lg" dismissible show={isCreateSpaceModal === 'show'} onClose={() => setIsCreateSpaceModal("hide")}>
                 <Modal.Header>Create new space</Modal.Header>
                 <Modal.Body>
                     <div className="">
-                        <label htmlFor="">Space Title</label>
+                        <label htmlFor="title">Space Title</label>
                         <input
                             type="text"
                             value={spaceData.title}
-                            name='title'
+                            name="title"
                             onChange={handleOnChange}
-                            placeholder="Lets talk in English"
+                            placeholder="Let's talk in English"
                             className="block mt-2 text-sm py-3 px-4 rounded-lg w-full border outline-none dark:border-gray-600 dark:bg-gray-700"
                         />
                     </div>
-
+                    <div className="mt-4">
+                        <label htmlFor="language">Language</label>
+                        <input
+                            type="text"
+                            value={spaceData.language}
+                            name="language"
+                            onChange={handleOnChange}
+                            placeholder="English"
+                            className="block mt-2 text-sm py-3 px-4 rounded-lg w-full border outline-none dark:border-gray-600 dark:bg-gray-700"
+                        />
+                    </div>
+                    <div className="mt-4">
+                        <label htmlFor="level">Level</label>
+                        <input
+                            type="text"
+                            value={spaceData.level}
+                            name="level"
+                            onChange={handleOnChange}
+                            placeholder="Intermediate"
+                            className="block mt-2 text-sm py-3 px-4 rounded-lg w-full border outline-none dark:border-gray-600 dark:bg-gray-700"
+                        />
+                    </div>
+                    <div className="mt-4">
+                        <label htmlFor="limit">Limit</label>
+                        <select
+                            value={spaceData.limit}
+                            name="limit"
+                            onChange={handleLimitChange}
+                            className="block mt-2 text-sm py-3 px-4 rounded-lg w-full border outline-none dark:border-gray-600 dark:bg-gray-700"
+                        >
+                            {/* Generating options for limits */}
+                            {Array.from({ length: 20 }, (_, index) => (
+                                <option key={index + 1} value={index + 1}>
+                                    {index + 1}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
                 </Modal.Body>
                 <Modal.Footer className='pt-0 border-none'>
                     {loading ? <Spinner aria-label="Alternate spinner button example" />
                         :
-                        <Button color="purple" onClick={createSpaceFunc}>Create Space</Button>
+                        <>
+                            <Button color="purple" onClick={createSpaceFunc}>Create Space</Button>
+                            <Button color="gray" onClick={() => setIsCreateSpaceModal("hide")}>
+                                Close
+                            </Button>
+                        </>
                     }
 
-                    <Button color="gray" onClick={() => setIsCreateSpaceModal("hide")}>
-                        Close
-                    </Button>
                 </Modal.Footer>
             </Modal>
+
         </>
     )
 }

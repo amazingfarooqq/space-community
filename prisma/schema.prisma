@@ -1,3 +1,6 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -12,46 +15,48 @@ model User {
   name            String?
   email           String?   @unique
   emailVerified   DateTime?
-  followers       String?
   image           String?
   hashedPassword  String?
-  username        String? @unique
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
+  accounts Account[]
+
+
+  
   spacesIds String[] @db.ObjectId
   spaces   Space[] @relation(fields: [spacesIds], references: [id])
 }
 
+model Account {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  userId             String   @db.ObjectId
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @db.String
+  access_token       String?  @db.String
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.String
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
 
 model Space {
   id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  spaceid        String?       
   owner          String?     
   title          String?     
   language       String?      
   level          String?    
   limit          String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   userIds       String[]     @db.ObjectId
   users         User[]       @relation(fields: [userIds], references: [id])
-}
-
-model Account {
-  id                String @id @default(auto()) @map("_id") @db.ObjectId
-  userId            String @db.ObjectId
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String? @db.String
-  access_token      String? @db.String
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String? @db.String
-  session_state     String?
-
-  user              User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
 }

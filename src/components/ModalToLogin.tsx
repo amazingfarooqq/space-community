@@ -1,6 +1,5 @@
 'use client';
 
-import { useSpacesSocket } from '@/contexts/SpacesSocketContext';
 import { useUser } from '@/contexts/UserContext';
 import { randomUUID } from 'crypto';
 import { Avatar, Button, Modal, Spinner } from 'flowbite-react';
@@ -43,7 +42,6 @@ export default function FormElements({ isLoginModal, setIsLoginModal }: any) {
       return
     }
     setUsername(e.target.value)
-    // console.log(`https://avatars.dicebear.com/api/avataaars/${e.target.value + randomFourDigits}.svg`);
 
     // setAvatarUrl(`https://avatars.dicebear.com/api/avataaars/${e.target.value + randomFourDigits}.svg`)
   }
@@ -51,12 +49,10 @@ export default function FormElements({ isLoginModal, setIsLoginModal }: any) {
   const LoginUsername = async () => {
     setLoading(true)
 
-    console.log(uuid());
-
     const data = {
       username: username,
       image: avatarUrl,
-      socketid: uuid()
+      uuid: uuid()
     }
 
     setUserData(data)
@@ -71,7 +67,7 @@ export default function FormElements({ isLoginModal, setIsLoginModal }: any) {
 
   return (
     <>
-      <button type="button" onClick={() => setIsLoginModal('show')} className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-500 dark:hover:bg-purple-400 dark:focus:ring-purple-900">Create Space</button>
+      <button type="button" onClick={() => setIsLoginModal('show')} className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-500 dark:hover:bg-purple-400 dark:focus:ring-purple-900 ">Create Space</button>
 
 
 

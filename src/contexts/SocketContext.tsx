@@ -30,32 +30,34 @@ export default function SocketProvider({ children }: { children: any }) {
     const [messages, setMessages] = useState<any>([]);
     const [spaces, setSpaces] = useState<any>([]);
 
+    const { userData } = useUser()
 
-    console.log("Context Space:", { spaces });
+    console.log({userData});
     
 
-    const connectSocket = (userData: any) => {
-        console.log("run1");
-        if (!userData?.username) return
-        console.log("run2");
+    const connectSocket = () => {
+        if (!userData?.id) return console.log("no user data");
 
         const newSocket = io.connect(process.env.NEXT_PUBLIC_BASE_URL, {
-            query: { username: userData.username, socketid: userData.socketid },
+            query: { name: userData.name, uuid: userData.id},
         });
 
-        newSocket.on("receive_socketid", (id: any) => {
-            const data = { socketid: userData.socketid, username: userData.username, image: userData.image };
-            setUserDataInCookie(data);
+        newSocket.on("receive_uuid", (id: any) => {
+            // const data = { uuid: userData.uuid, username: userData.username, image: userData.image };
+            // setUserDataInCookie(data);
         });
         newSocket.on("receive_message", (data: any) => {
-            console.log("receive_message", data);
-
-            setMessages((prev: any) => [...prev, data]);
+            if(data.status === "previous_space_left"){
+                console.log("previous_space_left", data);
+                
+            }else {
+                setMessages((prev: any) => [...prev, data]);
+            }
         });
 
         newSocket.on("receive_space", (data: any) => {
             setSpaces((prev: any) => {
-                const updatedSpaces = [...prev, data];
+                const updatedSpaces = [data,...prev];
                 updateSpaces(updatedSpaces);
                 return updatedSpaces;
             });
@@ -63,8 +65,7 @@ export default function SocketProvider({ children }: { children: any }) {
 
         newSocket.on("users_response", (data: any) => {
             const status = data.status;
-            console.log("users_response Socket Context",{status});
-            
+
             if (status === "joined") {
                 const newUsers = data.joinedUser;
                 setSpaces((prevSpaces: any[]) => {
@@ -81,20 +82,43 @@ export default function SocketProvider({ children }: { children: any }) {
             }
             if (status === "left") {
                 const leftUserId = data.leftUserId; // ID of the user who left
-              
+
+                console.log({leftUserId});
+                
                 setSpaces((prevSpaces: any[]) => {
-                  return prevSpaces.map((space: any) => {
-                    if (space.id === data.spaceId) {
-                      const updatedUsers = space.users.filter((user: any) => user.id !== leftUserId);
-                      return {
-                        ...space,
-                        users: updatedUsers
-                      };
-                    }
-                    return space;
-                  });
+                    return prevSpaces.map((space: any) => {
+                        if (space.id === data.spaceId) {
+                            console.log(space.id, data.spaceId);
+                            console.log(space.users);
+                            
+                            const updatedUsers = space.users.filter((user: any) => user.id !== leftUserId);
+                            return {
+                                ...space,
+                                users: updatedUsers
+                            };
+                        }
+                        return space;
+                    });
                 });
-              }
+            }
+
+            if (status === "left") {
+                const leftUserId = data.leftUserId; // ID of the user who left
+
+                setSpaces((prevSpaces: any[]) => {
+                    return prevSpaces.map((space: any) => {
+                        if (space.id === data.spaceId) {
+                            const updatedUsers = space.users.filter((user: any) => user.id !== leftUserId);
+                            return {
+                                ...space,
+                                users: updatedUsers
+                            };
+                        }
+                        return space;
+                    });
+                });
+            }
+
 
         });
         setSocket(newSocket);
@@ -102,24 +126,21 @@ export default function SocketProvider({ children }: { children: any }) {
     }
 
     useEffect(() => {
-        const userData = getUserDataFromCookie()
-        console.log({ userData });
-
-        console.log("run");
-
-        connectSocket(userData)
-    }, []);
+        connectSocket()
+    }, [userData]);
 
     useEffect(() => {
         fetchSpaces();
     }, [])
     async function fetchSpaces() {
-        const storedSpaces = await axios.get("/api/spaces/getSpaces")
-        console.log({ storedSpaces });
-        setSpaces(storedSpaces.data || []);
-
-        // if (storedSpaces) {
-        // }
+        try {
+            const storedSpaces = await axios.get("/api/spaces/getSpaces")
+            setSpaces(storedSpaces.data || []);
+            
+        } catch (error) {
+            console.error({error});
+            
+        }
     }
 
     function updateSpaces(updatedSpaces: any) {

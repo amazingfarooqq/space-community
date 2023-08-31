@@ -4,7 +4,6 @@ import { Inter } from 'next/font/google'
 import { ThemeProviders } from './theme.provider'
 import AuthContext from '@/context/AuthContext'
 import ToasterContext from '@/context/ToasterContext'
-import SpacesSocketProvider from '@/contexts/SpacesSocketContext'
 import SocketProvider from '@/contexts/SocketContext'
 import UserProvider from '@/contexts/UserContext'
 const inter = Inter({ subsets: ['latin'] })

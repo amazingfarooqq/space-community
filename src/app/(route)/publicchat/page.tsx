@@ -3,10 +3,7 @@
 import BGGradient from '@/components/BGGradient'
 import Header from '@/components/Header'
 import Sidebar from '@/components/sidebar/Sidebar'
-import { useRoom } from '@/contexts/RoomContext'
 import { useSocket } from '@/contexts/SocketContext'
-import { useUser } from '@/contexts/UserContext'
-import { pusherClient } from '@/libs/pusher'
 import axios from 'axios'
 import { Avatar, Button, Modal } from 'flowbite-react'
 import React, { useEffect, useRef, useState } from 'react'
@@ -17,9 +14,6 @@ const page = () => {
     const bottomRef = useRef<HTMLDivElement>(null);
     const [nickname, setNickname] = useState("")
     const { messages, socket, roomUsers, enterChatroom, logoutFunc } = useSocket();
-
-    console.log({roomUsers});
-    
 
     const enterAsGuest = () => {
         let generateuuid = uuidv4()
@@ -62,8 +56,6 @@ const page = () => {
     const handleSendMessage = (e: any) => {
         e.preventDefault()
         if (textArea.trim()) {
-            console.log({ textArea });
-
             socket?.emit("send_message", {
                 text: textArea,
                 name: nickname,
@@ -141,18 +133,6 @@ const page = () => {
                                 </div>
 
                                 <div className="w-100 p-0 m-0">
-                                    {/* {rooms.map(item => {
-                                        console.log({ item });
-
-                                        return (
-                                            <>
-                                                <div className='border-b dark:border-gray-800 cursor-pointer my-1 p-2'>{item.title}</div>
-                                                <img className="w-14 h-14 -mr-5 border-2 border-white rounded-full dark:border-gray-800" src="https://pbs.twimg.com/profile_images/1689670708862107648/YBrrroVQ_400x400.jpg" alt="" />
-                                            </>
-                                        )
-                                    })} */}
-
-
                                     {roomUsers?.map((item: {name: string}) => {
                                         return <div>
                                             <span className='text-xs'>{item.name}</span>

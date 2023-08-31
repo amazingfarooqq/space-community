@@ -1,6 +1,6 @@
 import React from 'react'
 
-const RightSide = ({ handleChatBox, handleParticipants, leaveSpace }) => {
+const RightSide = ({ isChatBox, isParticipants, handleChatBox, handleParticipants, leaveSpace, handleRightSide }) => {
 
     return (
         <>
@@ -91,6 +91,19 @@ const RightSide = ({ handleChatBox, handleParticipants, leaveSpace }) => {
                         </svg>
                         <span className="sr-only">Show information</span>
                     </button>
+
+                    {(isChatBox || isParticipants) &&
+                        <button
+                            type="button"
+                            className="p-2.5 group rounded-full"
+                            onClick={handleRightSide}
+                        >
+                            <svg className="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M1 5h12m0 0L9 1m4 4L9 9" />
+                            </svg>
+                            <span className="sr-only">Show options</span>
+                        </button>
+                    }
                 </div>
             </div>
             <div className="h-96 "></div>
@@ -177,6 +190,8 @@ const RightSide = ({ handleChatBox, handleParticipants, leaveSpace }) => {
                         </svg>
                         <span className="sr-only">Show options</span>
                     </button>
+
+
                     {/* <div
                         id="moreOptionsDropdown"
                         className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"

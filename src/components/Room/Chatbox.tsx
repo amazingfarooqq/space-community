@@ -6,10 +6,6 @@ import { toast } from 'react-hot-toast'
 const Chatbox = ({ messages, sendMessage }: { messages: any, sendMessage: any }) => {
 
 
-    console.log({messages});
-    
-
-    console.log({ messages });
     const [txt, setTxt] = useState("")
 
 
@@ -59,7 +55,7 @@ const Chatbox = ({ messages, sendMessage }: { messages: any, sendMessage: any })
                                         <div className="space-y-2 w-full text-xs mx-1 order-2 items-start">
                                             <div className={`px-2 rounded-lg`}>
                                                 <div className='flex justify-between'>
-                                                    <h2 className='mb-1 text-purple-400 text-sm'>{item % 2 ? "⭐" : ""} {item?.username} </h2>
+                                                    <h2 className='mb-1 text-purple-400 text-sm'>{item % 2 ? "⭐" : ""} {item?.name} </h2>
                                                     <h2>
                                                         <div className=" justify-center hidden mr-auto text-gray-500 dark:text-gray-400 md:flex">
                                                             <span className="text-xs break-all">{item?.createdAt}</span>

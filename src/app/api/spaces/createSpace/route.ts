@@ -1,25 +1,23 @@
-import getCurrentUser from "@/app/actions/getCurrentUser";
 import { NextResponse } from "next/server";
 
-import prisma from "@/app/libs/prismadb";
-import { pusherServer } from "@/app/libs/pusher";
+import prisma from "@/libs/prismadb";
 
 export async function POST(
     request: Request,
 ) {
     try {
-        const currentUser = await getCurrentUser();
         const body = await request.json();
         let createdSpace
 
         const { newSpace } = body;
 
-        console.log(newSpace);
-        
         try {
 
             createdSpace = await prisma.space.create({
-                data: newSpace
+                data: newSpace,
+                include: {
+                    users: true,
+                }
             });
 
 

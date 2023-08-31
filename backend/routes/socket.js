@@ -15,36 +15,53 @@ const io = new Server(server, {
   },
 });
 
-let spaceUsers = {};
+const userSpaceMap = new Map();
+const activeUsersInSpace = new Map()
 
 io.on("connection", (socket) => {
-  const username = socket.handshake.query.username
-  const socketid = socket.handshake.query.socketid
+  const { name, uuid } = socket.handshake.query;
 
-  console.log("User Connected:", {username, socketid})
-  debugPrint(`User Connected: ${socketid}`);
+  debugPrint(`User Connected: ${name} ${uuid} ${socket.id}`);
 
-  io.emit("receive_socketid", socketid);
+  io.emit("receive_uuid", uuid);
+
 
   socket.on("join_space", (data) => {
-    const spaceId = data.spaceId;
-    const joinedUser = data.joinedUserData;
+    const { spaceId, joinedUserData } = data;
 
-    // console.log({data});
-    // console.log({spaceId})
-    console.log(joinedUser);
+    debugPrint(`User Joined Space: ${spaceId} ${uuid}`);
+    const prevSpaceId = userSpaceMap.get(uuid);
+    if (prevSpaceId && prevSpaceId !== spaceId) {
+      socket.leave(prevSpaceId);
+      io.in(prevSpaceId).emit("receive_message", {
+        text: `${name} left the space.`,
+        uuid: "kurakani",
+        spaceId: prevSpaceId,
+        status: "left",
+        createdAt: `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
+      });
+
+      io.emit("users_response", {
+        spaceId: prevSpaceId,
+        leftUserId: uuid,
+        status: "left"
+      });
+    }
+
     socket.join(spaceId);
-    spaceUsers = {
-      ...spaceUsers,
-      [spaceId]: [...(spaceUsers[spaceId] ?? []), joinedUser],
-    };
+    userSpaceMap.set(uuid, spaceId);
 
-    console.log({spaceUsers});
 
-    // console.log(spaceUsers[spaceId]);
+    // Add the user to the active users in the space
+    if (!activeUsersInSpace.has(spaceId)) {
+      activeUsersInSpace.set(spaceId, new Set());
+    }
+    activeUsersInSpace.get(spaceId).add(uuid);
+
+    // Increment the user count for the space
     io.in(spaceId).emit("receive_message", {
-      text: username + " joined the space.",
-      socketId: "kurakani",
+      text: `${name} joined the space.`,
+      uuid: "kurakani",
       spaceId: spaceId,
       status: "joined",
       createdAt: `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
@@ -52,89 +69,96 @@ io.on("connection", (socket) => {
 
     const sendres = {
       spaceId: spaceId,
-      // spaceUsers: spaceUsers[spaceId],
-      joinedUser: joinedUser,
+      joinedUser: joinedUserData,
       status: "joined"
     }
-    // console.log("sendres", sendres.spaceId);
     io.emit("users_response", sendres);
-    // debugPrint(`User with ID: ${socketid} joined space: ${spaceId}`);
   });
 
-  socket.on("leave_space", (spaceId) => {
-    if (spaceUsers[spaceId] && spaceUsers[spaceId].includes(socketid)) {
-      spaceUsers[spaceId] = spaceUsers[spaceId].filter((id) => id !== socketid);
+  socket.on("leave_space", () => {
+    const spaceId = userSpaceMap.get(uuid);
 
-      io.in(spaceId).emit("users_response", {
-        spaceId,
-        spaceUsers: spaceUsers[spaceId]
-      });
+
+    debugPrint(`User Left Space: ${spaceId} ${uuid}`);
+
+
+    if (spaceId) {
+      userSpaceMap.delete(uuid);
 
       io.in(spaceId).emit("receive_message", {
-        text: username + " left the space.",
-        socketId: "kurakani",
+        text: `${name} left the space.`,
+        uuid: "kurakani",
         spaceId: spaceId,
         status: "left",
         createdAt: `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
       });
 
-      socket.leave(spaceId); // Leave the space
+      io.emit("users_response", {
+        spaceId: spaceId,
+        leftUserId: uuid,
+        status: "left"
+      });
 
-      debugPrint(`User with ID: ${socketid} left space: ${spaceId}`);
+
+      // Remove the user from the activeUsersInSpace map
+      if (activeUsersInSpace.has(spaceId)) {
+        const activeUsers = activeUsersInSpace.get(spaceId);
+        activeUsersInSpace.set(
+          spaceId,
+          activeUsers.filter((user) => user.uuid !== uuid)
+        );
+      }
+      socket.leave(spaceId);
+
     }
-  });
-
-  socket.on("send_message", (data) => {
-    io.in(data.spaceId).emit("receive_message", data);
-  });
-
-  socket.on("send_space", (data) => {
-    io.emit("receive_space", data);
   });
 
   socket.on("disconnect", () => {
-    debugPrint("User Disconnected", socketid);
-    for (const [spaceId, users] of Object.entries(spaceUsers)) {
-      const userIndex = users.findIndex(user => user.id === socketid);
-      if (userIndex !== -1) {
-        const leftUser = spaceUsers[spaceId][userIndex];
-        spaceUsers[spaceId].splice(userIndex, 1);
-    
-        const sendres = {
-          spaceId: spaceId,
-          // spaceUsers: spaceUsers[spaceId],
-          leftUserId: leftUser.id,
-          status: "left"
-        }
+    // debugPrint("User Disconnected", uuid);
 
-        io.emit("users_response", sendres);
-    
-        io.in(spaceId).emit("receive_message", {
-          text: username + " left the space.",
-          socketId: "kurakani",
-          spaceId: spaceId,
-          status: "left",
-          createdAt: `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
-        });
+    const spaceId = userSpaceMap.get(uuid);
+
+    // debugPrint("User Disconnected", spaceId);
+    debugPrint(`User Left Space: ${spaceId} ${uuid}`);
+
+    if (spaceId) {
+      userSpaceMap.delete(uuid);
+
+      io.in(spaceId).emit("receive_message", {
+        text: `${name} left the space.`,
+        uuid: "kurakani",
+        spaceId: spaceId,
+        status: "left",
+        createdAt: `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
+      });
+
+      io.emit("users_response", {
+        spaceId: spaceId,
+        leftUserId: uuid,
+        status: "left"
+      });
+
+
+      // Remove the user from the activeUsersInSpace map
+      if (activeUsersInSpace.has(spaceId)) {
+        const activeUsers = activeUsersInSpace.get(spaceId);
+        activeUsersInSpace.set(
+          spaceId,
+          activeUsers.filter((user) => user.uuid !== uuid)
+        );
       }
-      // if (users.includes(socketid)) {
-      //   spaceUsers[spaceId] = [...users.filter((id) => id !== socketid)];
 
-      //   io.emit("users_response", {
-      //     spaceId,
-      //     spaceUsers: spaceUsers[spaceId]
-      //   });
+      socket.leave(spaceId);
 
-      //   io.in(spaceId).emit("receive_message", {
-      //     text: username + " left the space.",
-      //     socketId: "kurakani",
-      //     spaceId: spaceId,
-      //     status: "left",
-      //     createdAt: `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
-      //   });
-      // }
     }
-    // io.emit("users_response", roomar);
+  });
+
+  socket.on("send_message", (msg) => {
+    io.in(msg.spaceId).emit("receive_message", msg);
+  });
+
+  socket.on("send_space", (space) => {
+    io.emit("receive_space", space);
   });
 });
 
