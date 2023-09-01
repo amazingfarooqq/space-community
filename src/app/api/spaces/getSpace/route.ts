@@ -15,7 +15,15 @@ export async function POST(
                 id:spaceId
             },
             include: {
-                users: true
+                users: {
+                    select: {
+                        id: true, // Include user ID
+                        name: true, // Include user name
+                        image: true, // Include user image
+                        // followers: true
+                        // Add other user fields you want to retrieve
+                    },
+                }
             }
         });
         

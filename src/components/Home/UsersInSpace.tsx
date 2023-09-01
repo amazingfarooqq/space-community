@@ -2,10 +2,11 @@ import { Tooltip } from 'flowbite-react'
 import React from 'react'
 
 const UsersInSpace = ({ users, ownerId }: any) => {
-    const sortedUsers = [...users]; // Create a copy of users array
-
+    
+    const sortedUsers = [...users].filter(user => user); // Create a copy of users array and remove undefined values
+    
     // Find the index of the owner's user in the users array
-    const ownerIndex = sortedUsers.findIndex(user => user.id === ownerId);
+    const ownerIndex = sortedUsers.findIndex(user => user?.id === ownerId);
 
     if (ownerIndex !== -1) {
         // Remove the owner's user from the array

@@ -15,8 +15,29 @@ const io = new Server(server, {
   },
 });
 
+const spaces = new Map()
 const userSpaceMap = new Map();
-const activeUsersInSpace = new Map()
+const activeUsersInSpace = new Map();
+
+
+
+function sendSpacesAndActiveUsersToUser(socket) {
+  const spacesWithActiveUsers = [];
+
+  // Iterate through spaces and add active users to each space
+  spaces.forEach((space, spaceId) => {
+    const spaceData = { ...space, users: [] };
+
+    if (activeUsersInSpace.has(spaceId)) {
+      const activeUsersArray = Array.from(activeUsersInSpace.get(spaceId).values());
+      spaceData.users = activeUsersArray;
+    }
+
+    spacesWithActiveUsers.push(spaceData);
+  });
+
+  socket.emit("receive_spaces", spacesWithActiveUsers);
+}
 
 io.on("connection", (socket) => {
   const { name, uuid } = socket.handshake.query;
@@ -26,12 +47,17 @@ io.on("connection", (socket) => {
   io.emit("receive_uuid", uuid);
 
 
+  sendSpacesAndActiveUsersToUser(socket);
+
   socket.on("join_space", (data) => {
     const { spaceId, joinedUserData } = data;
 
     debugPrint(`User Joined Space: ${spaceId} ${uuid}`);
+
     const prevSpaceId = userSpaceMap.get(uuid);
     if (prevSpaceId && prevSpaceId !== spaceId) {
+
+
       socket.leave(prevSpaceId);
       io.in(prevSpaceId).emit("receive_message", {
         text: `${name} left the space.`,
@@ -46,17 +72,22 @@ io.on("connection", (socket) => {
         leftUserId: uuid,
         status: "left"
       });
+
+      // Remove the user from the list of active users in the previous space
+      if (activeUsersInSpace.has(prevSpaceId)) {
+        activeUsersInSpace.get(prevSpaceId).delete(uuid);
+      }
     }
 
     socket.join(spaceId);
     userSpaceMap.set(uuid, spaceId);
 
-
-    // Add the user to the active users in the space
+    // Add the user to the list of active users in the space
     if (!activeUsersInSpace.has(spaceId)) {
-      activeUsersInSpace.set(spaceId, new Set());
+      activeUsersInSpace.set(spaceId, new Map());
     }
-    activeUsersInSpace.get(spaceId).add(uuid);
+    activeUsersInSpace.get(spaceId).set(uuid, joinedUserData);
+
 
     // Increment the user count for the space
     io.in(spaceId).emit("receive_message", {
@@ -84,7 +115,6 @@ io.on("connection", (socket) => {
 
     if (spaceId) {
       userSpaceMap.delete(uuid);
-
       io.in(spaceId).emit("receive_message", {
         text: `${name} left the space.`,
         uuid: "kurakani",
@@ -100,15 +130,13 @@ io.on("connection", (socket) => {
       });
 
 
-      // Remove the user from the activeUsersInSpace map
-      if (activeUsersInSpace.has(spaceId)) {
-        const activeUsers = activeUsersInSpace.get(spaceId);
-        activeUsersInSpace.set(
-          spaceId,
-          activeUsers.filter((user) => user.uuid !== uuid)
-        );
-      }
       socket.leave(spaceId);
+
+
+      // Remove the user from the list of active users in the space
+      if (activeUsersInSpace.has(spaceId)) {
+        activeUsersInSpace.get(spaceId).delete(uuid);
+      }
 
     }
   });
@@ -123,7 +151,6 @@ io.on("connection", (socket) => {
 
     if (spaceId) {
       userSpaceMap.delete(uuid);
-
       io.in(spaceId).emit("receive_message", {
         text: `${name} left the space.`,
         uuid: "kurakani",
@@ -138,17 +165,13 @@ io.on("connection", (socket) => {
         status: "left"
       });
 
-
-      // Remove the user from the activeUsersInSpace map
-      if (activeUsersInSpace.has(spaceId)) {
-        const activeUsers = activeUsersInSpace.get(spaceId);
-        activeUsersInSpace.set(
-          spaceId,
-          activeUsers.filter((user) => user.uuid !== uuid)
-        );
-      }
-
       socket.leave(spaceId);
+
+
+      // Remove the user from the list of active users in the space
+      if (activeUsersInSpace.has(spaceId)) {
+        activeUsersInSpace.get(spaceId).delete(uuid);
+      }
 
     }
   });
@@ -158,6 +181,8 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send_space", (space) => {
+
+    spaces.set(space.id, space);
     io.emit("receive_space", space);
   });
 });

@@ -92,7 +92,7 @@ const Header = () => {
                         <p className="mr-4 ml-3">Hello, {session?.data?.user?.name}</p>
                         <Dropdown
                             placement="bottom-end"
-                            className="dark:bg-gray-700"
+                            className="dark:bg-gray-700 animate-fade-in"
                             inline
                             label={<Avatar alt="User settings" bordered img={session?.data?.user?.image || ""} rounded />}
                         >

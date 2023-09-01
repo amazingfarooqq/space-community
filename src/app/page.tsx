@@ -5,13 +5,16 @@ import Sidebar from '@/components/sidebar/Sidebar';
 import BGGradient from '@/components/BGGradient';
 import Spaces from '@/components/Home/Spaces';
 import ModalToCreateSpace from '@/components/ModalToCreateSpace';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/contexts/UserContext';
 import { useSocket } from '@/contexts/SocketContext';
 import FormElements from '@/components/ModalToLogin';
+import { v4 as uuidv4 } from 'uuid';
+import Pusher from 'pusher-js';
+import { pusherClient } from '@/libs/pusher';
 
 interface User {
   id: string;
@@ -39,22 +42,28 @@ export default function Home() {
 
   const createSpace = async (spaceData: any) => {
 
-    !userData?.id && toast.error('You need to login first');
+    console.log({ userData });
+
+    if (!userData?.id) {
+      toast.error('You need to login first');
+      return
+    }
 
     console.log(spaceData.limit);
-    
+
     try {
+      const spaceid = uuidv4()
       const newSpace = {
         owner: userData.id,
         title: spaceData.title || "Lets talk in english",
         language: spaceData.language || "English",
         level: spaceData.level || "Begineer",
         limit: spaceData.limit.toString() || "10",
+        // users: []
       };
       const createNewSpace = await axios.post('/api/spaces/createSpace', {
         newSpace
       })
-      socket?.emit("send_space", { ...createNewSpace.data, spaceId: createNewSpace.data.id });
       toast.success('Space created!');
       setIsCreateSpaceModal("hide")
 
@@ -83,6 +92,8 @@ export default function Home() {
     }
     router.push(`/space/${spaceId}`)
   }
+
+ 
 
   return (
     <>

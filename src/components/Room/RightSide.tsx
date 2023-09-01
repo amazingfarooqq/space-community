@@ -1,6 +1,6 @@
 import React from 'react'
 
-const RightSide = ({ isChatBox, isParticipants, handleChatBox, handleParticipants, leaveSpace, handleRightSide }) => {
+const RightSide = ({ isChatBox, isParticipants, handleChatBox, handleParticipants, leaveSpace, handleRightSide }: any) => {
 
     return (
         <>
@@ -32,7 +32,7 @@ const RightSide = ({ isChatBox, isParticipants, handleChatBox, handleParticipant
                     </svg>
                     <span className="text-sm">12:43 PM</span>
                 </div>
-                <div className="items-center justify-center hidden ml-auto md:flex">
+                <div className="items-center justify-center ml-auto md:flex">
                     <button
                         type="button"
                         className="p-2.5 group rounded-full hover:bg-gray-100 mr-1 dark:focus:bg-gray-600 dark:hover:bg-gray-600"

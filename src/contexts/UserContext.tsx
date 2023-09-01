@@ -40,10 +40,9 @@ export default function UserProvider({
   }
 
   useEffect(() => {
-    if (session.status == "loading") return console.log("loading ")
-    if (session.status === "unauthenticated") return console.log("unauthenticated ")
+    if (session.status == "loading") return
+    if (session.status === "unauthenticated") return
     if (session.status === "authenticated") {
-      console.log("authenticated")
       fetchUserData()
     }
 

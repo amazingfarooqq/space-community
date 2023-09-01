@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import prisma from "@/libs/prismadb";
+import { pusherClient, pusherServer } from "@/libs/pusher";
 
 export async function POST(
     request: Request,
@@ -20,12 +21,12 @@ export async function POST(
                 }
             });
 
-
         } catch (error) {
             console.log({ error });
-
         }
 
+
+        pusherServer.trigger('my-channel', 'new-space', createdSpace);
 
         return NextResponse.json(createdSpace)
     } catch (error) {

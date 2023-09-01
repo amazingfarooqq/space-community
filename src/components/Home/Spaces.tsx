@@ -9,9 +9,6 @@ const Spaces = ({ setSpaces, joinSpace }: { setSpaces: any, joinSpace: any }) =>
 
     const { spaces } = useSocket()
 
-
-
-
     return (
         <div className="py-6 flex flex-wrap  gap-y-5 flex-col lg:flex-row ">
 
