@@ -22,6 +22,9 @@ export default function UserProvider({
   const [userData, setUserData] = useState({})
   const session = useSession()
 
+  console.log({userData});
+  
+
   const fetchUserData = async () => {
 
     try {

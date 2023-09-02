@@ -15,6 +15,7 @@ import FormElements from '@/components/ModalToLogin';
 import { v4 as uuidv4 } from 'uuid';
 import Pusher from 'pusher-js';
 import { pusherClient } from '@/libs/pusher';
+import { useSession } from 'next-auth/react';
 
 interface User {
   id: string;
@@ -37,6 +38,8 @@ export default function Home() {
   const { userData }: any = useUser()
   const router = useRouter()
 
+  const session = useSession()
+
   const [isCreateSpaceModal, setIsCreateSpaceModal] = useState("hide")
   const [isLoginModal, setIsLoginModal] = useState<string | undefined>();
 
@@ -44,7 +47,12 @@ export default function Home() {
 
     console.log({ userData });
 
-    if (!userData?.id) {
+    if (session.status == "loading") {
+      toast.error('please try again in a minute');
+      return
+    }
+
+    if (session.status !== "authenticated") {
       toast.error('You need to login first');
       return
     }
@@ -59,7 +67,6 @@ export default function Home() {
         language: spaceData.language || "English",
         level: spaceData.level || "Begineer",
         limit: spaceData.limit.toString() || "10",
-        // users: []
       };
       const createNewSpace = await axios.post('/api/spaces/createSpace', {
         newSpace

@@ -22,7 +22,6 @@ export default function FormElements({ isLoginModal, setIsLoginModal }: any) {
   const [username, setUsername] = useState<string>('');
 
   const { setUserData }: any = useUser();
-  const { connectSocket }: any = useSocket()
   const [data, setData] = useState({ username: "", image: "" })
 
   const [avatarUrl, setAvatarUrl] = useState(avatarArr[0])
@@ -57,7 +56,6 @@ export default function FormElements({ isLoginModal, setIsLoginModal }: any) {
 
     setUserData(data)
 
-    connectSocket(data)
 
     setIsLoginModal("hide")
     setLoading(false)

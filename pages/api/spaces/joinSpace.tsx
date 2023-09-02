@@ -1,32 +1,37 @@
-import prisma from "@/libs/prismadb";
-import { pusherServer } from "@/libs/pusher";
-import { NextResponse } from "next/server";
+import { NextApiRequest } from "next";
 
-export async function POST(request: Request) {
+import prisma from "@/libs/prismadb";
+import { NextApiResponseServerIo } from "../../../types";
+import { Server } from "socket.io";
+
+export default async function handler(
+    req: NextApiRequest,
+    res: NextApiResponseServerIo,
+) {
     try {
-        const body = await request.json();
-        const { spaceId, userId, joinedUserData } = body;
+
+        const { spaceId, userId, joinedUserData, socketId } = req.body;
 
         const existingSpace = await prisma.space.findFirst({
             where: {
-                userIds: {
-                    has: userId,
-                },
+                userIds: { has: userId },
             },
+            include: {
+                users: true
+            }
         });
+
+        
 
         if (existingSpace && existingSpace.id === spaceId) {
             // User is already in the current space, do nothing
-            return NextResponse.json(existingSpace);
+            return res.status(200).json(existingSpace);
         }
-
 
         if (existingSpace) {
             // User is in an existing space, remove them from that space
             const updatedExistingSpace = await prisma.space.update({
-                where: {
-                    id: existingSpace.id,
-                },
+                where: { id: existingSpace.id },
                 data: {
                     userIds: {
                         set: existingSpace.userIds.filter((id) => id !== userId),
@@ -41,7 +46,8 @@ export async function POST(request: Request) {
                 status: "left",
             };
 
-            pusherServer.trigger('my-channel', 'spaceupdates', leaveData);
+            res?.socket?.server?.io?.emit("joinSpace", leaveData);
+            ``
         }
 
         const updatedSpace = await prisma.space.update({
@@ -58,23 +64,19 @@ export async function POST(request: Request) {
         });
 
 
-        console.log({ existingSpace, updatedSpace, joinedUserData });
-
-
         const data = {
             spaceId: spaceId,
             joinedUserData: joinedUserData,
             status: "joined"
         }
 
-
-        pusherServer.trigger('my-channel', 'spaceupdates', data);
-
+        res?.socket?.server?.io?.emit("joinSpace", data);
 
 
-        return NextResponse.json(updatedSpace);
+
+        return res.status(200).json(updatedSpace);
     } catch (error) {
-        console.error("Error:", error);
-        return new NextResponse('Internal Error', { status: 500 });
+        console.log("[JOIN_SPACE]", error);
+        return res.status(500).json({ message: "Internal Error" });
     }
 }

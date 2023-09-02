@@ -30,8 +30,8 @@ export default function RootLayout({
             <ToasterContext />
             <UserProvider>
               <SocketProvider>
-                {/* <ActiveStatus /> */}
                 {children}
+                {/* <ActiveStatus /> */}
               </SocketProvider>
             </UserProvider>
           </ThemeProviders>
