@@ -45,8 +45,6 @@ export default function Home() {
 
   const createSpace = async (spaceData: any) => {
 
-    console.log({ userData });
-
     if (session.status == "loading") {
       toast.error('please try again in a minute');
       return
@@ -56,8 +54,6 @@ export default function Home() {
       toast.error('You need to login first');
       return
     }
-
-    console.log(spaceData.limit);
 
     try {
       const spaceid = uuidv4()

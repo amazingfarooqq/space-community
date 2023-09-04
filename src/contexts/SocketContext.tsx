@@ -26,87 +26,16 @@ export default function SocketProvider({ children }: { children: any }) {
     const [spaces, setSpaces] = useState<any>([]);
     const [currentSpaceData, setCurrentSpaceData] = useState({})
 
-    // const connectSocket = () => {
+    const [currentSpaceId, setCurrentSpaceId] = useState("")
 
-    //     if (!userData?.id) {
-    //         console.log("no user data");
-    //         return
-    //     }
-    //     console.log("got user");
-
-    //     console.log("run")
-
-    //     const newSocket = io.connect(process.env.NEXT_PUBLIC_BASE_URL, {
-    //         query: { name: userData.name, uuid: userData.id },
-    //     });
-
-
-
-    //     // newSocket.on("receive_spaces", (data: any) => {
-    //     //     console.log("receive_spaces", { data });
-    //     //     setSpaces(data)
-    //     //     // const data = { uuid: userData.uuid, username: userData.username, image: userData.image };
-    //     //     // setUserDataInCookie(data);
-    //     // });
-
-    //     newSocket.on("receive_available_spaces", (data: any) => {
-    //         console.log("receive_available_spaces", data);
-    //         setSpaces(data);
-    //     })
-    //     newSocket.on("receive_message", (data: any) => {
-    //         if (data.status === "previous_space_left") {
-    //             console.log("previous_space_left", data);
-
-    //         } else {
-    //             setMessages((prev: any) => [...prev, data]);
-    //         }
-    //     });
-
-    //     newSocket.on("receive_space", (data: any) => {
-    //         setSpaces((prev: any) => {
-    //             const updatedSpaces = [data, ...prev];
-    //             updateSpaces(updatedSpaces);
-    //             return updatedSpaces;
-    //         });
-    //     });
-
-    //     newSocket.on("users_response", (data: any) => {
-    //         const status = data.status;
-
-    //         if (status === "joined") {
-    //             const newUsers = data.joinedUser;
-    //             setSpaces((prevSpaces: any[]) => {
-    //                 return prevSpaces.map((space: any) => {
-    //                     if (space.id === data.spaceId) {
-    //                         return { ...space, users: [...space.users, newUsers] };
-    //                     }
-    //                     return space;
-    //                 });
-    //             });
-    //         }
-    //         if (status === "left") {
-    //             const leftUserId = data.leftUserId;
-
-    //             setSpaces((prevSpaces: any[]) => {
-    //                 return prevSpaces.map((space: any) => {
-    //                     if (space.id === data.spaceId) {
-    //                         const updatedUsers = space.users.filter((user: any) => user.id !== leftUserId);
-    //                         return { ...space, users: updatedUsers };
-    //                     }
-    //                     return space;
-    //                 });
-    //             });
-    //         }
-
-
-    //     });
-    //     setSocket(newSocket);
-
-    // }
+    const { userData } = useUser()
 
 
     const [socket, setSocket] = useState<any>(null);
     const [isConnected, setIsConnected] = useState(false);
+
+    console.log({ isConnected });
+
 
     useEffect(() => {
         const socketInstance = new (ClientIO as any)(process.env.NEXT_PUBLIC_SITE_URL!, {
@@ -115,12 +44,35 @@ export default function SocketProvider({ children }: { children: any }) {
         });
 
         socketInstance.on("connect", () => {
-            console.log("connected", socketInstance);
+            console.log("connected");
             setIsConnected(true);
         });
 
         socketInstance.on("disconnect", () => {
+            console.log("disconnect");
+            console.log({ currentSpaceId, userData });
+
             setIsConnected(false);
+
+            if (currentSpaceId && userData) {
+
+                const leaveData = {
+                    spaceId: currentSpaceId,
+                    userId: userData.id, // Assuming you have userData available
+                };
+                const removeFromSpace = async () => {
+                    await axios.delete(`/api/spaces/leaveSpace`, {
+                        data: {
+                            spaceId: currentSpaceId,
+                            userId: userData.id,
+                            name: userData.name
+                        }
+                    });
+                }
+
+                removeFromSpace()
+                // socketInstance.emit("leaveSpace", leaveData);
+            }
         });
 
         socketInstance.on("createSpace", (data: any) => {
@@ -133,11 +85,9 @@ export default function SocketProvider({ children }: { children: any }) {
 
         socketInstance.on("joinSpace", (data: any) => {
             console.log("joinSpace: ", { data });
-
-            console.log("joinSpace", data);
             const status = data.status;
             if (status === "joined") {
-
+                setCurrentSpaceId(data.spaceId)
                 const newUsers = data.joinedUserData;
                 setSpaces((prevSpaces: any[]) => {
                     return prevSpaces.map((space: any) => {
@@ -150,6 +100,11 @@ export default function SocketProvider({ children }: { children: any }) {
                     });
                 });
             }
+        });
+
+        socketInstance.on("leaveSpace", (data: any) => {
+            const status = data.status;
+
             if (status === "left") {
                 const leftUserId = data.leftUserId;
                 setSpaces((prevSpaces: any[]) => {
@@ -172,7 +127,7 @@ export default function SocketProvider({ children }: { children: any }) {
 
 
         socketInstance.on("space_msg", (data: any) => {
-            console.log({ data });
+            console.log("space_msg", { data });
             if (data) {
                 setMessages((prev: any) => [...prev, data]);
             }
@@ -195,6 +150,8 @@ export default function SocketProvider({ children }: { children: any }) {
         try {
             console.log("fetchSpaces");
             const storedSpaces = await axios.get("/api/spaces/getSpaces")
+            console.log({storedSpaces});
+            
             setSpaces(storedSpaces.data || []);
 
         } catch (error) {

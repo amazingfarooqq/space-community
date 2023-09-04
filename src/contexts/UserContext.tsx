@@ -46,6 +46,8 @@ export default function UserProvider({
     if (session.status == "loading") return
     if (session.status === "unauthenticated") return
     if (session.status === "authenticated") {
+      console.log("fetchUserData");
+      
       fetchUserData()
     }
 

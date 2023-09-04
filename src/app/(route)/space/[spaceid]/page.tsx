@@ -1,5 +1,6 @@
 "use client"
 
+import BGGradient from "@/components/BGGradient";
 import Chatbox from "@/components/Room/Chatbox";
 import RightSide from "@/components/Room/RightSide";
 import { useSocket } from "@/contexts/SocketContext";
@@ -47,17 +48,12 @@ const page = ({
     }
 
 
-    
-    
+
+
     const { spaces, socket, messages, setMessages, setSpaces }: any = useSocket()
-    
+
     const { userData }: any = useUser()
     const currentSpaceData = spaces.find((space: any) => space.id === spaceId)
-
-
-    console.log({ currentSpaceData });
-
-
 
 
     useEffect(() => {
@@ -67,8 +63,17 @@ const page = ({
     const session = useSession()
 
     const getSpace = async () => {
-        const spaceData = await axios.post("/api/spaces/getSpace", { spaceId })
-        return spaceData
+        try {
+            const spaceData = await axios.post("/api/spaces/getSpace", { spaceId })
+            return spaceData
+
+        } catch (error) {
+            console.log({ error });
+            toast.error("Space does not exist");
+            router.push("/")
+
+
+        }
     }
 
     useEffect(() => {
@@ -84,28 +89,21 @@ const page = ({
         }
 
         if (!userData?.id) {
-            toast.error("Excuse, userData?.id you are not logged in");
+            toast.error("Excuse, !userData?.id you are not logged in");
             router.push("/");
             return;
         }
 
-        toast.error("please wait as we fetch space data");
+        // toast.error("please wait as we fetch space data");
 
         getSpace().then((spaceData) => {
-            console.log("spaceData", spaceData);
-
             const spacedata = spaceData.data;
-            console.log("joining");
-
             const joinedUserData = {
                 id: userData?.id || "",
                 name: userData?.name || "",
                 image: userData?.image || "",
                 followers: userData?.followers || "",
             }
-
-            console.log("running");
-
             joinUserDatabase(joinedUserData)
         }).catch((error) => {
             // Handle any errors that might occur during the fetch
@@ -114,6 +112,7 @@ const page = ({
     }, [userData]);
 
     const joinUserDatabase = async (joinedUserData) => {
+
         try {
             await axios.post('/api/spaces/joinSpace', {
                 spaceId, userId: userData.id, joinedUserData, socketId: socket.id
@@ -121,6 +120,8 @@ const page = ({
 
         } catch (error) {
             console.log(error);
+            toast.error("Error joining space");
+            router.push("/")
         }
     }
 
@@ -139,17 +140,13 @@ const page = ({
                 createdAt: `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`,
             }
 
-            console.log({socket});
-            console.log({socketid: socket.id});
-            
-            
-
             await axios.post(`/api/msgs/spacemsgs/msgs`, {
-                spaceId, msgData, 
+                spaceId, msgData,
             });
 
             setTxt("")
         } catch (error) {
+            toast.error("Error sending message");
             console.log({ error });
 
         }
@@ -163,15 +160,16 @@ const page = ({
             const response = await axios.delete(`/api/spaces/leaveSpace`, {
                 data: {
                     spaceId: spaceId,
-                    userId: userData.id
+                    userId: userData.id,
+                    name: userData.name
                 }
             });
             console.log({ response });
 
-            socket?.emit("leave_space", spaceId);
             router.push("/");
 
         } catch (error) {
+            toast.error("Error leaving space");
             console.log(error);
 
         }
@@ -181,17 +179,33 @@ const page = ({
     return (
         <div>
             {!currentSpaceData?.id &&
-                <div className=" flex flex-col h-[100vh] w-[100vw] align-center justify-center items-center">
-                    <div role="status" >
-                        <svg aria-hidden="true" className="w-12 h-12 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-purple-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor" />
-                            <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill" />
-                        </svg>
-                        <span className="sr-only">Loading...</span>
-                    </div>
-                    {/* <h2 className="text-center text-white text-xl font-semibold">Loading...</h2> */}
-                    <p className="w-1/3 text-center text-white">Loading space data.</p>
-                </div>
+                <section className="relative place-items-center grid h-screen w-screen gap-4">
+                    <BGGradient />
+                    {/*   ITEM 1 */}
+                    <div className="bg-purple-500 w-48 h-48  absolute animate-ping rounded-full delay-5s shadow-xl" />
+                    {/*   ITEM 2 */}
+                    <div className="bg-purple-400 w-32 h-32 absolute animate-ping rounded-full shadow-xl" />
+                    {/*   ITEM 3 */}
+                    <div className="bg-white dark:bg-black w-24 h-24 absolute animate-pulse rounded-full shadow-xl" />
+                    {/*   SVG LOGO */}
+                    <img src="/images/logoemoji.png" alt="Logo" className="text-purple-900  h-16 w-16" />
+
+                    {/* <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="text-purple-900 filter mix-blend-overlay h-16 w-16"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M5.636 18.364a9 9 0 010-12.728m12.728 0a9 9 0 010 12.728m-9.9-2.829a5 5 0 010-7.07m7.072 0a5 5 0 010 7.07M13 12a1 1 0 11-2 0 1 1 0 012 0z"
+                        />
+                    </svg> */}
+                </section>
+
             }
             {currentSpaceData?.id &&
                 <div className="h-screen flex " >

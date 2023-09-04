@@ -53,13 +53,18 @@ export const authOptions: AuthOptions = {
     })
   ],
   callbacks: {
-    session: ({ session, token }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: token.sub,
-      },
-    }),
+    session: async ({ session, token }) => {
+      // Ensure that token.sub is of type string
+      const userId = token.sub as string;
+
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: userId,
+        },
+      };
+    },
   },
   debug: process.env.NODE_ENV === 'development',
   session: {

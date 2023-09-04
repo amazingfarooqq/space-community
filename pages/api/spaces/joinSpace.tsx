@@ -21,7 +21,20 @@ export default async function handler(
             }
         });
 
+        console.log({ existingSpaceid: existingSpace?.id });
         
+
+        res?.socket?.server?.io.of("/").sockets.get(socketId)?.join(spaceId);
+
+        res?.socket?.server?.io?.to(spaceId).emit("space_msg", {
+            text: `${joinedUserData.name} joins the space at ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}.`,
+            uuid: "farooq",
+            spaceId: spaceId,
+            status: "joined",
+            createdAt: `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
+        });
+
+
 
         if (existingSpace && existingSpace.id === spaceId) {
             // User is already in the current space, do nothing
@@ -45,10 +58,25 @@ export default async function handler(
                 leftUserId: userId,
                 status: "left",
             };
+            res?.socket?.server?.io?.to(existingSpace.id).emit("space_msg", {
+                text: `${joinedUserData.name} left the space.`,
+                uuid: "farooq",
+                spaceId: existingSpace.id,
+                status: "left",
+                createdAt: `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
+            });
 
-            res?.socket?.server?.io?.emit("joinSpace", leaveData);
-            ``
+
+            res?.socket?.server?.io.of("/").sockets.get(socketId)?.leave(existingSpace.id);
+            res?.socket?.server?.io?.emit("leaveSpace", leaveData);
         }
+
+        let currentSpace = await prisma.space.findUnique({
+            where: {
+                id: spaceId,
+            },
+        });
+        if(!currentSpace) return res.status(404).json({ message: "Space not found" });
 
         const updatedSpace = await prisma.space.update({
             where: { id: spaceId },

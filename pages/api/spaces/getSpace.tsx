@@ -13,7 +13,7 @@ export default async function handler(
         const { spaceId } = req.body;
 
 
-        const data = await prisma.space.findUnique({
+        const data = await prisma.space.findFirst({
             where: {
                 id: spaceId
             },
@@ -21,6 +21,11 @@ export default async function handler(
                 users: true
             }
         })
+
+        if (!data) {
+            // Space does not exist, return a 404 error response
+            return res.status(404).json({ message: "Space not found" });
+        }
 
         return res.status(200).json(data);
     } catch (error) {

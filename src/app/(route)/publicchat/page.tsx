@@ -13,7 +13,34 @@ const page = () => {
     const [isNicknameOpen, setIsNicknameOpen] = useState(true)
     const bottomRef = useRef<HTMLDivElement>(null);
     const [nickname, setNickname] = useState("")
-    const { messages, socket, roomUsers, enterChatroom, logoutFunc } = useSocket();
+    const [roomUsers, setRoomUsers] = useState([])
+    const [publicMessages, setPublicMessages] = useState([
+        {
+            text: "whats going on",
+            name: "Farooq dad",
+            time: new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds(),
+            socketId: "socket.id",
+            roomId: "1",
+            status: "new_message"
+        },
+        {
+            text: "Farooq joined",
+            name: nickname,
+            time: new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds(),
+            socketId: "socket.id",
+            roomId: "1",
+            status: "user_joined"
+        },
+        {
+            text: "Farooq left",
+            name: nickname,
+            time: new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds(),
+            socketId: "socket.id",
+            roomId: "1",
+            status: "user_left"
+        }
+    ])
+    const {  socket, enterChatroom, logoutFunc } = useSocket();
 
     const enterAsGuest = () => {
         let generateuuid = uuidv4()
@@ -23,6 +50,10 @@ const page = () => {
         setNickname(user)
         setIsNicknameOpen(false)
         enterChatroom(user)
+    }
+
+    const directJoin = () => {
+
     }
 
 
@@ -36,7 +67,7 @@ const page = () => {
 
     useEffect(() => {
         bottomRef?.current?.scrollIntoView();
-    }, [messages])
+    }, [publicMessages])
 
     const globalRoomFun = () => {
 
@@ -60,7 +91,7 @@ const page = () => {
                 text: textArea,
                 name: nickname,
                 time: new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds(),
-                socketId: socket.id,
+                socketId: "socket.id",
                 roomId: "1",
                 status: "new_message"
             });
@@ -81,6 +112,7 @@ const page = () => {
 
     return (
         <>
+
             <Sidebar />
 
             {/* <button onClick={triggerUseEffect}>See chats</button> */}
@@ -90,6 +122,7 @@ const page = () => {
                     <div className="">
 
                         <button className="focus:outline-none w-full text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-500 dark:hover:bg-purple-400 dark:focus:ring-purple-900" onClick={enterAsGuest}>Enter as guest</button>
+                        <button className="focus:outline-none w-full text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-500 dark:hover:bg-purple-400 dark:focus:ring-purple-900" onClick={directJoin}>Direct join</button>
                         <div>OR</div>
                         <label htmlFor="">Enter your nickname</label>
                         <input
@@ -108,8 +141,8 @@ const page = () => {
                     </Button>
                 </Modal.Footer>
             </Modal>
-            <div
-                className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl opacity-70 dark:opacity-0 sm:-top-80 "
+            {/* <div
+                className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl opacity-70 dark:opacity-20 sm:-top-80 "
                 aria-hidden="true"
             >
                 <div
@@ -119,7 +152,7 @@ const page = () => {
                             'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
                     }}
                 />
-            </div>
+            </div> */}
             <Header />
 
 
@@ -144,11 +177,11 @@ const page = () => {
                             <div className='border dark:border-gray-800 flex-1 p:2 sm:px-1 justify-between flex flex-col'>
 
                                 <div
-                                    id="messages"
+                                    id="publicMessages"
                                     className="flex flex-col space-y-3 p-2 overflow-y-auto"
                                 >
 
-                                    {messages[1]?.map((message: any, index: number) => {
+                                    {publicMessages?.map((message: any, index: number) => {
                                         return (
                                             <div key={message + index + index + index + index} className="chat-message pt-2">
                                                 {message.status == "user_joined" || message.status == "user_left" ?
@@ -305,7 +338,7 @@ const page = () => {
                     </div> */}
                 </div>
             </div>
-            <BGGradient />
+            {/* <BGGradient /> */}
         </>
 
     )
