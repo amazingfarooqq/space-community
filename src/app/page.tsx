@@ -34,7 +34,7 @@ interface Space {
 
 
 export default function Home() {
-  const { socket, setSpaces }: any = useSocket()
+  const { socket, setSpaces, spaces }: any = useSocket()
   const { userData }: any = useUser()
   const router = useRouter()
 
@@ -96,42 +96,74 @@ export default function Home() {
     router.push(`/space/${spaceId}`)
   }
 
- 
+
+
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredSpaces, setFilteredSpaces] = useState([]);
+
+  useEffect(() => {
+    // Fetch spaces data here or use your existing data fetching logic
+
+    // Filter spaces based on search query
+    const filtered = spaces.filter((space) => {
+      const { title, language, level, limit } = space;
+      const queryLowerCase = searchQuery.toLowerCase();
+
+      return (
+        title.toLowerCase().includes(queryLowerCase) ||
+        language.toLowerCase().includes(queryLowerCase) ||
+        level.toLowerCase().includes(queryLowerCase) ||
+        limit.toLowerCase().includes(queryLowerCase)
+      );
+    });
+
+    setFilteredSpaces(filtered);
+  }, [searchQuery, spaces]);
+
+  const handleSearchInputChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
 
   return (
     <>
-      <div >
+      <Sidebar />
+      <main className="birdcontainer min-h-100 flex min-h-screen flex-col pb-56 ml-16 px-10">
         <Header />
-        <main className="flex min-h-screen flex-col pb-56 ml-24">
-          <BGGradient />
-          <Sidebar />
+        <div className="bird-container bird-container--one">
+          <div className="bird bird--one" />
+        </div>
+        {/* <BGGradient /> */}
 
-          {/* bg gradient */}
+
+
+        {/* <div
+          className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl dark:opacity-50 sm:-top-80 "
+          aria-hidden="true"
+        >
           <div
-            className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl dark:opacity-50 sm:-top-80 "
-            aria-hidden="true"
-          >
-            <div
-              className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
-              style={{
-                background:
-                  "linear-gradient(106.89deg, rgba(192, 132, 252, 0.31) 15.73%, rgba(14, 165, 233, 0.21) 15.74%, rgba(232, 121, 249, 0.36) 56.49%, rgba(79, 70, 229, 0.4) 115.91%)",
-              }}
-            />
-          </div>
-          {/* bg gradient end */}
+            className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
+            style={{
+              background:
+                "linear-gradient(106.89deg, rgba(192, 132, 252, 0.31) 15.73%, rgba(14, 165, 233, 0.21) 15.74%, rgba(232, 121, 249, 0.36) 56.49%, rgba(79, 70, 229, 0.4) 115.91%)",
+            }}
+          />
+        </div> */}
 
-          <div className='mt-4 flex flex-wrap gap-x-2 gap-y-2 mt-4 lg:ml-6 '>
-            {/* <FormElements isLoginModal={isLoginModal} setIsLoginModal={setIsLoginModal} /> */}
-            <ModalToCreateSpace id="popup-modal" isCreateSpaceModal={isCreateSpaceModal} setIsCreateSpaceModal={setIsCreateSpaceModal} createSpace={createSpace} />
-            {/* <button type="button" className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-500 dark:hover:bg-purple-400 dark:focus:ring-purple-900">Community</button> */}
-          </div>
-          <div className=" ">
-            <Spaces setSpaces={setSpaces} joinSpace={joinSpace} />
-          </div>
-        </main >
+        <div className='mt-4 flex flex-wrap mt-4 '>
+          <ModalToCreateSpace id="popup-modal" isCreateSpaceModal={isCreateSpaceModal} setIsCreateSpaceModal={setIsCreateSpaceModal} createSpace={createSpace} />
+        </div>
+        {/* <input
+          value={searchQuery}
+          onChange={handleSearchInputChange}
+          type="text"
+          placeholder="Search space by user, title, language, level, limit, etc"
+          className="block mt-2 text-sm py-3 px-4 rounded-lg w-full border outline-none dark:border-gray-700 dark:bg-gray-800"
+        /> */}
+        <div className="py-6 flex flex-wrap gap-5 flex-col lg:flex-row  ">
+          <Spaces filteredSpaces={filteredSpaces} joinSpace={joinSpace} />
+        </div>
+      </main >
 
-      </div>
 
 
     </>

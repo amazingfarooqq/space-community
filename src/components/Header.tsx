@@ -61,10 +61,10 @@ const Header = () => {
     }
 
     return (
-        <div className="py-3 ml-24 z-10">
+        <div className="py-3 z-10">
 
 
-            <div className="px-3 h-12 mx-auto flex justify-between items-center ">
+            <div className="h-12 mx-auto flex justify-between items-center ">
                 <Link href="/" className="flex items-center ">
                     <img src="/images/logoemoji.png" alt="Logo" className="h-10 mr-2" />
                     <span className="text-xl -ml-2" style={{

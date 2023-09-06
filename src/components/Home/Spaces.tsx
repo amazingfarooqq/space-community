@@ -5,22 +5,22 @@ import { Tooltip } from 'flowbite-react'
 import React from 'react'
 import UsersInSpace from './UsersInSpace'
 
-const Spaces = ({ setSpaces, joinSpace }: { setSpaces: any, joinSpace: any }) => {
+const Spaces = ({ filteredSpaces, joinSpace }: { filteredSpaces:any,joinSpace: any }) => {
 
     const { spaces } = useSocket()
 
     return (
-        <div className="py-6 flex flex-wrap  gap-y-5 flex-col lg:flex-row ">
+        <>
 
-            {spaces.map((space: any, index: any) => {
+            {filteredSpaces?.map((space: any, index: any) => {
 
 
-                return <div key={index} className={` animate-fade-in dark:shadow-md border-2 relative rounded-md  bg-white dark:bg-gray-800 dark:border-gray-800 mr-3 lg:mr-0 lg:w-98 h-auto py-2 lg:h-72 border overflow-hidden ml-0 lg:ml-6`}>
+                return <div key={index} className={` animate-fade-in relative  bg-gray-200 dark:bg-gray-800 lg:w-98 h-auto py-2 lg:h-72 overflow-hidden ml-0 rounded-md  shadow-lg border border-gray-400 dark:border-gray-700`}>
 
                     {space.users?.length < space.limit ?
                         <>
-                            <div className="absolute z-100 top-0 right-0  mt-1 mr-1 w-2 h-2 rounded-full bg-purple-300 animate-ping"></div>
-                            <div className="absolute top-0 right-0 mt-1 mr-1 w-2 h-2 rounded-full bg-purple-400"></div>
+                            <div className="absolute z-100 top-1 right-1  mt-1 mr-1 w-2 h-2 rounded-full bg-purple-300 animate-ping"></div>
+                            <div className="absolute top-1 right-1 mt-1 mr-1 w-2 h-2 rounded-full bg-purple-400"></div>
                         </> : ""
                     }
                     <div className="flex flex-col px-4 py-3 ">
@@ -46,7 +46,7 @@ const Spaces = ({ setSpaces, joinSpace }: { setSpaces: any, joinSpace: any }) =>
                                         </div>
                                     </div>
                                     <h2>
-                                        <div className="text-right ">
+                                        <div className="text-right absolute z-100 bottom-3 right-3   ">
                                             {space.users.length < space.limit ?
                                                 <button onClick={() => joinSpace(space.id)}
                                                     className="text-sm font-medium hover:text-purple-500 inline-flex items-center transition duration-150 ease-in-out group ">Join
@@ -99,7 +99,7 @@ const Spaces = ({ setSpaces, joinSpace }: { setSpaces: any, joinSpace: any }) =>
                 </div>
 
             })}
-        </div>
+        </>
     )
 }
 

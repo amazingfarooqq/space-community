@@ -24,7 +24,7 @@ export default function RootLayout({
 
     <html lang="en">
 
-      <body className={`dark:bg-[#121212] ${inter.className}`} >
+      <body className={`dark:bg-[#191D20] ${inter.className}`} >
         <AuthContext>
           <ThemeProviders>
             <ToasterContext />

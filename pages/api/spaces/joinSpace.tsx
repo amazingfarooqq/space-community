@@ -21,9 +21,6 @@ export default async function handler(
             }
         });
 
-        console.log({ existingSpaceid: existingSpace?.id });
-        
-
         res?.socket?.server?.io.of("/").sockets.get(socketId)?.join(spaceId);
 
         res?.socket?.server?.io?.to(spaceId).emit("space_msg", {

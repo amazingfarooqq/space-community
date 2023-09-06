@@ -7,54 +7,27 @@ import { useSocket } from "@/contexts/SocketContext";
 import { useUser } from "@/contexts/UserContext";
 import { pusherClient } from "@/libs/pusher";
 import axios from "axios";
-import { Avatar } from "flowbite-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
-const page = ({
-    params: { spaceId },
-}: {
-    params: {
-        spaceId: string;
-    };
-}) => {
+const page = ({ params: { spaceId } }: { params: { spaceId: string; } }) => {
     const router = useRouter()
 
     const [isChatBox, setIsChatBox] = useState(true)
-    const [isParticipants, setIsParticipants] = useState(false)
-
-    const handleParticipants = () => {
-        setIsChatBox(false)
-        setIsParticipants(true)
-    }
-    const handleChatBox = () => {
-        setIsParticipants(false)
-        setIsChatBox(true)
-    }
-
-    const handleRightSide = () => {
-        if (isChatBox && !isParticipants) {
-            setIsChatBox(false)
-            setIsParticipants(false)
-        }
-        if (!isChatBox && isParticipants) {
-            setIsChatBox(false)
-            setIsParticipants(false)
-        }
-        if (!isChatBox && !isParticipants) {
-            setIsChatBox(true)
-        }
-    }
-
-
-
-
-    const { spaces, socket, messages, setMessages, setSpaces }: any = useSocket()
+    const { spaces, socket, messages, setMessages }: any = useSocket()
 
     const { userData }: any = useUser()
     const currentSpaceData = spaces.find((space: any) => space.id === spaceId)
 
+    const handleChatBox = () => {
+        setIsChatBox(true)
+    }
+
+    const handleRightSide = () => {
+        setIsChatBox(!isChatBox)
+
+    }
 
     useEffect(() => {
         setMessages([])
@@ -97,7 +70,6 @@ const page = ({
         // toast.error("please wait as we fetch space data");
 
         getSpace().then((spaceData) => {
-            const spacedata = spaceData.data;
             const joinedUserData = {
                 id: userData?.id || "",
                 name: userData?.name || "",
@@ -111,7 +83,7 @@ const page = ({
         });
     }, [userData]);
 
-    const joinUserDatabase = async (joinedUserData) => {
+    const joinUserDatabase = async (joinedUserData: any) => {
 
         try {
             await axios.post('/api/spaces/joinSpace', {
@@ -153,7 +125,6 @@ const page = ({
 
     }
 
-
     const leaveSpace = async () => {
         try {
 
@@ -186,7 +157,7 @@ const page = ({
                     {/*   ITEM 2 */}
                     <div className="bg-purple-400 w-32 h-32 absolute animate-ping rounded-full shadow-xl" />
                     {/*   ITEM 3 */}
-                    <div className="bg-white dark:bg-black w-24 h-24 absolute animate-pulse rounded-full shadow-xl" />
+                    <div className="bg-transparent w-24 h-24 absolute animate-pulse rounded-full shadow-xl" />
                     {/*   SVG LOGO */}
                     <img src="/images/logoemoji.png" alt="Logo" className="text-purple-900  h-16 w-16" />
 
@@ -205,36 +176,18 @@ const page = ({
                         />
                     </svg> */}
                 </section>
-
+                                            
             }
             {currentSpaceData?.id &&
                 <div className="h-screen flex " >
-                    {/* {isParticipants && */}
-                    <div className="relative max-w-md mx-auto shadow-lg h-80 overflow-hidden ring-1 ring-slate-900/5 w-[300px] h-[100vh]">
-                        <div className="top-0 left-0 right-0 px-4 py-3 flex items-center font-semibold text-sm  dark:bg-slate-700/90 backdrop-blur-sm ring-1 ring-slate-900/10 dark:ring-black/10">
-                            Avtive
-                        </div>
-                        <div className="overflow-auto flex flex-col divide-y dark:divide-slate-200/5 h-full">
-                            {currentSpaceData.users?.map((user: any) => (
-                                <div className="flex items-center gap-4 p-4">
-
-                                    <Avatar img={user.image} bordered rounded />
-                                    <strong className="text-slate-900 text-sm font-medium dark:text-slate-200">
-                                        {user.name.length > 15 ? `${user.name?.slice(0, 15)}...` : user.name}
-                                    </strong>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                    {/* } */}
-                    <div className={`lg:w-3/4 w-full flex flex-col justify-between dark:bg-[#191D20]`}>
-                        <RightSide isChatBox={isChatBox} isParticipants={isParticipants} leaveSpace={leaveSpace} handleParticipants={handleParticipants} handleChatBox={handleChatBox} handleRightSide={handleRightSide} />
+                    <div className={`lg:w-full w-full flex flex-col justify-between dark:bg-[#191D20]`}>
+                        <RightSide currentSpaceData={currentSpaceData} isChatBox={isChatBox} leaveSpace={leaveSpace} handleChatBox={handleChatBox} handleRightSide={handleRightSide} />
                     </div>
 
 
 
                     {isChatBox &&
-                        <div className={`absolute lg:relative right-0 absolute lg:relative w-[400px]  border dark:bg-[#1e272d] dark:border-gray-700  pb-2  justify-between flex flex-col h-[calc(100vh)]`}>
+                        <div className={`absolute lg:relative right-0 absolute lg:relative w-[500px]  border dark:bg-[#1e272d] dark:border-gray-700  pb-2  justify-between flex flex-col h-[calc(100vh)]`}>
                             <Chatbox messages={messages} sendMessage={sendMessage} />
                         </div>
                     }

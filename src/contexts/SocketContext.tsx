@@ -7,6 +7,7 @@ import axios from "axios";
 import { io as ClientIO } from "socket.io-client";
 
 const initialData = {
+    publicChatMsgs: [],
     isConnected: false,
     socket: undefined,
     messages: {},
@@ -30,12 +31,19 @@ export default function SocketProvider({ children }: { children: any }) {
 
     const { userData } = useUser()
 
+    const [publicChatMsgs, setPublicChatMsgs] = useState<any>([])
+    const [publicChatUsers, setPublicChatUsers] = useState<any>([])
+
 
     const [socket, setSocket] = useState<any>(null);
     const [isConnected, setIsConnected] = useState(false);
 
-    console.log({ isConnected });
+    useEffect(() => {
+        console.log("emit saveUserData", { userData });
+        
+        socket?.emit("saveUserData", userData)
 
+    }, [userData, socket]);
 
     useEffect(() => {
         const socketInstance = new (ClientIO as any)(process.env.NEXT_PUBLIC_SITE_URL!, {
@@ -48,31 +56,50 @@ export default function SocketProvider({ children }: { children: any }) {
             setIsConnected(true);
         });
 
+        socketInstance.on("userDisconneted", async (userDataa: any) => {
+
+            if(userDataa?.id){
+                try {
+                    await axios.post(`/api/spaces/disconnectUser`, {
+                        userData: userDataa
+                    })
+                    
+                } catch (error) {
+                    console.log({error});
+                    
+                }
+
+            }
+            
+            
+        })
         socketInstance.on("disconnect", () => {
             console.log("disconnect");
+            
+            socketInstance.disconnect()
+            socketInstance.close()
             console.log({ currentSpaceId, userData });
 
             setIsConnected(false);
 
-            if (currentSpaceId && userData) {
+            // if (currentSpaceId && userData) {
 
-                const leaveData = {
-                    spaceId: currentSpaceId,
-                    userId: userData.id, // Assuming you have userData available
-                };
-                const removeFromSpace = async () => {
-                    await axios.delete(`/api/spaces/leaveSpace`, {
-                        data: {
-                            spaceId: currentSpaceId,
-                            userId: userData.id,
-                            name: userData.name
-                        }
-                    });
-                }
+            //     const leaveData = {
+            //         spaceId: currentSpaceId,
+            //         userId: userData.id,
+            //     };
+            //     const removeFromSpace = async () => {
+            //         await axios.delete(`/api/spaces/leaveSpace`, {
+            //             data: {
+            //                 spaceId: currentSpaceId,
+            //                 userId: userData.id,
+            //                 name: userData.name
+            //             }
+            //         });
+            //     }
 
-                removeFromSpace()
-                // socketInstance.emit("leaveSpace", leaveData);
-            }
+            //     removeFromSpace()
+            // }
         });
 
         socketInstance.on("createSpace", (data: any) => {
@@ -135,6 +162,25 @@ export default function SocketProvider({ children }: { children: any }) {
         });
 
 
+
+        // publicchat
+
+        socketInstance?.on("join_public_chat", (data: any) => {
+            console.log("public_msg", data);
+            setPublicChatUsers((prev: any) => [...prev, data]);
+        });
+
+        socketInstance?.on("public_msg", (data: any) => {
+            console.log("public_msg", data);
+            setPublicChatMsgs((prev: any) => [...prev, data]);
+        });
+
+        socketInstance?.on("leave_public_chat", (data: any) => {
+            console.log("leave_public_chat", data);
+
+            setPublicChatMsgs((prev: any) => prev.filter((item: any) => item.nam !== data.name));
+        });
+
         setSocket(socketInstance);
 
         return () => {
@@ -150,8 +196,8 @@ export default function SocketProvider({ children }: { children: any }) {
         try {
             console.log("fetchSpaces");
             const storedSpaces = await axios.get("/api/spaces/getSpaces")
-            console.log({storedSpaces});
-            
+            console.log({ storedSpaces });
+
             setSpaces(storedSpaces.data || []);
 
         } catch (error) {
@@ -161,7 +207,7 @@ export default function SocketProvider({ children }: { children: any }) {
 
     return (
         <SocketContext.Provider
-            value={{ isConnected, socket, messages, setMessages, spaces, setSpaces, currentSpaceData, setCurrentSpaceData }}
+            value={{ publicChatMsgs, publicChatUsers, isConnected, socket, messages, setMessages, spaces, setSpaces, currentSpaceData, setCurrentSpaceData }}
         >
             {children}
         </SocketContext.Provider>

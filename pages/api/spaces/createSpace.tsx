@@ -19,9 +19,6 @@ export default async function handler(
       }
     });
 
-    console.log("createdSpace", createdSpace);
-    
-
     res?.socket?.server?.io?.emit("createSpace", createdSpace);
 
     return res.status(200).json(createdSpace);

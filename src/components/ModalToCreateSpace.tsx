@@ -44,11 +44,11 @@ const ModalToCreateSpace: React.FC<ModalToCreateSpaceProps> = ({ id, isCreateSpa
 
     return (
         <>
-            <button type="button" onClick={() => setIsCreateSpaceModal('show')} className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-500 dark:hover:bg-purple-400 dark:focus:ring-purple-900">Create Space</button>
+            <button type="button" onClick={() => setIsCreateSpaceModal('show')} className="focus:outline-none text-white bg-purple-800 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-400 dark:hover:bg-purple-500 dark:focus:ring-purple-900">Create Space</button>
 
             <Modal size="lg" dismissible show={isCreateSpaceModal === 'show'} onClose={() => setIsCreateSpaceModal("hide")}>
-                <Modal.Header>Create new space</Modal.Header>
-                <Modal.Body>
+                <Modal.Header className='dark:bg-[#20354b] py-4'>Create new space</Modal.Header>
+                <Modal.Body className='dark:bg-[#20354b]'>
                     <div className="">
                         <label htmlFor="title">Space Title</label>
                         <input
@@ -57,7 +57,7 @@ const ModalToCreateSpace: React.FC<ModalToCreateSpaceProps> = ({ id, isCreateSpa
                             name="title"
                             onChange={handleOnChange}
                             placeholder="Let's talk in English"
-                            className="block mt-2 text-sm py-3 px-4 rounded-lg w-full border outline-none dark:border-gray-600 dark:bg-gray-700"
+                            className="block mt-2 text-sm py-3 px-4 rounded-lg w-full border outline-none dark:border-gray-700 dark:dark:bg-[#20354b]"
                         />
                     </div>
                     <div className="mt-4">
@@ -68,7 +68,7 @@ const ModalToCreateSpace: React.FC<ModalToCreateSpaceProps> = ({ id, isCreateSpa
                             name="language"
                             onChange={handleOnChange}
                             placeholder="English"
-                            className="block mt-2 text-sm py-3 px-4 rounded-lg w-full border outline-none dark:border-gray-600 dark:bg-gray-700"
+                            className="block mt-2 text-sm py-3 px-4 rounded-lg w-full border outline-none dark:border-gray-700 dark:dark:bg-[#20354b]"
                         />
                     </div>
                     <div className="mt-4">
@@ -79,7 +79,7 @@ const ModalToCreateSpace: React.FC<ModalToCreateSpaceProps> = ({ id, isCreateSpa
                             name="level"
                             onChange={handleOnChange}
                             placeholder="Intermediate"
-                            className="block mt-2 text-sm py-3 px-4 rounded-lg w-full border outline-none dark:border-gray-600 dark:bg-gray-700"
+                            className="block mt-2 text-sm py-3 px-4 rounded-lg w-full border outline-none dark:border-gray-700 dark:dark:bg-[#20354b]"
                         />
                     </div>
                     <div className="mt-4">
@@ -88,7 +88,7 @@ const ModalToCreateSpace: React.FC<ModalToCreateSpaceProps> = ({ id, isCreateSpa
                             value={spaceData.limit}
                             name="limit"
                             onChange={handleLimitChange}
-                            className="block mt-2 text-sm py-3 px-4 rounded-lg w-full border outline-none dark:border-gray-600 dark:bg-gray-700"
+                            className="block mt-2 text-sm py-3 px-4 rounded-lg w-full border outline-none dark:border-gray-700 dark:dark:bg-[#20354b]"
                         >
                             {/* Generating options for limits */}
                             {Array.from({ length: 20 }, (_, index) => (
@@ -99,7 +99,7 @@ const ModalToCreateSpace: React.FC<ModalToCreateSpaceProps> = ({ id, isCreateSpa
                         </select>
                     </div>
                 </Modal.Body>
-                <Modal.Footer className='pt-0 border-none'>
+                <Modal.Footer className='pt-0 border-none dark:bg-[#20354b]'>
                     {loading ? <Spinner aria-label="Alternate spinner button example" />
                         :
                         <>

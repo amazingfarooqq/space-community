@@ -35,6 +35,10 @@ export default async function handler(
             status: "left",
         };
 
+
+        console.log({leaveData});
+        
+
         res?.socket?.server?.io?.to(spaceId).emit("space_msg", {
             text: `${name} left the space.`,
             uuid: "farooq",

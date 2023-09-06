@@ -4,9 +4,10 @@ import IUserContext from "@/interfaces/IUserContext";
 import { getUserDataFromCookie } from "@/libs/functions";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, use, useContext, useEffect, useState } from "react";
 const intialData: IUserContext = {
   userData: ({} as any),
+  users: [],
   setUserData: () => { },
 };
 
@@ -21,9 +22,7 @@ export default function UserProvider({
 }: any) {
   const [userData, setUserData] = useState({})
   const session = useSession()
-
-  console.log({userData});
-  
+  const [users, setUsers] = useState([])
 
   const fetchUserData = async () => {
 
@@ -42,6 +41,22 @@ export default function UserProvider({
 
   }
 
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get('/api/user/getUsers')
+      const data = response.data;
+      setUsers(data);
+    } catch (error) {
+      console.error({error});
+
+    }
+  }
+
+  useEffect(() => {
+    fetchUsers()
+  }, []); 
+
+
   useEffect(() => {
     if (session.status == "loading") return
     if (session.status === "unauthenticated") return
@@ -49,6 +64,7 @@ export default function UserProvider({
       console.log("fetchUserData");
       
       fetchUserData()
+
     }
 
     // const data = getUserDataFromCookie()
@@ -63,6 +79,7 @@ export default function UserProvider({
     <UserContext.Provider
       value={{
         userData,
+        users,
         setUserData
       }}
     >

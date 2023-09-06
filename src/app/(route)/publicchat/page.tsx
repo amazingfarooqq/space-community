@@ -6,77 +6,77 @@ import Sidebar from '@/components/sidebar/Sidebar'
 import { useSocket } from '@/contexts/SocketContext'
 import axios from 'axios'
 import { Avatar, Button, Modal } from 'flowbite-react'
+import { useSession } from 'next-auth/react'
 import React, { useEffect, useRef, useState } from 'react'
+import { toast } from 'react-hot-toast'
 import { v4 as uuidv4 } from 'uuid';
 
 const page = () => {
     const [isNicknameOpen, setIsNicknameOpen] = useState(true)
     const bottomRef = useRef<HTMLDivElement>(null);
     const [nickname, setNickname] = useState("")
-    const [roomUsers, setRoomUsers] = useState([])
-    const [publicMessages, setPublicMessages] = useState([
-        {
-            text: "whats going on",
-            name: "Farooq dad",
-            time: new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds(),
-            socketId: "socket.id",
-            roomId: "1",
-            status: "new_message"
-        },
-        {
-            text: "Farooq joined",
-            name: nickname,
-            time: new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds(),
-            socketId: "socket.id",
-            roomId: "1",
-            status: "user_joined"
-        },
-        {
-            text: "Farooq left",
-            name: nickname,
-            time: new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds(),
-            socketId: "socket.id",
-            roomId: "1",
-            status: "user_left"
+    const { publicChatMsgs, publicChatUsers, socket, logoutFunc } = useSocket();
+
+    const session = useSession()
+
+    const enterAsGuest = async () => {
+        try {
+
+            let generateuuid = uuidv4()
+            let generate = generateuuid.split("-")
+            let user = "Guest-" + generate[0].slice(0, 2) + generate[1].slice(0, 2) + generate[1].slice(0, 2)
+            const msgData = {
+                text: user + " joined the space.",
+                name: user,
+                time: "11:30",
+                socketId: "socket.id",
+                roomId: "1",
+                status: "user_joined"
+            }
+
+            await axios.post("api/msgs/publicchat/join", {
+                msgData
+            })
+            setNickname(user)
+            setIsNicknameOpen(false)
+        } catch (error) {
+            console.log({ error });
+
         }
-    ])
-    const {  socket, enterChatroom, logoutFunc } = useSocket();
-
-    const enterAsGuest = () => {
-        let generateuuid = uuidv4()
-        let generate = generateuuid.split("-")
-        let user = "Guest-" + generate[0].slice(0, 2) + generate[1].slice(0, 2) + generate[1].slice(0, 2)
-
-        setNickname(user)
-        setIsNicknameOpen(false)
-        enterChatroom(user)
     }
-
-    const directJoin = () => {
-
-    }
-
-
-    const logout = () => {
-        setIsNicknameOpen(true)
-        logoutFunc()
-        socket?.emit("logout")
-
-    }
-
 
     useEffect(() => {
         bottomRef?.current?.scrollIntoView();
-    }, [publicMessages])
+    }, [publicChatMsgs])
 
-    const globalRoomFun = () => {
-
-        if (!nickname) {
-            return;
+    useEffect(() => {
+        if(session.status == "authenticated"){
+            globalRoomFun()
         }
-        // if ("1"?.includes(socket?.id)) return;
+    },[session.status])
+
+    const globalRoomFun = async () => {
+
+        // if (!nickname.trim()) return toast.error("We need a nickname")
+
+        setNickname(session?.data?.user?.name || "")
+        const msgData = {
+            text: session?.data?.user?.name + " joined the space.",
+            name: session?.data?.user?.name,
+            time: "11:30",
+            socketId: "socket.id",
+            roomId: "1",
+            image: session?.data?.user?.image,
+            status: "user_joined"
+        }
+        console.log(socket);
+
+        console.log(socket?.id);
+
+        await axios.post("api/msgs/publicchat/join", {
+            msgData, socketId: socket?.id
+        })
         setIsNicknameOpen(false)
-        enterChatroom(nickname)
 
     }
 
@@ -84,17 +84,21 @@ const page = () => {
 
     const [textArea, settextArea] = useState("")
 
-    const handleSendMessage = (e: any) => {
+    const handleSendMessage = async (e: any) => {
+        const msgData = {
+            text: textArea,
+            name: nickname,
+            time: "11:30",
+            socketId: "socket.id",
+            roomId: "1",
+            image: session?.data?.user?.image,
+            status: "new_message"
+        }
         e.preventDefault()
         if (textArea.trim()) {
-            socket?.emit("send_message", {
-                text: textArea,
-                name: nickname,
-                time: new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds(),
-                socketId: "socket.id",
-                roomId: "1",
-                status: "new_message"
-            });
+            await axios.post("api/msgs/publicchat/sendmsg", {
+                msgData
+            })
         }
         settextArea("");
     };
@@ -107,7 +111,7 @@ const page = () => {
 
 
     const handleTyping = () => {
-        socket?.emit("typing", textArea ? nickname + " is typing ..." : "");
+        // socket?.emit("typing", textArea ? nickname + " is typing ..." : "");
     };
 
     return (
@@ -116,21 +120,21 @@ const page = () => {
             <Sidebar />
 
             {/* <button onClick={triggerUseEffect}>See chats</button> */}
-            <Modal size="lg" show={isNicknameOpen}>
+
+            {/* <button className="focus:outline-none w-full text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-500 dark:hover:bg-purple-400 dark:focus:ring-purple-900" onClick={enterAsGuest}>Enter as guest</button> */}
+            {/* <button className="focus:outline-none w-full text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-500 dark:hover:bg-purple-400 dark:focus:ring-purple-900" onClick={directJoin}>Direct join</button>
+                        <div>OR</div> */}
+            {/* <Modal size="lg" show={isNicknameOpen}>
                 <Modal.Header>Enter your nickname to Continue</Modal.Header>
                 <Modal.Body>
                     <div className="">
-
-                        <button className="focus:outline-none w-full text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-500 dark:hover:bg-purple-400 dark:focus:ring-purple-900" onClick={enterAsGuest}>Enter as guest</button>
-                        <button className="focus:outline-none w-full text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-500 dark:hover:bg-purple-400 dark:focus:ring-purple-900" onClick={directJoin}>Direct join</button>
-                        <div>OR</div>
                         <label htmlFor="">Enter your nickname</label>
                         <input
                             type="text"
                             value={nickname}
                             onChange={(e) => setNickname(e.target.value)}
                             placeholder="Enter your nickname"
-                            className="block mt-2 text-sm py-3 px-4 rounded-lg w-full border outline-none dark:border-gray-600 dark:bg-gray-700"
+                            className=""
                         />
                     </div>
                 </Modal.Body>
@@ -140,7 +144,7 @@ const page = () => {
                         Go to home
                     </Button>
                 </Modal.Footer>
-            </Modal>
+            </Modal> */}
             {/* <div
                 className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl opacity-70 dark:opacity-20 sm:-top-80 "
                 aria-hidden="true"
@@ -153,35 +157,16 @@ const page = () => {
                     }}
                 />
             </div> */}
-            <Header />
 
 
-            <div className=" mx-auto flex justify-between  ml-12 z-10 xl:ml-20 ">
+            <div className=" mx-auto flex justify-between  z-10 ml-20 px-2 flex-col ">
+                <Header />
                 <div className="flex flex-row justify-between w-full">
                     <div className=" w-full ">
                         <div className='flex flex-row justify-between h-[calc(100vh-5rem)]'>
-                            <div className='border  dark:border-gray-800 flex flex-col w-1/5  overflow-y-auto overflow-x-hidden '>
-                                <div className="flex sm:items-center justify-between border-b-2 py-4 mb-3 border-gray-200 dark:border-gray-800 p-2 text-md">
-                                    Online users
-                                </div>
-
-                                <div className="w-100 p-0 m-0">
-                                    {roomUsers?.map((item: {name: string}) => {
-                                        return <div>
-                                            <span className='text-xs'>{item.name}</span>
-                                        </div>
-                                    })}
-                                </div>
-
-                            </div>
-                            <div className='border dark:border-gray-800 flex-1 p:2 sm:px-1 justify-between flex flex-col'>
-
-                                <div
-                                    id="publicMessages"
-                                    className="flex flex-col space-y-3 p-2 overflow-y-auto"
-                                >
-
-                                    {publicMessages?.map((message: any, index: number) => {
+                            <div className='border dark:border-gray-800 flex-1 p:2 sm:px-1 justify-between flex flex-col rounded'>
+                                <div id="publicMessages" className="flex flex-col space-y-3 p-2 overflow-y-auto">
+                                    {publicChatMsgs?.map((message: any, index: number) => {
                                         return (
                                             <div key={message + index + index + index + index} className="chat-message pt-2">
                                                 {message.status == "user_joined" || message.status == "user_left" ?
@@ -204,7 +189,9 @@ const page = () => {
                                                         <div className="space-y-2 w-full text-xs mx-1 order-2 items-start">
                                                             <div className={`px-2 rounded-lg`}>
                                                                 <div className='flex justify-between'>
-                                                                    <h2 className='mb-1 text-purple-500 dark:text-purple-400 text-sm'>{message.name}</h2>
+                                                                    <h2 className='mb-1 text-purple-500 dark:text-purple-400 text-sm'>{message.name} {" "}
+                                                                        <span className='opacity-30 text-xs text-gray-400'>@sdsad</span>
+                                                                    </h2>
                                                                     <h2>
                                                                         <div className=" justify-center hidden mr-auto text-gray-500 dark:text-gray-400 md:flex">
                                                                             <span className="text-xs">{message.time}</span>
@@ -212,7 +199,7 @@ const page = () => {
                                                                     </h2>
 
                                                                 </div>
-                                                                <div className={`dark:text-gray-300`}>
+                                                                <div className={`dark:text-gray-300 `}>
                                                                     {message.text}
                                                                 </div>
                                                             </div>
@@ -232,7 +219,7 @@ const page = () => {
                                 </div>
                                 <div>
                                     <div className='pt-1'>
-                                        <button
+                                        {/* <button
                                             onClick={logout}
                                             type="button"
                                             className="inline-flex items-center justify-center rounded-full w-8 transition duration-500 ease-in-out text-gray-500 0 focus:outline-none"
@@ -240,7 +227,7 @@ const page = () => {
                                             <svg className="h-6 w-6 text-purple-500 dark:text-purple-400 transition duration-300 ease-in-out" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 18">
                                                 <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 1v11m0 0 4-4m-4 4L4 8m11 4v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-3" />
                                             </svg>
-                                        </button>
+                                        </button> */}
 
                                         <button
                                             type="button"
@@ -318,13 +305,30 @@ const page = () => {
                                 </div>
 
                             </div>
+                            {/* <div className='border  dark:border-gray-800 flex flex-col w-1/5  overflow-y-auto overflow-x-hidden '>
+                                <div className="flex sm:items-center justify-between border-b-2 py-4 mb-3 border-gray-200 dark:border-gray-800 p-2 text-md">
+                                    Online users
+                                </div>
+
+                                <div className="w-100">
+                                    {publicChatUsers?.map((item: { name: string }) => {
+                                        return <div className=' p-2 bg-gray-900'>
+                                            <span className='text-xs'>{item.name}</span>
+                                        </div>
+                                    })}
+                                </div>
+
+                            </div> */}
                         </div>
                     </div >
                     {/* end message */}
-                    {/* <div className="w-2/5 border-l-2 px-5">
+                    <div className="w-2/5  px-5 hidden md:block">
                         <div className="flex flex-col">
-                            <div className="font-semibold text-xl py-4">Mern Stack Group</div>
-                            <img
+                            <div className="">
+                                <h2 className='font-semibold text-xl py-4'>Public Chat Room</h2>
+                                <p className='text-xs'>Public place to troll each other : )</p>
+                            </div>
+                            {/* <img
                                 src="https://source.unsplash.com/L2cxSuKWbpo/600x600"
                                 className="object-cover rounded-xl h-64"
                                 alt=""
@@ -333,9 +337,9 @@ const page = () => {
                             <div className="font-light">
                                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt,
                                 perspiciatis!
-                            </div>
+                            </div> */}
                         </div>
-                    </div> */}
+                    </div>
                 </div>
             </div>
             {/* <BGGradient /> */}
