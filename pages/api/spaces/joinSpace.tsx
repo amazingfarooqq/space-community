@@ -22,9 +22,12 @@ export default async function handler(
         });
 
         res?.socket?.server?.io.of("/").sockets.get(socketId)?.join(spaceId);
+        const currentTime = new Date();
+        const formattedTime = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
 
         res?.socket?.server?.io?.to(spaceId).emit("space_msg", {
-            text: `${joinedUserData.name} joins the space at ${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}.`,
+            text: `${joinedUserData.name} joins the space at ${formattedTime}.`,
             uuid: "farooq",
             spaceId: spaceId,
             status: "joined",
@@ -55,8 +58,9 @@ export default async function handler(
                 leftUserId: userId,
                 status: "left",
             };
+            
             res?.socket?.server?.io?.to(existingSpace.id).emit("space_msg", {
-                text: `${joinedUserData.name} left the space.`,
+                text:  `${joinedUserData.name} left the space at ${formattedTime}.`,
                 uuid: "farooq",
                 spaceId: existingSpace.id,
                 status: "left",

@@ -15,35 +15,9 @@ const page = () => {
     const [isNicknameOpen, setIsNicknameOpen] = useState(true)
     const bottomRef = useRef<HTMLDivElement>(null);
     const [nickname, setNickname] = useState("")
-    const { publicChatMsgs, publicChatUsers, socket, logoutFunc } = useSocket();
+    const { publicChatMsgs, socket } = useSocket();
 
     const session = useSession()
-
-    const enterAsGuest = async () => {
-        try {
-
-            let generateuuid = uuidv4()
-            let generate = generateuuid.split("-")
-            let user = "Guest-" + generate[0].slice(0, 2) + generate[1].slice(0, 2) + generate[1].slice(0, 2)
-            const msgData = {
-                text: user + " joined the space.",
-                name: user,
-                time: "11:30",
-                socketId: "socket.id",
-                roomId: "1",
-                status: "user_joined"
-            }
-
-            await axios.post("api/msgs/publicchat/join", {
-                msgData
-            })
-            setNickname(user)
-            setIsNicknameOpen(false)
-        } catch (error) {
-            console.log({ error });
-
-        }
-    }
 
     useEffect(() => {
         bottomRef?.current?.scrollIntoView();
@@ -56,28 +30,11 @@ const page = () => {
     },[session.status])
 
     const globalRoomFun = async () => {
-
-        // if (!nickname.trim()) return toast.error("We need a nickname")
-
         setNickname(session?.data?.user?.name || "")
-        const msgData = {
-            text: session?.data?.user?.name + " joined the space.",
-            name: session?.data?.user?.name,
-            time: "11:30",
-            socketId: "socket.id",
-            roomId: "1",
-            image: session?.data?.user?.image,
-            status: "user_joined"
-        }
-        console.log(socket);
-
-        console.log(socket?.id);
-
         await axios.post("api/msgs/publicchat/join", {
-            msgData, socketId: socket?.id
+            roomId: "1", socketId: socket?.id
         })
         setIsNicknameOpen(false)
-
     }
 
 

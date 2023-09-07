@@ -51,7 +51,6 @@ const page = ({ params: { spaceId } }: { params: { spaceId: string; } }) => {
 
     useEffect(() => {
         if (session.status == "loading") {
-            toast.error("Loading");
             return;
         }
 
@@ -187,7 +186,7 @@ const page = ({ params: { spaceId } }: { params: { spaceId: string; } }) => {
 
 
                     {isChatBox &&
-                        <div className={`absolute lg:relative right-0 absolute lg:relative w-[500px]  border dark:bg-[#1e272d] dark:border-gray-700  pb-2  justify-between flex flex-col h-[calc(100vh)]`}>
+                        <div className={`absolute lg:relative right-0 absolute lg:relative w-[400px]  border dark:bg-[#1e272d] dark:border-gray-700  pb-2  justify-between flex flex-col h-[calc(100vh)]`}>
                             <Chatbox messages={messages} sendMessage={sendMessage} />
                         </div>
                     }

@@ -93,7 +93,8 @@ export default function Home() {
       setIsLoginModal("show")
       return
     }
-    router.push(`/space/${spaceId}`)
+    // router.push(`/space/${spaceId}`)
+    window.open (`/space/${spaceId}`, '_ blank')
   }
 
 

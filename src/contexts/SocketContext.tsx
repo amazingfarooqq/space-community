@@ -5,6 +5,7 @@ import io from "socket.io-client"; // Import the socket.io-client library direct
 import { useUser } from "./UserContext";
 import axios from "axios";
 import { io as ClientIO } from "socket.io-client";
+import { useSession } from "next-auth/react";
 
 const initialData = {
     publicChatMsgs: [],
@@ -30,6 +31,7 @@ export default function SocketProvider({ children }: { children: any }) {
     const [currentSpaceId, setCurrentSpaceId] = useState("")
 
     const { userData } = useUser()
+    const session = useSession()
 
     const [publicChatMsgs, setPublicChatMsgs] = useState<any>([])
     const [publicChatUsers, setPublicChatUsers] = useState<any>([])
@@ -39,16 +41,32 @@ export default function SocketProvider({ children }: { children: any }) {
     const [isConnected, setIsConnected] = useState(false);
 
     useEffect(() => {
-        console.log("emit saveUserData", { userData });
-        
-        socket?.emit("saveUserData", userData)
+
+        if (userData?.id) {
+            socket?.emit("saveUserData", userData)
+        }
 
     }, [userData, socket]);
 
     useEffect(() => {
+        if(session.status !== "authenticated") return
+
+        console.log("socketInstance useEffect");
+        
+        console.log(session);
+        
+
         const socketInstance = new (ClientIO as any)(process.env.NEXT_PUBLIC_SITE_URL!, {
             path: "/api/socket/io",
             addTrailingSlash: false,
+            query: {
+                // Add your query parameters here
+                userId: session.data?.user?.id,
+                userName: session.data?.user?.name,
+                userEmail: session.data?.user?.email,
+                userImage: session.data?.user?.image,
+
+            },
         });
 
         socketInstance.on("connect", () => {
@@ -56,26 +74,27 @@ export default function SocketProvider({ children }: { children: any }) {
             setIsConnected(true);
         });
 
-        socketInstance.on("userDisconneted", async (userDataa: any) => {
+        socketInstance.on("userDisconneted", async (data: any) => {
 
-            if(userDataa?.id){
+            if (data?.id) {
                 try {
                     await axios.post(`/api/spaces/disconnectUser`, {
-                        userData: userDataa
+                        userData: data
                     })
-                    
+
                 } catch (error) {
-                    console.log({error});
-                    
+                    console.log({ error });
+
                 }
 
             }
-            
-            
+
+
         })
+
         socketInstance.on("disconnect", () => {
             console.log("disconnect");
-            
+
             socketInstance.disconnect()
             socketInstance.close()
             console.log({ currentSpaceId, userData });
@@ -186,7 +205,7 @@ export default function SocketProvider({ children }: { children: any }) {
         return () => {
             socketInstance.disconnect();
         }
-    }, []);
+    }, [session.status]);
 
     useEffect(() => {
         fetchSpaces();

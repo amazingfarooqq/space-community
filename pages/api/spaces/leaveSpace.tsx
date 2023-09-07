@@ -38,9 +38,11 @@ export default async function handler(
 
         console.log({leaveData});
         
+        const currentTime = new Date();
+        const formattedTime = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
         res?.socket?.server?.io?.to(spaceId).emit("space_msg", {
-            text: `${name} left the space.`,
+            text: `${name} left the space. ${formattedTime}`,
             uuid: "farooq",
             spaceId: spaceId,
             status: "left",
