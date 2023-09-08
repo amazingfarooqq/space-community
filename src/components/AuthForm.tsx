@@ -111,7 +111,7 @@ const AuthForm = () => {
   return (
     <div className='pb-8 dark:bg-[#191D20] mt-8 sm:mx-auto sm:w-full sm:max-w-md ml-20 '>
       <div
-        className="py-12 px-12 bg-white dark:bg-[#1e272d] rounded-xl shadow-xl z-20 border dark:border-gray-700"
+        className="py-12 px-12 bg-gray-100 dark:bg-[#1e272d] rounded-xl shadow-xl z-20 border dark:border-gray-700"
       >
         <div>
             <h1 className="text-3xl font-bold text-center mb-4">
@@ -154,7 +154,7 @@ const AuthForm = () => {
             placeholder="Enter Passoword"
           />
           <div className="text-center mt-3">
-            <button className="py-2 px-7 text-white bg-purple-600 dark:bg-purple-500 rounded-2xl ">
+            <button className="py-2 px-7 text-white bg-blue-600 dark:bg-blue-500 rounded-2xl ">
               {variant}
             </button>
 
@@ -174,7 +174,7 @@ const AuthForm = () => {
               <div className="w-full border-t border-gray-300" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="bg-white px-2 text-gray-500 dark:bg-[#1e272d] dark:text-gray-200 rounded py-1">
+              <span className="bg-gray-100 px-2 text-gray-500 dark:bg-[#1e272d] dark:text-gray-100 rounded py-1">
                 Or continue with
               </span>
             </div>

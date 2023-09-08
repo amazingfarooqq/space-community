@@ -65,7 +65,7 @@ export default function FormElements({ isLoginModal, setIsLoginModal }: any) {
 
   return (
     <>
-      <button type="button" onClick={() => setIsLoginModal('show')} className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-500 dark:hover:bg-purple-400 dark:focus:ring-purple-900 ">Create Space</button>
+      <button type="button" onClick={() => setIsLoginModal('show')} className="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-500 dark:hover:bg-blue-400 dark:focus:ring-blue-900 ">Create Space</button>
 
 
 
@@ -89,7 +89,7 @@ export default function FormElements({ isLoginModal, setIsLoginModal }: any) {
               <label htmlFor="" >Avatar</label>
               <div className="flex flex-wrap my-2 ">
                 {avatarArr.map(item => {
-                  return <img key={item} onClick={() => setAvatarUrl(item)} className={`cursor-pointer h-24 w-24  rounded-full ${item == avatarUrl && "ring-2 ring-purple-500 dark:ring-purple-400"} `} src={item} alt="" />
+                  return <img key={item} onClick={() => setAvatarUrl(item)} className={`cursor-pointer h-24 w-24  rounded-full ${item == avatarUrl && "ring-2 ring-blue-500 dark:ring-blue-400"} `} src={item} alt="" />
 
                 })}
 
@@ -105,7 +105,7 @@ export default function FormElements({ isLoginModal, setIsLoginModal }: any) {
         <Modal.Footer className='pt-0 border-none'>
           {loading ? <Spinner aria-label="Alternate spinner button example" />
             :
-            <Button color="purple" onClick={LoginUsername}>Create Space</Button>
+            <Button color="blue" onClick={LoginUsername}>Create Space</Button>
           }
 
           <Button color="gray" onClick={() => setIsLoginModal("hide")}>

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 
-const Chatbox = ({ messages, sendMessage }: { messages: any; sendMessage: any }) => {
+const Chatbox = ({ messages, sendMessage, closeChatbox }: { messages: any; sendMessage: any, closeChatbox: any }) => {
   const [txt, setTxt] = useState('');
   const bottomRef = useRef<HTMLDivElement>(null);
   const [newMessageCount, setNewMessageCount] = useState(0);
@@ -38,7 +38,7 @@ const Chatbox = ({ messages, sendMessage }: { messages: any; sendMessage: any })
 
   return (
     <>
-      <div id="messages" className="flex flex-col py-2 pr-0 overflow-y-auto h-full">
+      <div id="messages" className="flex flex-col py-2 pr-0 overflow-y-auto h-full ">
         {messages?.map((item: any) => {
           return (
             <React.Fragment key={item.id}>
@@ -56,12 +56,12 @@ const Chatbox = ({ messages, sendMessage }: { messages: any; sendMessage: any })
               {item.status === 'sent' && (
                 <div className="chat-message p-2">
                   <div className="flex">
-                  <img src={item?.image} alt="My profile" className="w-8 h-8 rounded-lg" />
+                    <img src={item?.image} alt="My profile" className="w-8 h-8 rounded-lg" />
 
                     <div className="space-y-3 w-full text-xs mx-1 items-start">
                       <div className={`px-1 rounded-lg`}>
                         <div className="flex justify-between">
-                          <h2 className="text-purple-400 text-sm">{item % 2 ? '⭐' : ''} {item?.name}</h2>
+                          <h2 className="text-blue-400 text-sm">{item % 2 ? '⭐' : ''} {item?.name}</h2>
                           <h2>
                             <div className="justify-center hidden mr-auto text-gray-500 dark:text-gray-400 md:flex">
                               <span className="text-xs break-all">{item?.createdAt}</span>
@@ -78,7 +78,7 @@ const Chatbox = ({ messages, sendMessage }: { messages: any; sendMessage: any })
           );
         })}
         {newMessageCount > 0 && (
-          <div className="text-center text-purple-400 cursor-pointer" onClick={handleNewMessageClick}>
+          <div className="text-center text-blue-400 cursor-pointer" onClick={handleNewMessageClick}>
             {newMessageCount} new message(s)
           </div>
         )}
@@ -86,6 +86,15 @@ const Chatbox = ({ messages, sendMessage }: { messages: any; sendMessage: any })
       </div>
       <div>
         <div className="pt-1">
+          <button
+          onClick={closeChatbox}
+            type="button"
+            className="lg:hidden inline-flex items-center justify-center rounded-full w-8 transition duration-500 ease-in-out text-gray-500 focus:outline-none"
+          >
+            <svg className="h-5 w-5 text-gray-600 hover:text-blue-400 transition duration-300 ease-in-out" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+              <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M1 5h12m0 0L9 1m4 4L9 9" />
+            </svg>
+          </button>
           <button
             type="button"
             className="inline-flex items-center justify-center rounded-full w-8 transition duration-500 ease-in-out text-gray-500 focus:outline-none"
@@ -95,7 +104,7 @@ const Chatbox = ({ messages, sendMessage }: { messages: any; sendMessage: any })
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
-              className="h-6 w-6 text-gray-600 hover:text-purple-400 transition duration-300 ease-in-out"
+              className="h-6 w-6 text-gray-600 hover:text-blue-400 transition duration-300 ease-in-out"
             >
               <path
                 strokeLinecap="round"
@@ -113,16 +122,14 @@ const Chatbox = ({ messages, sendMessage }: { messages: any; sendMessage: any })
           </button>
           <button
             type="button"
-            className="inline-flex items
-
--center justify-center rounded-full w-8 transition duration-500 ease-in-out text-gray-500 0 focus:outline-none"
+            className="inline-flex items-center justify-center rounded-full w-8 transition duration-500 ease-in-out text-gray-500 0 focus:outline-none"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
-              className="h-6 w-6 text-gray-600 hover:text-purple-400 transition duration-300 ease-in-out"
+              className="h-6 w-6 text-gray-600 hover:text-blue-400 transition duration-300 ease-in-out"
             >
               <path
                 strokeLinecap="round"
@@ -138,11 +145,11 @@ const Chatbox = ({ messages, sendMessage }: { messages: any; sendMessage: any })
             onKeyDown={onEnterPress}
             value={txt}
             onChange={handleOnChange}
-            className="w-full p-2 border dark:bg-[#1e272d] dark:border-gray-700  rounded-l-lg resize-none  dark:text-gray-200"
+            className="w-full p-2 border dark:bg-[#1e272d] dark:border-gray-700  rounded-l-lg resize-none  dark:text-gray-100 bg-gray-100"
             placeholder="Enter your message..."
-            rows={2}
+            rows={3}
           />
-          <button className="bg-purple-500 text-white p-2 rounded-r-lg" onClick={sendMessageFunc}>
+          <button className="bg-blue-500 text-white p-2 rounded-r-lg" onClick={sendMessageFunc}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6"

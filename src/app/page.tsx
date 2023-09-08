@@ -16,6 +16,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Pusher from 'pusher-js';
 import { pusherClient } from '@/libs/pusher';
 import { useSession } from 'next-auth/react';
+import SidebarToCreateSpace from '@/components/SidebarToCreateSpace';
 
 interface User {
   id: string;
@@ -94,7 +95,7 @@ export default function Home() {
       return
     }
     // router.push(`/space/${spaceId}`)
-    window.open (`/space/${spaceId}`, '_ blank')
+    window.open(`/space/${spaceId}`, '_ blank')
   }
 
 
@@ -125,11 +126,12 @@ export default function Home() {
     setSearchQuery(event.target.value);
   };
 
+
   return (
     <>
-      <Sidebar />
-      <main className="birdcontainer min-h-100 flex min-h-screen flex-col pb-56 ml-16 px-10">
+      <main className="birdcontainer min-h-100 flex min-h-screen flex-col pb-56 ml-24 px-4" >
         <Header />
+        <Sidebar />
         <div className="bird-container bird-container--one">
           <div className="bird bird--one" />
         </div>
@@ -149,7 +151,9 @@ export default function Home() {
             }}
           />
         </div> */}
-
+        <div className=" mx-auto">
+          <h2 className=" py-2 text-2xl  opacity-90">Join Space and start talking or create your own</h2>
+        </div>
         <div className='mt-4 flex flex-wrap mt-4 '>
           <ModalToCreateSpace id="popup-modal" isCreateSpaceModal={isCreateSpaceModal} setIsCreateSpaceModal={setIsCreateSpaceModal} createSpace={createSpace} />
         </div>

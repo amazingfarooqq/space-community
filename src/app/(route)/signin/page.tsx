@@ -12,7 +12,7 @@ const SignInPage = () => {
     }, [session, status]);
 
     return (
-        <div className="bg-white"
+        <div className="bg-gray-100"
             style={{
                 width: "100px",
                 height: "100px",

@@ -1,19 +1,22 @@
-import React from 'react'
+import React, { useState } from 'react'
 import UserProfileCard from './UserCard'
 import { useUser } from '@/contexts/UserContext'
 import { MediaRoom } from './Media'
+import Options from './Options'
+import UsersInSpace from './UsersInSpace'
 
-const RightSide = ({currentSpaceData, isChatBox, handleChatBox, leaveSpace, handleRightSide }: any) => {
+const RightSide = ({ currentSpaceData, isChatBox, handleChatBox, leaveSpace, handleRightSide }: any) => {
+
 
 
     return (
         <>
             {/* <div
-                className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl dark:opacity-0 sm:-top-80 "
+                className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80 "
                 aria-hidden="true"
             >
                 <div
-                    className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
+                    className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
                     style={{
                         clipPath:
                             'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
@@ -21,9 +24,10 @@ const RightSide = ({currentSpaceData, isChatBox, handleChatBox, leaveSpace, hand
                 />
             </div> */}
 
-            
+
             <div>
-                <div className="flex  justify-between  h-[60px]  px-8  bg-white border-t border-gray-200 md:grid-cols-3 dark:bg-[#191D20] dark:border-gray-600">
+
+                <div className="flex  justify-between  h-[60px]  px-8  bg-transparent border-t border-gray-100 md:grid-cols-3 dark:border-gray-600">
                     <div className="items-center justify-center hidden mr-auto text-gray-500 dark:text-gray-400 md:flex">
                         <span className="text-sm">Created At: </span>
 
@@ -56,7 +60,7 @@ const RightSide = ({currentSpaceData, isChatBox, handleChatBox, leaveSpace, hand
                         </button>
                         <button
                             type="button"
-                            className="p-2.5 group rounded-full hover:bg-gray-100 mr-1 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-600 dark:hover:bg-gray-600"
+                            className="p-2.5 group rounded-full hover:bg-gray-100 mr-1 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-600 dark:hover:bg-gray-600"
                         >
                             <svg
                                 className="w-4 h-4 text-gray-500 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white"
@@ -72,7 +76,7 @@ const RightSide = ({currentSpaceData, isChatBox, handleChatBox, leaveSpace, hand
                         <button
                             onClick={handleChatBox}
                             type="button"
-                            className="p-2.5 group rounded-full hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-600 dark:hover:bg-gray-600"
+                            className="p-2.5 group rounded-full hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-600 dark:hover:bg-gray-600"
                         >
                             <svg className="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 18" fill="currentColor">
                                 <path d="M18 4H16V9C16 10.0609 15.5786 11.0783 14.8284 11.8284C14.0783 12.5786 13.0609 13 12 13H9L6.846 14.615C7.17993 14.8628 7.58418 14.9977 8 15H11.667L15.4 17.8C15.5731 17.9298 15.7836 18 16 18C16.2652 18 16.5196 17.8946 16.7071 17.7071C16.8946 17.5196 17 17.2652 17 17V15H18C18.5304 15 19.0391 14.7893 19.4142 14.4142C19.7893 14.0391 20 13.5304 20 13V6C20 5.46957 19.7893 4.96086 19.4142 4.58579C19.0391 4.21071 18.5304 4 18 4Z" fill="currentColor" />
@@ -95,140 +99,16 @@ const RightSide = ({currentSpaceData, isChatBox, handleChatBox, leaveSpace, hand
                         }
                     </div>
                 </div>
-                <div className="h-[calc(100vh-140px)] flex gap-3 flex-wrap overflow-auto  justify-center py-5">
 
-                    {currentSpaceData?.users.map(user => {
-                        return (
-                            <div className='w-[300px]'>
-                                <UserProfileCard user={user}/>
-                            </div>
 
-                        )
-                    })}
-
+                <div className="h-[calc(100vh-180px)] flex gap-3 flex-wrap overflow-auto  justify-center py-5">
+                    <UsersInSpace currentSpaceData={currentSpaceData}/>
                 </div>
 
             </div>
 
-            <div className="flex align-center justify-between  h-[80px]  px-8  bg-white border-t border-gray-200 md:grid-cols-3 dark:bg-[#1e272d] dark:border-gray-600">
-                <div className="flex items-center justify-center mx-auto">
-
-                    <button
-                        type="button"
-                        className="p-2.5 group rounded-full"
-                    >
-                        <svg
-                            className="w-6 h-8"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="currentColor"
-                            viewBox="0 0 16 19"
-                        >
-                            <path d="M15 5a1 1 0 0 0-1 1v3a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V6a1 1 0 0 0-2 0v3a6.006 6.006 0 0 0 6 6h1v2H5a1 1 0 0 0 0 2h6a1 1 0 0 0 0-2H9v-2h1a6.006 6.006 0 0 0 6-6V6a1 1 0 0 0-1-1Z" />
-                            <path d="M9 0H7a3 3 0 0 0-3 3v5a3 3 0 0 0 3 3h2a3 3 0 0 0 3-3V3a3 3 0 0 0-3-3Z" />
-                        </svg>
-                        <span className="sr-only">Mute microphone</span>
-                    </button>
-                    <button
-                        type="button"
-                        className="p-2.5 group rounded-full"
-                    >
-                        <svg
-                            className="w-6 h-8"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="currentColor"
-                            viewBox="0 0 20 14"
-                        >
-                            <path d="M11 0H2a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm8.585 1.189a.994.994 0 0 0-.9-.138l-2.965.983a1 1 0 0 0-.685.949v8a1 1 0 0 0 .675.946l2.965 1.02a1.013 1.013 0 0 0 1.032-.242A1 1 0 0 0 20 12V2a1 1 0 0 0-.415-.811Z" />
-                        </svg>
-                        <span className="sr-only">Hide camera</span>
-                    </button>
-
-                    <button
-                        type="button"
-                        className="p-2.5 group rounded-full"
-                    >
-                        <svg
-                            className="w-6 h-8"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 20 20"
-                        >
-                            <path
-                                stroke="currentColor"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M4 12.25V1m0 11.25a2.25 2.25 0 0 0 0 4.5m0-4.5a2.25 2.25 0 0 1 0 4.5M4 19v-2.25m6-13.5V1m0 2.25a2.25 2.25 0 0 0 0 4.5m0-4.5a2.25 2.25 0 0 1 0 4.5M10 19V7.75m6 4.5V1m0 11.25a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5ZM16 19v-2"
-                            />
-                        </svg>
-                        <span className="sr-only">Video settings</span>
-                    </button>
-                    <button
-                        type="button"
-                        className="p-2.5 group rounded-full"
-                    >
-                        <svg
-                            className="w-4 h-6"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="currentColor"
-                            viewBox="0 0 4 15"
-                        >
-                            <path d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
-                        </svg>
-                        <span className="sr-only">Show options</span>
-                    </button>
-
-                    <button
-                        type="button"
-                        className="p-2.5 group rounded-full"
-                        onClick={leaveSpace}
-                    >
-                        <svg className="w-6 h-6 text-gray-800 text-red-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m16.344 12.168-1.4-1.4a1.98 1.98 0 0 0-2.8 0l-.7.7a1.98 1.98 0 0 1-2.8 0l-2.1-2.1a1.98 1.98 0 0 1 0-2.8l.7-.7a1.981 1.981 0 0 0 0-2.8l-1.4-1.4a1.828 1.828 0 0 0-2.8 0C-.638 5.323 1.1 9.542 4.78 13.22c3.68 3.678 7.9 5.418 11.564 1.752a1.828 1.828 0 0 0 0-2.804Z" />
-                        </svg>
-                        <span className="sr-only">Show options</span>
-                    </button>
-
-
-                    {/* <div
-                        id="moreOptionsDropdown"
-                        className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
-                    >
-                        <ul
-                            className="py-2 text-sm text-gray-700 dark:text-gray-200"
-                            aria-labelledby="moreOptionsDropdownButton"
-                        >
-                            <li>
-                                <a
-                                    href="#"
-                                    className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                                >
-                                    Show participants
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="#"
-                                    className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                                >
-                                    Adjust volume
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="#"
-                                    className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                                >
-                                    Show information
-                                </a>
-                            </li>
-                        </ul>
-                    </div> */}
-                </div>
+            <div className="flex align-center justify-between  h-[95px]  px-8  bg-gray-100 border-t border-gray-100 md:grid-cols-3 dark:bg-[#1e272d] dark:border-gray-600">
+                <Options leaveSpace={leaveSpace} />
             </div>
         </>
     )

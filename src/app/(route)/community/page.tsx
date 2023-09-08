@@ -40,117 +40,115 @@ const page = () => {
     }));
   };
   return (
-    <div >
+    <main className=" mx-auto flex justify-between  z-10 ml-24 px-4 flex-col ">
       <Header />
-      {/* <img src="https://tailwindui.com/img/beams-home@95.jpg" alt="" className="absolute -top-[1rem] left-1/2 -ml-[40rem] w-[163.125rem] max-w-none sm:-ml-[67.5rem] -z-10 overflow-hidden" /> */}
-      <main className="flex min-h-screen flex-col pb-56 ml-24">
-        {/* <BGGradient /> */}
-        <Sidebar />
-        {/* bg gradient */}
+      <Sidebar />
+      {/* <BGGradient /> */}
+      {/* bg gradient */}
+      {/* <div
+        className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl dark:opacity-50 sm:-top-80 "
+        aria-hidden="true"
+      >
         <div
-          className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl dark:opacity-50 sm:-top-80 "
-          aria-hidden="true"
-        >
-          <div
-            className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
-            style={{
-              background:
-                "linear-gradient(106.89deg, rgba(192, 132, 252, 0.31) 15.73%, rgba(14, 165, 233, 0.21) 15.74%, rgba(232, 121, 249, 0.36) 56.49%, rgba(79, 70, 229, 0.4) 115.91%)",
-            }}
-          />
-        </div>
-        {/* bg gradient end */}
+          className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
+          style={{
+            background:
+              "linear-gradient(106.89deg, rgba(192, 132, 252, 0.31) 15.73%, rgba(14, 165, 233, 0.21) 15.74%, rgba(232, 121, 249, 0.36) 56.49%, rgba(79, 70, 229, 0.4) 115.91%)",
+          }}
+        />
+      </div> */}
+      {/* bg gradient end */}
 
-        <div className="h-auto  border-t-0 items-center flex flex-col align-center justify-center">
-          {/*middle wall*/}
-          <div className='w-2/4 '>
-            <div className=" ">
-              <h2 className=" py-2 text-2xl font-bold">Bugs and Features</h2>
+      <div className="h-auto  border-t-0 items-center flex flex-col align-center justify-center">
+        {/*middle wall*/}
+        <div className='w-2/4 '>
+          <div className=" ">
+            <h2 className=" py-2 text-2xl font-bold">Bugs and Features</h2>
+          </div>
+          <div className="flex">
+            <div className="w-10 py-1">
+              <img
+                className="inline-block h-10 w-10 rounded-full"
+                src="https://pbs.twimg.com/profile_images/1121328878142853120/e-rpjoJi_bigger.png"
+                alt=""
+              />
             </div>
-            <div className="flex">
-              <div className="w-10 py-1">
-                <img
-                  className="inline-block h-10 w-10 rounded-full"
-                  src="https://pbs.twimg.com/profile_images/1121328878142853120/e-rpjoJi_bigger.png"
-                  alt=""
-                />
-              </div>
-              <div className="flex-1 px-2 pt-2 ">
-                <textarea
-                  className=" bg-transparent text-gray-400 font-medium text-lg w-full"
-                  rows={2}
-                  cols={50}
-                  placeholder="What's happening?"
-                  defaultValue={""}
-                />
-              </div>
+            <div className="flex-1 px-2 pt-2 ">
+              <textarea
+                className=" bg-transparent text-gray-400 font-medium text-lg w-full"
+                rows={2}
+                cols={50}
+                placeholder="What's happening?"
+                defaultValue={""}
+              />
             </div>
-            {/*middle creat tweet below icons*/}
-            <div className="flex">
-              <div className="">
-                <button className="bg-purple-400 mt-5 hover:bg-purple-600 font-bold py-2 px-8 rounded text-white float-right">
-                  Post
-                </button>
-              </div>
+          </div>
+          {/*middle creat tweet below icons*/}
+          <div className="flex">
+            <div className="">
+              <button className="bg-blue-400 mt-5 hover:bg-blue-600 font-bold py-2 px-8 rounded text-white float-right">
+                Post
+              </button>
             </div>
-            <div className="flex mt-2">
-              <div className="flex-1 ">
-                <h2 className="py-2 text-xl font-semibolay e">Posts</h2>
-              </div>
-              <div className="flex-1 py-2">
-                <div
-                  className=" text-2xl font-medium rounded-full cursor-pointer float-right"
-                >
-                  <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 1v5h-5M2 19v-5h5m10-4a8 8 0 0 1-14.947 3.97M1 10a8 8 0 0 1 14.947-3.97" />
-                  </svg>
-                </div>
+          </div>
+          <div className="flex mt-2">
+            <div className="flex-1 ">
+              <h2 className="py-2 text-xl font-semibolay e">Posts</h2>
+            </div>
+            <div className="flex-1 py-2">
+              <div
+                className=" text-2xl font-medium rounded-full cursor-pointer float-right"
+              >
+                <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
+                  <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 1v5h-5M2 19v-5h5m10-4a8 8 0 0 1-14.947 3.97M1 10a8 8 0 0 1 14.947-3.97" />
+                </svg>
               </div>
             </div>
+          </div>
 
-            {posts.map(item => {
-              const isExpanded = expandedPosts[item.id];
-              const isLiked = likes[item.id] > 0;
+          {posts.map(item => {
+            const isExpanded = expandedPosts[item.id];
+            const isLiked = likes[item.id] > 0;
 
-              return (
-                <div className='py-4'>
+            return (
+              <div className='py-4'>
 
-                  <div className="flex flex-shrink-0 pb-0">
-                    <a href="#" className="flex-shrink-0 group block">
-                      <div className="flex items-center">
-                        <div>
-                          <img className="inline-block h-10 w-10 rounded-full" src="https://pbs.twimg.com/profile_images/1121328878142853120/e-rpjoJi_bigger.png" alt="" />
-                        </div>
-                        <div className="ml-3 mb-1">
-                          <p className="text-base leading-6 font-bold ">
-                            {item.name} {" "}
-                            <span className="text-sm leading-5 font-medium text-gray-400 group-hover:text-gray-300 transition ease-in-out duration-150">
-                              16 April
-                            </span>
-                          </p>
-                        </div>
+                <div className="flex flex-shrink-0 pb-0">
+                  <a href="#" className="flex-shrink-0 group block">
+                    <div className="flex items-center">
+                      <div>
+                        <img className="inline-block h-10 w-10 rounded-full" src="https://pbs.twimg.com/profile_images/1121328878142853120/e-rpjoJi_bigger.png" alt="" />
                       </div>
-                    </a>
-                  </div>
-                  <div className="">
-                    <p className="text-base width-auto font-medium flex-shrink py-2">
-                      {isExpanded ? item.text : item.text.slice(0, 400)}
-                      {item.text.length > 400 && (
-                        <span
-                          onClick={() => togglePostExpand(item.id)}
-                          className="cursor-pointer text-blue-500"
-                        >
-                          {isExpanded ? " Show Less" : " See More"}
-                        </span>
-                      )}
-                    </p>
-                    {/* <div className="flex">
+                      <div className="ml-3 mb-1">
+                        <p className="text-base leading-6 font-bold ">
+                          {item.name} {" "}
+                          <span className="text-sm leading-5 font-medium text-gray-400 group-hover:text-gray-300 transition ease-in-out duration-150">
+                            16 April
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+                <div className="">
+                  <p className="text-base width-auto font-medium flex-shrink py-2">
+                    {isExpanded ? item.text : item.text.slice(0, 400)}
+                    {item.text.length > 400 && (
+                      <span
+                        onClick={() => togglePostExpand(item.id)}
+                        className="cursor-pointer "
+                      >
+                        {isExpanded ? " Show Less" : " See More"}
+                      </span>
+                    )}
+                  </p>
+                  {/* <div className="flex">
                       <div className="w-full">
                         <div className="flex items-center">
                           <div className=" ">
                             <button
                               onClick={() => handleLikeComment(item.id)}
-                              className={`flex gap-1 text-gray-500 text-base leading-6 font-medium rounded-full ${isLiked ? "text-purple-300" : ""
+                              className={`flex gap-1 text-gray-500 text-base leading-6 font-medium rounded-full ${isLiked ? "text-blue-300" : ""
                                 }`}
                             >
                               <svg
@@ -170,18 +168,16 @@ const page = () => {
                         </div>
                       </div>
                     </div> */}
-                  </div>
                 </div>
+              </div>
 
-              )
-            })}
+            )
+          })}
 
-          </div>
         </div>
+      </div>
 
-      </main >
-
-    </div>
+    </main >
   )
 }
 

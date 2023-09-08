@@ -24,7 +24,7 @@ export default function Page() {
     return (
         <>
             <Sidebar />
-            <main className=" flex min-h-screen flex-col pb-56 ml-16 px-10">
+            <main className=" flex min-h-screen flex-col pb-56 ml-24 px-10">
                 <Header />
                 {/* <BGGradient /> */}
 
@@ -56,7 +56,7 @@ export default function Page() {
                         <div className="py-6 flex flex-wrap gap-5 flex-row  ">
                             {filteredUsers.map((item: any) => {
                                 return (
-                                    <section className="w-64 bg-white dark:bg-[#20354b] rounded-2xl px-8 py-6 shadow-lg">
+                                    <section className="w-64 bg-gray-100 dark:bg-[#20354b] rounded-2xl px-8 py-6 shadow-lg">
                                         <div className="flex items-center justify-between">
                                             <span className="text-gray-400 text-sm">Joining 2nd Feb 2023</span>
                                             {/* <span className="text-emerald-400">
@@ -77,7 +77,7 @@ export default function Page() {
                                     </span> */}
                                         </div>
                                         <div className="mt-6 w-fit mx-auto">
-                                            <Avatar bordered rounded size="" img={item.image}/>
+                                            <Avatar bordered rounded size="xl" img={item.image}/>
                                             {/* <img
                                                 src={item.image}
                                                 className="rounded-full w-28 "
@@ -86,7 +86,7 @@ export default function Page() {
                                             /> */}
                                         </div>
                                         <div className="mt-8 ">
-                                            <h2 className="text-purple-400 font-bold text-2xl tracking-wide">
+                                            <h2 className="text-blue-400 font-bold text-2xl tracking-wide">
                                                 {item.name}
                                             </h2>
                                         </div>
@@ -94,7 +94,7 @@ export default function Page() {
                                         {/* <p className="text-xs font-semibold mt-2.5"> Followers 100</p>
                                 <p className="text-xs font-semibold mt-2.5"> Following 2</p>
                                 <div className="h-1 w-full bg-black mt-8 rounded-full">
-                                    <div className="h-1 rounded-full w-full bg-purple-500 " />
+                                    <div className="h-1 rounded-full w-full bg-blue-500 " />
                                 </div> */}
                                     </section>
 

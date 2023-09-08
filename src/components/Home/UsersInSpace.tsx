@@ -23,8 +23,8 @@ const UsersInSpace = ({ users, ownerId }: any) => {
                         imgIndex < 10 && (
                             <Tooltip animation="duration-500" content={`${ownerId == user.id ? "⭐" : ""} ${user.name}`}>
                                 <div key={user.toString() + imgIndex} className='flex flex-col justify-center align-center items-center py-1'>
-                                    <img key={imgIndex} className={`cursor-pointer ${users.length <= 3 ? "h-24 w-24" : users.length <= 4 ? "h-22 w-22" : "h-18 w-18"}   rounded-full ring-1 ring-white dark:ring-purple-400 mr-1`} src={user.image} alt="" />
-                                    <span className={'  text-purple-500 dark:text-purple-400 mt-1'} style={{ fontSize: "0.6rem" }}>{ownerId == user.id ? "⭐" : ""}  {user.name?.slice(0, 6)}..</span>
+                                    <img key={imgIndex} className={`cursor-pointer ${users.length <= 3 ? "h-24 w-24" : users.length <= 4 ? "h-22 w-22" : "h-18 w-18"}   rounded-full ring-1 ring-white dark:ring-blue-400 mr-1`} src={user.image} alt="" />
+                                    <span className={'  text-blue-500 dark:text-blue-400 mt-1'} style={{ fontSize: "0.6rem" }}>{ownerId == user.id ? "⭐" : ""}  {user.name?.slice(0, 6)}..</span>
                                 </div>
                             </Tooltip>
                         )

@@ -47,7 +47,7 @@ const RandomVocabWords: React.FC = () => {
             {vocabData.phonetics.map((phonetic: any, index: number) => (
               <div key={index} className="ml-2">
                 <span className="text-gray-600">{phonetic.text}</span> -{' '}
-                <a href={phonetic.audio} target="_blank" rel="noopener noreferrer" className="text-blue-600">
+                <a href={phonetic.audio} target="_blank" rel="noopener noreferrer" className="">
                   Listen
                 </a>
               </div>
@@ -55,7 +55,7 @@ const RandomVocabWords: React.FC = () => {
           </div>
 
           {/* Source URL */}
-          <p className="text-sm text-blue-600">
+          <p className="text-sm">
             <a href={vocabData.sourceUrls[0]} target="_blank" rel="noopener noreferrer">
               Learn more
             </a>

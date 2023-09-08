@@ -24,10 +24,10 @@ const page = () => {
     }, [publicChatMsgs])
 
     useEffect(() => {
-        if(session.status == "authenticated"){
+        if (session.status == "authenticated") {
             globalRoomFun()
         }
-    },[session.status])
+    }, [session.status])
 
     const globalRoomFun = async () => {
         setNickname(session?.data?.user?.name || "")
@@ -40,12 +40,14 @@ const page = () => {
 
 
     const [textArea, settextArea] = useState("")
+    const currentTime = new Date();
+    const formattedTime = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
     const handleSendMessage = async (e: any) => {
         const msgData = {
             text: textArea,
             name: nickname,
-            time: "11:30",
+            time: formattedTime,
             socketId: "socket.id",
             roomId: "1",
             image: session?.data?.user?.image,
@@ -74,12 +76,11 @@ const page = () => {
     return (
         <>
 
-            <Sidebar />
 
             {/* <button onClick={triggerUseEffect}>See chats</button> */}
 
-            {/* <button className="focus:outline-none w-full text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-500 dark:hover:bg-purple-400 dark:focus:ring-purple-900" onClick={enterAsGuest}>Enter as guest</button> */}
-            {/* <button className="focus:outline-none w-full text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-500 dark:hover:bg-purple-400 dark:focus:ring-purple-900" onClick={directJoin}>Direct join</button>
+            {/* <button className="focus:outline-none w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-500 dark:hover:bg-blue-400 dark:focus:ring-blue-900" onClick={enterAsGuest}>Enter as guest</button> */}
+            {/* <button className="focus:outline-none w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-500 dark:hover:bg-blue-400 dark:focus:ring-blue-900" onClick={directJoin}>Direct join</button>
                         <div>OR</div> */}
             {/* <Modal size="lg" show={isNicknameOpen}>
                 <Modal.Header>Enter your nickname to Continue</Modal.Header>
@@ -96,7 +97,7 @@ const page = () => {
                     </div>
                 </Modal.Body>
                 <Modal.Footer className='pt-0 border-none'>
-                    <Button color="purple" onClick={globalRoomFun}>Enter Chatroom</Button>
+                    <Button color="blue" onClick={globalRoomFun}>Enter Chatroom</Button>
                     <Button color="gray" onClick={() => setIsNicknameOpen(false)}>
                         Go to home
                     </Button>
@@ -116,8 +117,10 @@ const page = () => {
             </div> */}
 
 
-            <div className=" mx-auto flex justify-between  z-10 ml-20 px-2 flex-col ">
+            <div className=" mx-auto flex justify-between  z-10 ml-24 px-4 flex-col ">
                 <Header />
+                <Sidebar />
+
                 <div className="flex flex-row justify-between w-full">
                     <div className=" w-full ">
                         <div className='flex flex-row justify-between h-[calc(100vh-5rem)]'>
@@ -146,7 +149,7 @@ const page = () => {
                                                         <div className="space-y-2 w-full text-xs mx-1 order-2 items-start">
                                                             <div className={`px-2 rounded-lg`}>
                                                                 <div className='flex justify-between'>
-                                                                    <h2 className='mb-1 text-purple-500 dark:text-purple-400 text-sm'>{message.name} {" "}
+                                                                    <h2 className='mb-1 text-blue-500 dark:text-blue-400 text-sm'>{message.name} {" "}
                                                                         <span className='opacity-30 text-xs text-gray-400'>@sdsad</span>
                                                                     </h2>
                                                                     <h2>
@@ -181,7 +184,7 @@ const page = () => {
                                             type="button"
                                             className="inline-flex items-center justify-center rounded-full w-8 transition duration-500 ease-in-out text-gray-500 0 focus:outline-none"
                                         >
-                                            <svg className="h-6 w-6 text-purple-500 dark:text-purple-400 transition duration-300 ease-in-out" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 18">
+                                            <svg className="h-6 w-6 text-blue-500 dark:text-blue-400 transition duration-300 ease-in-out" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 18">
                                                 <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 1v11m0 0 4-4m-4 4L4 8m11 4v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-3" />
                                             </svg>
                                         </button> */}
@@ -195,7 +198,7 @@ const page = () => {
                                                 fill="none"
                                                 viewBox="0 0 24 24"
                                                 stroke="currentColor"
-                                                className="h-6 w-6 text-gray-600 hover:text-purple-500 transition duration-300 ease-in-out"
+                                                className="h-6 w-6 text-gray-600 hover:text-blue-500 transition duration-300 ease-in-out"
                                             >
                                                 <path
                                                     strokeLinecap="round"
@@ -220,7 +223,7 @@ const page = () => {
                                                 fill="none"
                                                 viewBox="0 0 24 24"
                                                 stroke="currentColor"
-                                                className="h-6 w-6 text-gray-600 hover:text-purple-500 transition duration-300 ease-in-out"
+                                                className="h-6 w-6 text-gray-600 hover:text-blue-500 transition duration-300 ease-in-out"
                                             >
                                                 <path
                                                     strokeLinecap="round"
@@ -238,11 +241,11 @@ const page = () => {
                                             onKeyDown={onEnterPress}
                                             value={textArea}
                                             onChange={(e) => settextArea(e.target.value)}
-                                            className="w-full p-2 border dark:bg-[#1e272d] dark:border-gray-800  rounded-l-lg resize-none  dark:text-gray-200 "
+                                            className="w-full p-2 border dark:bg-[#1e272d] dark:border-gray-800  rounded-l-lg resize-none  dark:text-gray-100 "
                                             placeholder="Enter your message..."
                                             rows={2}
                                         />
-                                        <button onClick={handleSendMessage} type='submit' className="bg-purple-500 text-white p-2 rounded-r-lg">
+                                        <button onClick={handleSendMessage} type='submit' className="bg-blue-500 text-white p-2 rounded-r-lg">
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 className="h-6 w-6"
@@ -263,7 +266,7 @@ const page = () => {
 
                             </div>
                             {/* <div className='border  dark:border-gray-800 flex flex-col w-1/5  overflow-y-auto overflow-x-hidden '>
-                                <div className="flex sm:items-center justify-between border-b-2 py-4 mb-3 border-gray-200 dark:border-gray-800 p-2 text-md">
+                                <div className="flex sm:items-center justify-between border-b-2 py-4 mb-3 border-gray-100 dark:border-gray-800 p-2 text-md">
                                     Online users
                                 </div>
 

@@ -44,7 +44,7 @@ const ModalToCreateSpace: React.FC<ModalToCreateSpaceProps> = ({ id, isCreateSpa
 
     return (
         <>
-            <button type="button" onClick={() => setIsCreateSpaceModal('show')} className="focus:outline-none text-white bg-purple-800 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-400 dark:hover:bg-purple-500 dark:focus:ring-purple-900">Create Space</button>
+            <button type="button" onClick={() => setIsCreateSpaceModal('show')} className="focus:outline-none text-white bg-blue-800 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2  dark:hover:bg-blue-500 dark:focus:ring-blue-900">Create Space</button>
 
             <Modal size="lg" dismissible show={isCreateSpaceModal === 'show'} onClose={() => setIsCreateSpaceModal("hide")}>
                 <Modal.Header className='dark:bg-[#20354b] py-4'>Create new space</Modal.Header>
@@ -103,7 +103,7 @@ const ModalToCreateSpace: React.FC<ModalToCreateSpaceProps> = ({ id, isCreateSpa
                     {loading ? <Spinner aria-label="Alternate spinner button example" />
                         :
                         <>
-                            <Button color="purple" onClick={createSpaceFunc}>Create Space</Button>
+                            <Button color="blue" onClick={createSpaceFunc}>Create Space</Button>
                             <Button color="gray" onClick={() => setIsCreateSpaceModal("hide")}>
                                 Close
                             </Button>

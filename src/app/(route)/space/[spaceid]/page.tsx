@@ -61,7 +61,7 @@ const page = ({ params: { spaceId } }: { params: { spaceId: string; } }) => {
         }
 
         if (!userData?.id) {
-            toast.error("Excuse, !userData?.id you are not logged in");
+            toast.error("Seems like there is something wrong, refrsh will solve it!");
             router.push("/");
             return;
         }
@@ -146,48 +146,34 @@ const page = ({ params: { spaceId } }: { params: { spaceId: string; } }) => {
     }
 
 
+    const closeChatbox = () => {
+        setIsChatBox(false)
+    }
+
+
     return (
         <div>
             {!currentSpaceData?.id &&
                 <section className="relative place-items-center grid h-screen w-screen gap-4">
                     <BGGradient />
-                    {/*   ITEM 1 */}
-                    <div className="bg-purple-500 w-48 h-48  absolute animate-ping rounded-full delay-5s shadow-xl" />
-                    {/*   ITEM 2 */}
-                    <div className="bg-purple-400 w-32 h-32 absolute animate-ping rounded-full shadow-xl" />
-                    {/*   ITEM 3 */}
+                    <div className="bg-blue-500 w-48 h-48  absolute animate-ping rounded-full delay-5s shadow-xl" />
+                    <div className="bg-blue-400 w-32 h-32 absolute animate-ping rounded-full shadow-xl" />
                     <div className="bg-transparent w-24 h-24 absolute animate-pulse rounded-full shadow-xl" />
-                    {/*   SVG LOGO */}
-                    <img src="/images/logoemoji.png" alt="Logo" className="text-purple-900  h-16 w-16" />
-
-                    {/* <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="text-purple-900 filter mix-blend-overlay h-16 w-16"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M5.636 18.364a9 9 0 010-12.728m12.728 0a9 9 0 010 12.728m-9.9-2.829a5 5 0 010-7.07m7.072 0a5 5 0 010 7.07M13 12a1 1 0 11-2 0 1 1 0 012 0z"
-                        />
-                    </svg> */}
+                    <img src="/images/logoemoji.png" alt="Logo" className="text-blue-900  h-16 w-16" />
                 </section>
                                             
             }
             {currentSpaceData?.id &&
                 <div className="h-screen flex " >
-                    <div className={`lg:w-full w-full flex flex-col justify-between dark:bg-[#191D20]`}>
+                    <div className={`lg:w-full w-full flex flex-col justify-between bg-gray-100 dark:bg-[#191D20]`}>
                         <RightSide currentSpaceData={currentSpaceData} isChatBox={isChatBox} leaveSpace={leaveSpace} handleChatBox={handleChatBox} handleRightSide={handleRightSide} />
                     </div>
 
 
 
                     {isChatBox &&
-                        <div className={`absolute lg:relative right-0 absolute lg:relative w-[400px]  border dark:bg-[#1e272d] dark:border-gray-700  pb-2  justify-between flex flex-col h-[calc(100vh)]`}>
-                            <Chatbox messages={messages} sendMessage={sendMessage} />
+                        <div className={`absolute right-0 lg:relative  w-full sm:w-[400px] lg:w-[500px]  border border-gray-300 dark:bg-[#1e272d] dark:border-gray-700  pb-2  justify-between flex flex-col h-[calc(100vh)]`}>
+                            <Chatbox messages={messages} sendMessage={sendMessage} closeChatbox={closeChatbox}/>
                         </div>
                     }
 
