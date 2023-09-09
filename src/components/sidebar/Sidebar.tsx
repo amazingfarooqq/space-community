@@ -61,7 +61,7 @@ function Sidebar() {
                     <Link
                       href={item.href}
                       className={` group w-14 h-14 mx-auto
-                    ${pathname === item.href ? 'bg-blue-500 dark:bg-blue-400 ' : 'bg-gray-300 dark:bg-gray-600'}
+                    ${pathname === item.href ? 'text-white bg-blue-500 dark:bg-blue-400 ' : 'bg-gray-300 dark:bg-gray-600'}
                   dark:text-white text-gray-900
                     flex 
                 rounded-full 

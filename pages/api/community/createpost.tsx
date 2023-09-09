@@ -12,18 +12,18 @@ export default async function handler(
     const { newPost } = req.body;
 
 
-    let createdPost = await prisma.post.create({
-      data: newPost,
-      include: {
-        users: true,
-      }
-    });
+    // let createdPost = await prisma.post.create({
+    //   data: newPost,
+    //   include: {
+    //     users: true,
+    //   }
+    // });
 
     // res?.socket?.server?.io?.emit("createSpace", createdPost);
 
-    return res.status(200).json(createdPost);
+    return res.status(200).json({TEST: "S"});
   } catch (error) {
-    console.log("[CREATE_SPACE]", error);
+    console.log("[CREATE_POST]", error);
     return res.status(500).json({ message: "Internal Error" });
   }
 }

@@ -60,11 +60,13 @@ const page = ({ params: { spaceId } }: { params: { spaceId: string; } }) => {
             return;
         }
 
-        if (!userData?.id) {
-            toast.error("Seems like there is something wrong, refrsh will solve it!");
-            router.push("/");
-            return;
-        }
+        console.log({userData});
+        
+
+        // if (!userData?.id) {
+        //     toast.error("Seems like there is something wrong, refrsh will solve it!");
+        //     return;
+        // }
 
         // toast.error("please wait as we fetch space data");
 

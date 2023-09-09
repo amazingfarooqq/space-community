@@ -66,10 +66,10 @@ const Header = () => {
 
             <div className="h-12 mx-auto flex justify-between items-center ">
                 <Link href="/" className="flex items-center ">
-                    {/* <img src="/images/logoemoji.png" alt="Logo" className="h-10 mr-2" /> */}
+                    <img src="https://www.expesh.com/imgs/logo.png" alt="Logo" className="h-7" />
                     <span className="text-xl " >
                         {/* <span className="text-blue-500 dark:text-blue-400">spark</span> */}
-                        <span className="text-black dark:text-white ">Spark talk</span>
+                        <span className="text-black dark:text-white "> sparktalk</span>
                     </span>
                     {/* <img src="/images/lightlogopng.png" alt="Logo" className="h-16 mr-2 " /> */}
                     {/* <h1 className="text-gray-600 dark:text-white  text-lg font-semibold">Spark talk</h1> */}
@@ -102,11 +102,11 @@ const Header = () => {
                                     {session?.data?.user?.email}
                                 </span>
                             </Dropdown.Header>
-                            <Dropdown.Item>
-                                Profile
+                            <Dropdown.Item className="m-0 p-0">
+                                <Link href="/me" className="p-4 text-start w-full">Profile</Link>
                             </Dropdown.Item>
-                            <Dropdown.Item>
-                                Public Chat
+                            <Dropdown.Item className="m-0 p-0">
+                                <Link href="/me" className="p-4 text-start w-full">Public chat</Link>
                             </Dropdown.Item>
                             <Dropdown.Divider />
                             <Dropdown.Item onClick={() => signOut()}>
