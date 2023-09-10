@@ -7,7 +7,7 @@ const UsersInSpace = ({currentSpaceData}: {currentSpaceData: any}) => {
 
             {currentSpaceData?.users.map((user: any) => {
                 return (
-                    <div className='w-[300px]'>
+                    <div className='w-[250px]'>
                         <UserProfileCard user={user} />
                     </div>
 
