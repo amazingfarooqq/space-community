@@ -5,7 +5,6 @@ import Chatbox from "@/components/Room/Chatbox";
 import RightSide from "@/components/Room/RightSide";
 import { useSocket } from "@/contexts/SocketContext";
 import { useUser } from "@/contexts/UserContext";
-import { pusherClient } from "@/libs/pusher";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -71,11 +70,17 @@ const page = ({ params: { spaceId } }: { params: { spaceId: string; } }) => {
         // toast.error("please wait as we fetch space data");
 
         getSpace().then((spaceData) => {
+            console.log({userData});
+            
             const joinedUserData = {
                 id: userData?.id || "",
                 name: userData?.name || "",
                 image: userData?.image || "",
                 followers: userData?.followers || "",
+                native: userData?.native || "",
+                learning: userData?.learning || "",
+                country: userData?.country || "",
+                bio: userData?.bio || "",
             }
             joinUserDatabase(joinedUserData)
         }).catch((error) => {
@@ -92,15 +97,13 @@ const page = ({ params: { spaceId } }: { params: { spaceId: string; } }) => {
             })
 
         } catch (error) {
-            console.log(error);
+            console.error({error});
             toast.error("Error joining space");
             router.push("/")
         }
     }
 
     const sendMessage = async (txt: any, setTxt: any) => {
-        if (!pusherClient || !txt || !spaceId) return
-
         try {
 
             let msgData = {
@@ -167,7 +170,7 @@ const page = ({ params: { spaceId } }: { params: { spaceId: string; } }) => {
             }
             {currentSpaceData?.id &&
                 <div className="h-screen flex " >
-                    <div className={`lg:w-full w-full flex flex-col justify-between bg-gray-100 dark:bg-[#191D20]`}>
+                    <div className={`lg:w-full w-full flex flex-col justify-between  `}>
                         <RightSide currentSpaceData={currentSpaceData} isChatBox={isChatBox} leaveSpace={leaveSpace} handleChatBox={handleChatBox} handleRightSide={handleRightSide} />
                     </div>
 

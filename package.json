@@ -40,6 +40,8 @@
     "react-dom": "18.2.0",
     "react-hook-form": "^7.45.4",
     "react-hot-toast": "^2.4.1",
+    "react-select": "^5.7.4",
+    "react-select-country-list": "^2.2.3",
     "react-use-webrtc": "^1.7.6",
     "socket.io": "^4.7.2",
     "socket.io-client": "^4.7.2",

@@ -27,7 +27,8 @@ export default function SocketProvider({ children }: { children: any }) {
     const [messages, setMessages] = useState<any>([]);
     const [spaces, setSpaces] = useState<any>([]);
     const [currentSpaceData, setCurrentSpaceData] = useState({})
-
+    console.log({spaces});
+    
     const [currentSpaceId, setCurrentSpaceId] = useState("")
 
     const { userData } = useUser()
@@ -217,7 +218,19 @@ export default function SocketProvider({ children }: { children: any }) {
             const storedSpaces = await axios.get("/api/spaces/getSpaces")
             console.log({ storedSpaces });
 
-            setSpaces(storedSpaces.data || []);
+            const adjustSpaces = storedSpaces?.data?.map(item => {
+                const createdAt = item.createdAt;
+                const date =  new Date(createdAt)
+                const options = { year: 'numeric', month: 'short', day: 'numeric', hour: "numeric", minute: "numeric", second: "numeric" };
+                const formattedDate = date.toLocaleDateString('en-US', options);
+            
+                return {
+                    ...item,
+                    createdAt: formattedDate
+                }
+            })
+
+            setSpaces(adjustSpaces || []);
 
         } catch (error) {
             console.error({ error });

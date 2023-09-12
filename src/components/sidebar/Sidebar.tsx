@@ -90,7 +90,7 @@ function Sidebar() {
             <div>
               <ThemeSwitch />
             </div>
-            {userData.id &&
+            {userData?.id &&
               <div
                 className="cursor-pointer hover:opacity-75 transition"
               >

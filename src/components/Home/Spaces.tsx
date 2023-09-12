@@ -8,6 +8,7 @@ import UsersInSpace from './UsersInSpace'
 const Spaces = ({ filteredSpaces, joinSpace }: { filteredSpaces: any, joinSpace: any }) => {
 
     const { spaces } = useSocket()
+    
 
     return (
         <>
@@ -15,7 +16,7 @@ const Spaces = ({ filteredSpaces, joinSpace }: { filteredSpaces: any, joinSpace:
             {filteredSpaces?.map((space: any, index: any) => {
 
 
-                return <div key={index} className={` animate-fade-in relative border dark:border-gray-700 dark:bg-gray-800 lg:w-98 h-auto py-2 h-72 lg:h-72 overflow-hidden ml-0 rounded-md  shadow-lg dark:border-gray-700 `}>
+                return <div key={index} className={` animate-fade-in relative border dark:border-gray-700 bg-white dark:bg-gray-800 lg:w-98 h-auto py-2 h-72 lg:h-72 overflow-hidden ml-0 rounded-md  shadow-lg dark:border-gray-700 `}>
 
                     {/* {space.users?.length < space.limit ?
                         <>

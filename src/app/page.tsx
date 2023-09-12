@@ -14,7 +14,6 @@ import { useSocket } from '@/contexts/SocketContext';
 import FormElements from '@/components/ModalToLogin';
 import { v4 as uuidv4 } from 'uuid';
 import Pusher from 'pusher-js';
-import { pusherClient } from '@/libs/pusher';
 import { useSession } from 'next-auth/react';
 import SidebarToCreateSpace from '@/components/SidebarToCreateSpace';
 
@@ -129,7 +128,7 @@ export default function Home() {
 
   return (
     <>
-      <main className="birdcontainer min-h-100 flex min-h-screen flex-col pb-56 ml-24 px-4" >
+      <main className="birdcontainer min-h-100 flex min-h-screen flex-col mb-0 pb-0 ml-24 px-4" >
         <Header />
         <Sidebar />
         <div className="bird-container bird-container--one">
@@ -151,12 +150,12 @@ export default function Home() {
             }}
           />
         </div> */}
-        <div className=" mx-auto">
+        <div className=" mx-auto pb-10">
           <h2 className=" py-2 text-2xl  opacity-90">Join Space and start talking or create your own</h2>
         </div>
-        <div className='mt-4 flex flex-wrap mt-4 '>
+        {/* <div className='mt-4 flex flex-wrap mt-4 '>
           <ModalToCreateSpace id="popup-modal" isCreateSpaceModal={isCreateSpaceModal} setIsCreateSpaceModal={setIsCreateSpaceModal} createSpace={createSpace} />
-        </div>
+        </div> */}
         {/* <input
           value={searchQuery}
           onChange={handleSearchInputChange}
@@ -164,7 +163,7 @@ export default function Home() {
           placeholder="Search space by user, title, language, level, limit, etc"
           className="block mt-2 text-sm py-3 px-4 rounded-lg w-full border outline-none dark:border-gray-700 dark:bg-gray-800"
         /> */}
-        <div className="py-6 flex flex-wrap gap-5 flex-col lg:flex-row  ">
+        <div className=" flex flex-wrap gap-5 flex-col lg:flex-row  ">
           <Spaces filteredSpaces={filteredSpaces} joinSpace={joinSpace} />
         </div>
       </main >

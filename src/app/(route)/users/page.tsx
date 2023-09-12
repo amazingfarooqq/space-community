@@ -10,7 +10,7 @@ import { Avatar } from 'flowbite-react';
 
 export default function Page() {
 
-    const {users} = useUser()
+    const { users } = useUser()
 
     const [isLoading, setIsLoading] = useState(false)
     const [searchQuery, setSearchQuery] = useState('');
@@ -77,7 +77,7 @@ export default function Page() {
                                     </span> */}
                                         </div>
                                         <div className="mt-6 w-fit mx-auto">
-                                            <Avatar bordered rounded size="xl" img={item.image}/>
+                                            <Avatar bordered rounded size="xl" img={item.image} />
                                             {/* <img
                                                 src={item.image}
                                                 className="rounded-full w-28 "

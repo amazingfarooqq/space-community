@@ -67,7 +67,7 @@ const Header = () => {
             <div className="h-12 mx-auto flex justify-between items-center ">
                 <Link href="/" className="flex items-center ">
                     <img src="https://www.expesh.com/imgs/logo.png" alt="Logo" className="h-7" />
-                    <span className="text-xl " >
+                    <span className="text-xl ml-1" >
                         {/* <span className="text-blue-500 dark:text-blue-400">spark</span> */}
                         <span className="text-black dark:text-white "> sparktalk</span>
                     </span>

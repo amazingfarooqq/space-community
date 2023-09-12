@@ -20,9 +20,9 @@ export function useUser() {
 export default function UserProvider({
   children,
 }: any) {
-  const [userData, setUserData] = useState({})
+  const [userData, setUserData] = useState<{}>({})
   const session = useSession()
-  const [users, setUsers] = useState([])
+  const [users, setUsers] = useState<any[]>([])
 
   const fetchUserData = async () => {
 
@@ -31,10 +31,17 @@ export default function UserProvider({
         uuid: session.data?.user?.id
       })
       const data = response.data;
+
+      console.log("1");
       
-      setUserData(data);
+      const date =  new Date(data.createdAt)
+      const options = { year: 'numeric', month: 'short', day: 'numeric' };
+      const formattedDate = date.toLocaleDateString('en-US', options);
+      
+      console.log("2");
+      setUserData({ ...data, createdAt: formattedDate});
     } catch (error) {
-      console.error({error});
+      console.error({ error });
 
     }
     // const data = await getUserDataFromCookie()
@@ -47,14 +54,14 @@ export default function UserProvider({
       const data = response.data;
       setUsers(data);
     } catch (error) {
-      console.error({error});
+      console.error({ error });
 
     }
   }
 
   useEffect(() => {
     fetchUsers()
-  }, []); 
+  }, []);
 
 
   useEffect(() => {
@@ -62,7 +69,7 @@ export default function UserProvider({
     if (session.status === "unauthenticated") return
     if (session.status === "authenticated") {
       console.log("fetchUserData");
-      
+
       fetchUserData()
 
     }

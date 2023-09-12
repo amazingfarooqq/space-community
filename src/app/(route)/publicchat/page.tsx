@@ -122,9 +122,8 @@ const page = () => {
                 <Sidebar />
 
                 <div className="flex flex-row justify-between w-full">
-                    <div className=" w-full ">
-                        <div className='flex flex-row justify-between h-[calc(100vh-5rem)]'>
-                            <div className='border dark:border-gray-800 flex-1 p:2 sm:px-1 justify-between flex flex-col rounded'>
+                    <div className=" w-full  ">
+                        <div className='flex shadow-xl dark:shadow-black flex-row justify-between h-[calc(100vh-5rem)] border dark:border-gray-800 flex-1 p:2 sm:px-1 justify-between flex flex-col rounded-lg dark:bg-[#191D20] '>
                                 <div id="publicMessages" className="flex flex-col space-y-3 p-2 overflow-y-auto">
                                     {publicChatMsgs?.map((message: any, index: number) => {
                                         return (
@@ -177,7 +176,7 @@ const page = () => {
 
                                     <div className="" ref={bottomRef} />
                                 </div>
-                                <div>
+                                <div className='pb-2 px-2'>
                                     <div className='pt-1'>
                                         {/* <button
                                             onClick={logout}
@@ -264,7 +263,6 @@ const page = () => {
                                     </form>
                                 </div>
 
-                            </div>
                             {/* <div className='border  dark:border-gray-800 flex flex-col w-1/5  overflow-y-auto overflow-x-hidden '>
                                 <div className="flex sm:items-center justify-between border-b-2 py-4 mb-3 border-gray-100 dark:border-gray-800 p-2 text-md">
                                     Online users

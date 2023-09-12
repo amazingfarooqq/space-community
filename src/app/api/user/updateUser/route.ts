@@ -8,18 +8,20 @@ export async function POST(
     try {
         const body = await req.json();
 
-        const { uuid } = body;
+        const { uuid, data } = body;
 
-        const data = await prisma.user.findUnique({
-            where: {
-                id: uuid
-            }
+        const updatedUser = await prisma.user.update({
+            where: { id: uuid },
+            data: data,
         });
 
+        console.log({updatedUser});
+        
 
-        return NextResponse.json(data);
+
+        return NextResponse.json(updatedUser);
     } catch (error) {
-        console.log('[CATEGORIES_GET]', error);
+        console.log('[UPDATE_USER]', error);
         return new NextResponse("Internal error", { status: 500 });
     }
 };

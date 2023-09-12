@@ -40,7 +40,7 @@ const RightSide = ({ currentSpaceData, isChatBox, handleChatBox, leaveSpace, han
                         >
                             <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z" />
                         </svg>
-                        <span className="text-sm">12:43 PM</span>
+                        <span className="text-sm">{currentSpaceData.createdAt}</span>
                     </div>
                     <div className="items-center justify-center ml-auto md:flex">
                         <button
@@ -107,7 +107,7 @@ const RightSide = ({ currentSpaceData, isChatBox, handleChatBox, leaveSpace, han
 
             </div>
 
-            <div className="flex align-center justify-between  h-[95px]  px-8  bg-gray-100 border-t border-gray-100 md:grid-cols-3 dark:bg-[#1e272d] dark:border-gray-600">
+            <div className="flex align-center justify-between  h-[75px]  px-8  bg-gray-100 border-t border-gray-100 md:grid-cols-3 dark:bg-[#1e272d] dark:border-gray-600">
                 <Options leaveSpace={leaveSpace} />
             </div>
         </>

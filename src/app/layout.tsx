@@ -32,6 +32,7 @@ export default function RootLayout({
             <ToasterContext />
             <UserProvider>
               <SocketProvider>
+                {/* <div className='-z-10 fixed w-full h-full hidden dark:block opacity-30' style={{backgroundImage: "url('https://c4.wallpaperflare.com/wallpaper/217/640/970/technology-discord-wallpaper-preview.jpg')", backgroundRepeat: "repeat"}}></div> */}
                 {children}
                 {/* <ActiveStatus /> */}
               </SocketProvider>
