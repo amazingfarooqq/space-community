@@ -53,14 +53,16 @@ model Account {
 
 model Space {
   id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  owner          String?     
-  title          String?     
-  language       String?      
-  level          String?    
-  limit          String?
+  ownerId         String?     
+  ownerName       String?     
+  ownerImage      String?     
+  title           String?     
+  language        String?      
+  level           String?    
+  limit           String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  userIds       String[]     @db.ObjectId
-  users         User[]       @relation(fields: [userIds], references: [id])
+  userIds         String[]     @db.ObjectId
+  users           User[]       @relation(fields: [userIds], references: [id])
 }

@@ -29,7 +29,6 @@ const page = () => {
     const { userData, setUserData }: any = useUser()
     const router = useRouter()
 
-    console.log({ userData, bio });
     useEffect(() => {
         const change = () => {
 
@@ -58,60 +57,42 @@ const page = () => {
 
     const handleSave = async () => {
 
+        if(!userData?.id){
+            toast.error("There was an error updating")
+            return
+        }
+
         const ajdustcountry = `${country?.label}-${country?.value?.toLowerCase()}`
         const ajdustnative = `${nativeLang?.label}-${nativeLang?.value?.toLowerCase()}`
         const ajdustlearninglang = `${learningLang?.label}-${learningLang?.value?.toLowerCase()}`
-        console.log({
-            ajdustcountry,
-            ajdustnative,
-            ajdustlearninglang
-        });
 
         let data = {}
 
         if (country && ajdustcountry !== userData.country) {
-            data = {
-                ...data,
-                country: ajdustcountry
-            }
+            data = { ...data, country: ajdustcountry }
         }
 
         if (nativeLang && ajdustnative !== userData.native) {
-            data = {
-                ...data,
-                native: ajdustnative
-            }
+            data = { ...data,  native: ajdustnative }
         }
 
         if (learningLang && ajdustlearninglang !== userData.learning) {
-            data = {
-                ...data,
-                learning: ajdustlearninglang
-            }
+            data = { ...data, learning: ajdustlearninglang }
         }
 
         if (bio !== userData?.bio) {
-            data = {
-                ...data,
-                bio
-            }
+            data = { ...data, bio }
         }
 
 
         !data && ""
 
-        console.log({ data });
-
 
         try {
             setIsLoading(true)
 
-            const updatedUser = await axios.post("/api/user/updateUser", { uuid: userData?.id, data })
-            setUserData({
-                ...userData,
-                ...data
-            })
-            console.log({ updatedUser });
+            const updatedUser = await axios.post("/api/user/updateUser", { uuid: userData.id, data })
+            setUserData({ ...userData, ...data })
             setIsLoading(false)
 
         } catch (error) {
@@ -125,7 +106,7 @@ const page = () => {
 
     // session.status == "loading" && toast.error("Loading..")
     session.status == "unauthenticated" && router.push("/")
-    console.log({ userData });
+    session.status == "authenticated" && !userData?.id && router.push("/")
     return (
         <>
             {session.status == "authenticated" && userData?.id &&

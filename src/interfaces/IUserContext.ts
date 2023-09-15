@@ -1,5 +1,5 @@
 export default interface IUserContext {
   userData:  {},
-  users: []
+  users: any
   setUserData: (data: {}) => void,
 }

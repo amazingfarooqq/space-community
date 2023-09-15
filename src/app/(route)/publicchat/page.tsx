@@ -12,9 +12,7 @@ import { toast } from 'react-hot-toast'
 import { v4 as uuidv4 } from 'uuid';
 
 const page = () => {
-    const [isNicknameOpen, setIsNicknameOpen] = useState(true)
     const bottomRef = useRef<HTMLDivElement>(null);
-    const [nickname, setNickname] = useState("")
     const { publicChatMsgs, socket } = useSocket();
 
     const session = useSession()
@@ -23,19 +21,18 @@ const page = () => {
         bottomRef?.current?.scrollIntoView();
     }, [publicChatMsgs])
 
-    useEffect(() => {
-        if (session.status == "authenticated") {
-            globalRoomFun()
-        }
-    }, [session.status])
+    // useEffect(() => {
+    //     if (session.status == "authenticated") {
+    //         globalRoomFun()
+    //     }
+    // }, [session.status])
 
-    const globalRoomFun = async () => {
-        setNickname(session?.data?.user?.name || "")
-        await axios.post("api/msgs/publicchat/join", {
-            roomId: "1", socketId: socket?.id
-        })
-        setIsNicknameOpen(false)
-    }
+    // const globalRoomFun = async () => {
+    //     await axios.post("api/msgs/publicchat/join", {
+    //         roomId: "1", socketId: socket?.id
+    //     })
+    // }
+
 
 
 
@@ -44,16 +41,23 @@ const page = () => {
     const formattedTime = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
     const handleSendMessage = async (e: any) => {
+        e.preventDefault()
+
+
+        // if (session.status !== "authenticated") {
+        //     toast.error("ERROR: You are not logged in")
+        //     return
+        // }
+        
         const msgData = {
             text: textArea,
-            name: nickname,
+            name: session?.data?.user?.name,
             time: formattedTime,
             socketId: "socket.id",
             roomId: "1",
             image: session?.data?.user?.image,
             status: "new_message"
         }
-        e.preventDefault()
         if (textArea.trim()) {
             await axios.post("api/msgs/publicchat/sendmsg", {
                 msgData
@@ -280,7 +284,7 @@ const page = () => {
                         </div>
                     </div >
                     {/* end message */}
-                    <div className="w-2/5  px-5 hidden md:block">
+                    <div className="lg:w-1/5  px-5 hidden md:block">
                         <div className="flex flex-col">
                             <div className="">
                                 <h2 className='font-semibold text-xl py-4'>Public Chat Room</h2>

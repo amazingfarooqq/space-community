@@ -25,9 +25,48 @@ export function useSocket() {
 
 export default function SocketProvider({ children }: { children: any }) {
     const [messages, setMessages] = useState<any>([]);
-    const [spaces, setSpaces] = useState<any>([]);
+    const [spaces, setSpaces] = useState<any>([
+        {
+        id: "213123",
+        title: "test",
+        ownerId: "1234",
+        ownerName: "Whats going on",
+        ownerImage:  "/images/persistence.jpg",
+        ownerData: {bio: "Testing bio", native: "english-en",learning: "urdu-ur", country: "pakistan-pk" ,id: "1234",name: "Whats going on",image: "/images/persistence.jpg" },
+        users: [
+            {bio: "Testing bio", native: "urdu-ur",learning: "english-en", country: "india-in" ,id: "123",name: "Ahmed Sardar",image: "/images/persistence.jpg" },
+            {bio: "Testing bio", native: "english-en",learning: "urdu-ur", country: "pakistan-pk" ,id: "1234",name: "Whats going on",image: "/images/persistence.jpg" },
+        ],
+        level: "Begineer",
+        limit: "2"
+    },
+    {
+        id: "213123",
+        title: "Music with friends",
+        ownerId: "31",
+        ownerName: "Ahmed Sardar",
+        ownerImage:  "/images/persistence.jpg",
+        users: [
+            {bio: "Testing bio", native: "urdu-ur",learning: "english-en", country: "india-in" ,id: "31",name: "Ahmed Sardar",image: "/images/persistence.jpg" },
+            {bio: "Testing bio", native: "urdu-ur",learning: "english-en", country: "United States-us" ,id: "444",name: "Ahmed Sardar",image: "/images/persistence.jpg" },
+            {bio: "Testing bio", native: "english-en",learning: "urdu-ur", country: "pakistan-pk" ,id: "1234",name: "Whats going on",image: "/images/persistence.jpg" },
+        ],
+        level: "Advance",
+        limit: "3"
+    },
+    {
+        id: "213123",
+        title: "Useless people",
+        ownerId: "1234",
+        ownerName: "Whats going on",
+        ownerImage:  "/images/persistence.jpg",
+        users: [
+        ],
+        level: "Advance",
+        limit: "10"
+    },
+]);
     const [currentSpaceData, setCurrentSpaceData] = useState({})
-    console.log({spaces});
     
     const [currentSpaceId, setCurrentSpaceId] = useState("")
 
@@ -54,7 +93,6 @@ export default function SocketProvider({ children }: { children: any }) {
 
         console.log("socketInstance useEffect");
         
-        console.log(session);
         
 
         const socketInstance = new (ClientIO as any)(process.env.NEXT_PUBLIC_SITE_URL!, {
@@ -184,6 +222,8 @@ export default function SocketProvider({ children }: { children: any }) {
 
 
         // publicchat
+
+        
 
         socketInstance?.on("join_public_chat", (data: any) => {
             console.log("public_msg", data);

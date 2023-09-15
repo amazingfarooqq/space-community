@@ -20,22 +20,20 @@ const UserInSpace = ({ users, user, ownerId }: any) => {
                 <div key={user.toString()} className='flex flex-col justify-center align-center items-center py-1'>
                     <div className="relative" onClick={handleOnOpen}>
 
-                        <img className={`cursor-pointer ${users.length <= 3 ? "h-24 w-24" : users.length <= 4 ? "h-22 w-22" : "h-18 w-18"}   rounded-full ring-1 ring-white dark:ring-blue-400 mr-1`} src={user.image} alt="" />
+                        <img className={`cursor-pointer ${users.length <= 3 ? "h-24 w-24" : users.length <= 4 ? "h-22 w-22" : "h-18 w-18"}   rounded-full ring-1 ring-ring-gray-400 dark:ring-gray-700 mr-1`} src={user.image} alt="" />
                         <span className="bottom-1 right-1 absolute   rounded-full text-2xl">
-                            <img className='w-6' src={`/images/flags/${user?.country?.split("-")[1]?.toLowerCase()}.png`} alt="" />
+                            <img title={user?.country?.split("-")[0]} className={`h-4`} src={`/images/flags/${user?.country?.split("-")[1]?.toLowerCase()}.png`} alt="" />
                         </span>
 
                     </div>
-                    <span className={'  text-blue-500 dark:text-blue-400 mt-1'} style={{ fontSize: "0.6rem" }}>{ownerId == user.id ? "⭐" : ""}  {user.name?.slice(0, 6)}..</span>
+                    <span className={'text-blue-500 dark:text-blue-400 mt-1'} style={{ fontSize: "0.6rem" }}>{ownerId == user.id ? "⭐" : ""}  {user.name?.slice(0, 6)}..</span>
                 </div>
             </Tooltip>
-            {openUserModal && (
-                <ModalForUserProfile
-                    user={user}
-                    openUserModal={openUserModal}
-                    handleOnClose={handleOnClose}
-                />
-            )}
+            <ModalForUserProfile
+                user={user}
+                openUserModal={openUserModal}
+                handleOnClose={handleOnClose}
+            />
         </>
     )
 }

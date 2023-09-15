@@ -5,8 +5,9 @@ import { useSession } from 'next-auth/react'
 import { toast } from 'react-hot-toast'
 import axios from 'axios'
 import { useUser } from '@/contexts/UserContext'
-import { TopicCategories } from '@/libs/data'
+import { LanguagesList, TopicCategories } from '@/libs/data'
 import { Spinner } from 'flowbite-react'
+import Select from 'react-select'
 
 export default function SidebarbarToCreateSpace({ open, setOpen }: any) {
 
@@ -18,9 +19,9 @@ export default function SidebarbarToCreateSpace({ open, setOpen }: any) {
   const [loading, setLoading] = useState(false)
   const [spaceData, setSpaceData] = useState({
     title: '',
-    language: '',
-    level: '',
-    limit: 10,
+    language: { label: "English", value: "en" },
+    level: { label: "Begineer", value: "bg" },
+    limit: { label: "10", value: "10" },
   });
 
   const handleOnSelectTopic = (topic: any) => {
@@ -33,10 +34,15 @@ export default function SidebarbarToCreateSpace({ open, setOpen }: any) {
     setSpaceData({ ...spaceData, [name]: value });
   };
 
-  const handleLimitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedLimit = parseInt(e.target.value);
-    setSpaceData({ ...spaceData, limit: selectedLimit });
-  };
+  // const handleLimitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  //   const selectedLimit = parseInt(e.target.value);
+  //   setSpaceData({ ...spaceData, limit: selectedLimit });
+  // };
+
+
+  const handleLanguageChange = (val: any) => setSpaceData({ ...spaceData, language: val });
+  const handleLevelChange = (val: any) => setSpaceData({ ...spaceData, level: val });
+  const handleLimitChange = (val: any) => setSpaceData({ ...spaceData, limit: val });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,22 +65,30 @@ export default function SidebarbarToCreateSpace({ open, setOpen }: any) {
       return
     }
 
-    if(!userData?.id) {
+    if (!userData?.id) {
       toast.error('There was error creating a new space');
       return
     }
 
     try {
+
+
+      const level = spaceData?.level?.label
+      const language = spaceData?.language?.label
+      const limit = spaceData?.limit?.label
+
       const newSpace = {
-        owner: userData.id,
+        ownerId: userData?.id,
+        ownerName: userData?.name,
+        ownerImage: userData?.image,
         title: spaceData.title || "Lets talk in english",
-        language: spaceData.language || "English",
-        level: spaceData.level || "Begineer",
-        limit: spaceData.limit.toString() || "10",
+        language, level, limit,
       };
-      const createNewSpace = await axios.post('/api/spaces/createSpace', {
-        newSpace
-      })
+      console.log({newSpace});
+      
+      // const createNewSpace = await axios.post('/api/spaces/createSpace', {
+      //   newSpace
+      // })
       toast.success('Space created!');
       setOpen(false)
       setSpaceData({})
@@ -136,7 +150,7 @@ export default function SidebarbarToCreateSpace({ open, setOpen }: any) {
                       </button>
                     </div>
                   </Transition.Child>
-                  <div className="flex h-full flex-col border-l dark:border-gray-700 overflow-y-scroll bg-white dark:bg-[#191D20] py-6 shadow-xl">
+                  <div className="flex h-full flex-col border-l dark:border-gray-700 overflow-y-scroll bg-white dark:bg-gray-800 py-6 shadow-xl">
                     <div className="px-4 sm:px-6">
                       <Dialog.Title className="text-base font-semibold leading-6">
                         <div className='flex justify-between'>
@@ -153,17 +167,17 @@ export default function SidebarbarToCreateSpace({ open, setOpen }: any) {
                     {isExploreTopics &&
                       <div className="relative mt-6 flex-1 px-4 sm:px-6">
                         <div className='text-2xl pb-2'>Explore Topics</div>
-                        <div className='py-2 text-lg cursor-pointer border-b border-gray-200 dark:border-gray-600' onClick={() => handleOnSelectTopic("🍿 Just Hanging out")}>🍿 Just Hanging out</div>
-                        <div className='py-2 text-lg cursor-pointer border-b border-gray-200 dark:border-gray-600' onClick={() => handleOnSelectTopic("🎊 New here ")}>🎊 New here </div>
-                        <div className='py-2 text-lg cursor-pointer border-b border-gray-200 dark:border-gray-600' onClick={() => handleOnSelectTopic("⏰ 10 min chat ")}>⏰ 10 min chat </div>
-                        <div className='py-2 text-lg cursor-pointer border-b border-gray-200 dark:border-gray-600' onClick={() => handleOnSelectTopic("🎤 Singing Room ")}>🎤 Singing Room </div>
+                        <div className='py-2 text-md cursor-pointer border-b border-gray-200 dark:border-gray-600' onClick={() => handleOnSelectTopic("🍿 Just Hanging out")}>🍿 Just Hanging out</div>
+                        <div className='py-2 text-md cursor-pointer border-b border-gray-200 dark:border-gray-600' onClick={() => handleOnSelectTopic("🎊 New here ")}>🎊 New here </div>
+                        <div className='py-2 text-md cursor-pointer border-b border-gray-200 dark:border-gray-600' onClick={() => handleOnSelectTopic("⏰ 10 min chat ")}>⏰ 10 min chat </div>
+                        <div className='py-2 text-md cursor-pointer border-b border-gray-200 dark:border-gray-600' onClick={() => handleOnSelectTopic("🎤 Singing Room ")}>🎤 Singing Room </div>
 
 
-                        {TopicCategories.map(item =>{
+                        {TopicCategories.map(item => {
                           return <>
-                          {item.topics.map(item => {
-                            return <div className='py-2 text-lg cursor-pointer border-b border-gray-200 dark:border-gray-600' onClick={() => handleOnSelectTopic(item)}>{item}</div>
-                          })}
+                            {item.topics.map(item => {
+                              return <div className='py-2 text-md cursor-pointer border-b border-gray-200 dark:border-gray-600' onClick={() => handleOnSelectTopic(item)}>{item}</div>
+                            })}
                           </>
                         })}
                       </div>
@@ -178,46 +192,37 @@ export default function SidebarbarToCreateSpace({ open, setOpen }: any) {
                               name="title"
                               value={spaceData.title}
                               onChange={handleInputChange}
-                              placeholder="Let's talk in English"
-                              className=" block mt-2 text-sm py-3 px-4 rounded-lg w-full border outline-none border dark:bg-gray-700 dark:border-gray-700"
+                              placeholder={`Let's talk in ${spaceData.language.label}`}
+                              className=" block mt-2 text-sm py-2 px-4 rounded-md w-full border outline-none border-gray-400 text-black"
                             />
                           </div>
                           <div className="mb-4">
                             <label htmlFor="language">Language</label>
-                            <input
-                              type="text"
-                              name="language"
-                              value={spaceData.language}
-                              onChange={handleInputChange}
-                              placeholder="English"
-                              className=" block mt-2 text-sm py-3 px-4 rounded-lg w-full border outline-none border dark:bg-gray-700 dark:border-gray-700"
-                            />
+                            <Select className="mt-2 text-black" options={LanguagesList} value={spaceData.language} onChange={handleLanguageChange} />
                           </div>
                           <div className="mb-4">
                             <label htmlFor="level">Level</label>
-                            <input
-                              type="text"
-                              name="level"
-                              value={spaceData.level}
-                              onChange={handleInputChange}
-                              placeholder="Intermediate"
-                              className=" block mt-2 text-sm py-3 px-4 rounded-lg w-full border outline-none border dark:bg-gray-700 dark:border-gray-700"
-                            />
+                            <Select className="mt-2 text-black" options={[
+                              { label: "Begineer", value: "bg" },
+                              { label: "Intermediate", value: "in" },
+                              { label: "Advanced", value: "ad" },
+                              { label: "Upper Advanced", value: "uad" },
+                            ]} value={spaceData.level} onChange={handleLevelChange} />
                           </div>
                           <div className="mb-4">
                             <label htmlFor="limit">Limit</label>
-                            <select
-                              name="limit"
-                              value={spaceData.limit}
-                              onChange={handleLimitChange}
-                              className=" block mt-2 text-sm py-3 px-4 rounded-lg w-full border outline-none border dark:bg-gray-700 dark:border-gray-700"
-                            >
-                              {Array.from({ length: 20 }, (_, index) => (
-                                <option key={index + 1} value={index + 1}>
-                                  {index + 1}
-                                </option>
-                              ))}
-                            </select>
+                            <Select className="mt-2 text-black" options={[
+                              { label: "1", value: "1" },
+                              { label: "2", value: "2" },
+                              { label: "3", value: "3" },
+                              { label: "4", value: "4" },
+                              { label: "5", value: "5" },
+                              { label: "6", value: "6" },
+                              { label: "7", value: "7" },
+                              { label: "8", value: "8" },
+                              { label: "9", value: "9" },
+                              { label: "10", value: "10" },
+                            ]} value={spaceData.limit} onChange={handleLimitChange} />
                           </div>
                           {loading ?
                             <Spinner aria-label="Loader" />

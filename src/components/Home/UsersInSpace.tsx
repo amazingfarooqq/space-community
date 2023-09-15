@@ -1,6 +1,4 @@
-import { Button, Tooltip } from 'flowbite-react'
 import React, { useState } from 'react'
-import ModalForUserProfile from '../ModalForUserProfile';
 import UserInSpace from './UserInSpace';
 
 const UsersInSpace = ({ users, ownerId }: any) => {
@@ -11,27 +9,17 @@ const UsersInSpace = ({ users, ownerId }: any) => {
     const ownerIndex = sortedUsers.findIndex(user => user?.id === ownerId);
 
     if (ownerIndex !== -1) {
-        // Remove the owner's user from the array
         const ownerUser = sortedUsers.splice(ownerIndex, 1)[0];
-
-        // Place the owner's user at the beginning of the array
         sortedUsers.unshift(ownerUser);
     }
 
     return (
         <>
-            {
-                sortedUsers?.map((user: any, imgIndex: any) => {
-
-                    return (
-                        <>
-                            {imgIndex < 10 && (
-                                <UserInSpace users={users} user={user} ownerId={ownerId} />
-                            )}
-                        </>
-                    )
-                })
-            }
+            {sortedUsers?.map((user: any, imgIndex: any) => {
+                return imgIndex < 10 && (
+                    <UserInSpace users={users} user={user} ownerId={ownerId} />
+                )
+            })}
         </>
     )
 }

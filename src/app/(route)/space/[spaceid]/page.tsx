@@ -55,7 +55,7 @@ const page = ({ params: { spaceId } }: { params: { spaceId: string; } }) => {
 
         if (session.status == "unauthenticated") {
             toast.error("Excuse, you are not logged in");
-            router.push("/");
+            // router.push("/");
             return;
         }
 
@@ -68,19 +68,36 @@ const page = ({ params: { spaceId } }: { params: { spaceId: string; } }) => {
         // }
 
         // toast.error("please wait as we fetch space data");
+        // const set = async () => {
+        //     try {
+        //         const joinedUserData = {
+        //             ...userData
+        //         }
 
+        //         await axios.post('/api/spaces/joinSpace', {
+        //             spaceId, userId: userData.id, joinedUserData, socketId: socket.id
+        //         })
+                
+        //         joinUserDatabase(joinedUserData)
+        //     } catch (error) {
+        //         console.log({error});
+                
+        //     }
+        // }
+
+        // set()
         getSpace().then((spaceData) => {
             console.log({userData});
             
             const joinedUserData = {
-                id: userData?.id || "",
-                name: userData?.name || "",
-                image: userData?.image || "",
-                followers: userData?.followers || "",
-                native: userData?.native || "",
-                learning: userData?.learning || "",
-                country: userData?.country || "",
-                bio: userData?.bio || "",
+                id: userData?.id,
+                name: userData?.name,
+                image: userData?.image,
+                followers: userData?.followers,
+                native: userData?.native,
+                learning: userData?.learning,
+                country: userData?.country,
+                bio: userData?.bio,
             }
             joinUserDatabase(joinedUserData)
         }).catch((error) => {

@@ -12,8 +12,11 @@ export default async function handler(
     const { publicChatId, msgData } = req.body;
 
 
+    console.log({msgData});
+    
 
-    res?.socket?.server?.io?.to(msgData.roomId).emit("public_msg", msgData);
+    // res?.socket?.server?.io?.to(msgData.roomId).emit("public_msg", msgData);
+    res?.socket?.server?.io?.emit("public_msg", msgData);
 
 
     return res.status(200).json(msgData);

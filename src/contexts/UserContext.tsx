@@ -35,7 +35,7 @@ export default function UserProvider({
       console.log("1");
       
       const date =  new Date(data.createdAt)
-      const options = { year: 'numeric', month: 'short', day: 'numeric' };
+      const options: any = { year: 'numeric', month: 'short', day: 'numeric' };
       const formattedDate = date.toLocaleDateString('en-US', options);
       
       console.log("2");

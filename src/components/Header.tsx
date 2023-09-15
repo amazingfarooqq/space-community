@@ -65,15 +65,15 @@ const Header = () => {
 
 
             <div className="h-12 mx-auto flex justify-between items-center ">
-                <Link href="/" className="flex items-center ">
-                    <img src="https://www.expesh.com/imgs/logo.png" alt="Logo" className="h-7" />
+                <div className="flex items-center ">
+                    {/* <img src="https://www.expesh.com/imgs/logo.png" alt="Logo" className="h-7" /> */}
                     <span className="text-xl ml-1" >
                         {/* <span className="text-blue-500 dark:text-blue-400">spark</span> */}
                         <span className="text-black dark:text-white "> sparktalk</span>
                     </span>
                     {/* <img src="/images/lightlogopng.png" alt="Logo" className="h-16 mr-2 " /> */}
                     {/* <h1 className="text-gray-600 dark:text-white  text-lg font-semibold">Spark talk</h1> */}
-                </Link>
+                </div>
                 <div className="flex items-center pr-5">
                     <ThemeSwitch />
                     {session.status == "loading" &&

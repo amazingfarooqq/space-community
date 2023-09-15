@@ -4,9 +4,6 @@ import { Avatar, Button, Modal } from 'flowbite-react';
 import { useState } from 'react';
 
 export default function ModalForUserProfile({ user, openUserModal, handleOnClose }) {
-
-
-    console.log({user});
     
     return (
         <>

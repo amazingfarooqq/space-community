@@ -76,6 +76,7 @@ function Sidebar() {
                       {/* <Icon className="h-6 w-6 shrink-0" aria-hidden="true" /> */}
                       <button className='mx-auto'>
                         {item.icon()}
+                        
                         <span className="sr-only">{item.name}</span>
 
                       </button>

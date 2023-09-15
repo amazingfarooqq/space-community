@@ -4,6 +4,7 @@ import { useUser } from '@/contexts/UserContext'
 import { MediaRoom } from './Media'
 import Options from './Options'
 import UsersInSpace from './UsersInSpace'
+import { Avatar } from 'flowbite-react'
 
 const RightSide = ({ currentSpaceData, isChatBox, handleChatBox, leaveSpace, handleRightSide }: any) => {
 
@@ -40,7 +41,7 @@ const RightSide = ({ currentSpaceData, isChatBox, handleChatBox, leaveSpace, han
                         >
                             <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z" />
                         </svg>
-                        <span className="text-sm">{currentSpaceData.createdAt}</span>
+                        <span className="text-sm">{currentSpaceData?.createdAt}</span>
                     </div>
                     <div className="items-center justify-center ml-auto md:flex">
                         <button
@@ -102,13 +103,22 @@ const RightSide = ({ currentSpaceData, isChatBox, handleChatBox, leaveSpace, han
 
 
                 <div className="h-[calc(100vh-180px)] flex gap-3 flex-wrap overflow-auto  justify-center py-5">
-                    <UsersInSpace currentSpaceData={currentSpaceData}/>
+                    <UsersInSpace currentSpaceData={currentSpaceData} />
                 </div>
 
             </div>
 
-            <div className="flex align-center justify-between  h-[75px]  px-8  bg-gray-100 border-t border-gray-100 md:grid-cols-3 dark:bg-[#1e272d] dark:border-gray-600">
-                <Options leaveSpace={leaveSpace} />
+            <div >
+                {/* <div className=" flex align-center justify-start px-3  overflow-auto w-96">
+
+                <img className='w-10 h-10' src="/images/persistence.jpg" alt="" />
+                <img className='w-10 h-10' src="/images/persistence.jpg" alt="" />
+                <img className='w-10 h-10' src="/images/persistence.jpg" alt="" />
+                </div> */}
+                <div className="flex align-center justify-between  h-[75px]  px-8  bg-gray-100 border-t border-gray-100 md:grid-cols-3 dark:bg-[#1e272d] dark:border-gray-600">
+                    <Options leaveSpace={leaveSpace} />
+
+                </div>
             </div>
         </>
     )
