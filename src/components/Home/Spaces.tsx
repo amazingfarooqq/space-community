@@ -27,7 +27,7 @@ const Spaces = () => {
 
             {spaces?.map((space: any, index: any) => {
                 return <>
-                    <div key={index} className={`flex h-full flex-col justify-between px-4 py-3  animate-fade-in relative border dark:border-gray-700 bg-white dark:bg-gray-800 lg:w-98 ${space.users.length == 0 ? "h-60" : "h-auto"} lg:h-80 overflow-hidden ml-0 rounded-lg  shadow-lg  ${index == 0 && "border-blue-400 dark:border-blue-400"} `}>
+                    <div key={index} className={`flex h-full flex-col justify-between px-4 py-3  animate-fade-in relative border dark:border-gray-700 bg-gray-100 dark:bg-gray-800 lg:w-98 ${space.users.length == 0 ? "h-60" : "h-auto"} lg:h-80 overflow-hidden ml-0 rounded-md  shadow-lg  ${index == 0 && "border-blue-400 dark:border-blue-400"} `}>
 
 
 
@@ -50,24 +50,25 @@ const Spaces = () => {
                                         {space.title?.length > 100 ? `${space.title.slice(0, 100)}...` : space.title}
                                     </div>
                                 </div>
-                                <div>
+                                <div className=''>
                                     <Dropdown
                                         placement="bottom-end"
                                         inline
                                         label=""
-                                        className='w-36 '
+                                        className='w-36'
+                                        
                                     >
 
-                                        <div className='px-3 my-2  text-center flex justify-center'>
+                                        <div className='px-3 py-2 text-center flex justify-center'>
                                             <img src={space?.ownerImage} className='w-14 h-14 rounded-full border' alt="" />
                                         </div>
-                                        <div className='px-3 my-2  text-center'>
+                                        <div className='px-3 pb-2  text-center'>
                                             <span className=''>{space?.ownerName}</span>
                                         </div>
-                                        <div className='mx-auto flex flex-col justify-center px-3'>
-                                            <div className='pt-1'>Create At</div>
-                                            <div className='pt-1'>{space?.createdAt}</div>
-                                        </div>
+                                        {/* <div className='mx-auto opacity-80 flex flex-col justify-center p-1'>
+                                            <div className=''>Created At:</div>
+                                            <div className=''>{space?.createdAt}</div>
+                                        </div> */}
 
                                     </Dropdown>
                                 </div>
@@ -77,7 +78,7 @@ const Spaces = () => {
 
                         <div className="flex flex-wrap ">
                             {space.users.length > 0 && <UsersInSpace users={space.users} ownerId={space.ownerId} />}
-                            {space.users?.length && space.users.length > 8 ?
+                            {space.users?.length && space.users.length > 9 ?
                                 <div className="inline-block h-10 w-10 rounded-full ring-2 ring-white flex items-center justify-center dark:ring-[#272F34] bg-slate-100 dark:bg-gray-600  dark:text-gray-200" style={{ fontSize: '0.8rem' }}>
                                     {space.users.length}
                                 </div> : ""
@@ -86,18 +87,18 @@ const Spaces = () => {
 
                         <div className='flex justify-between'>
                             <div className="text-right  bottom-3 left-3   ">
-                                <div className="text-sm font-medium px-3 py-2 rounded-3xl bg-white shadow-md dark:bg-gray-700">{space.level}</div>
+                                <div className="text-sm font-medium px-3 py-2 rounded-xl bg-gray-100 shadow-md dark:bg-gray-700">{space.level}</div>
                             </div>
                             <div className="text-right  z-100 bottom-3 right-3   ">
                                 {space.users.length < space.limit ?
                                     <button onClick={() => joinSpace(space.id)}
-                                        className="text-sm font-medium hover:text-blue-500 inline-flex items-center transition duration-150 ease-in-out group border px-3 py-2 rounded-3xl border-gray-200 dark:border-gray-700">Join
-                                        <svg className="w-4 h-4 ml-2 tracking-normal text-blue-500 group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                                        className="text-sm font-medium inline-flex items-center transition duration-150 ease-in-out group border px-4 py-2 rounded-xl border-blue-200 dark:border-gray-600 border-dashed hover:text-blue-400 ">Join space
+                                        <svg className="w-4 h-4 ml-2 tracking-normal group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
                                         </svg>
                                     </button> :
                                     <div
-                                        className="text-sm font-medium inline-flex items-center transition duration-150 ease-in-out px-3 py-2 rounded-3xl  opacity-70">Full
+                                        className="text-sm font-medium text-gray-700 dark:text-red-400 inline-flex items-center transition duration-150 ease-in-out group  py-2 rounded-xl text-red-500 ">Space is Full
                                     </div>
                                 }
                             </div>
@@ -147,10 +148,10 @@ const Spaces = () => {
 
                             <div className='flex justify-between'>
                                 <div className="text-right  ">
-                                    <div className="text-sm font-medium px-3 py-2 rounded-3xl shadow-md bg-gray-200 dark:bg-gray-700  w-20 h-8"></div>
+                                    <div className="text-sm font-medium px-3 py-2 rounded-xl shadow-md bg-gray-200 dark:bg-gray-700  w-20 h-8"></div>
                                 </div>
                                 <div className="text-right ">
-                                    <div className="text-sm font-medium px-3 py-2 rounded-3xl shadow-md bg-gray-200 dark:bg-gray-700  w-20 h-8"></div>
+                                    <div className="text-sm font-medium px-3 py-2 rounded-xl shadow-md bg-gray-200 dark:bg-gray-700  w-20 h-8"></div>
                                 </div>
                             </div>
 

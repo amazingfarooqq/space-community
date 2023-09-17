@@ -9,6 +9,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { navigation } from '../Header/navigation';
 import SidebarbarToCreateSpace from '../SidebarToCreateSpace';
 import { useState } from 'react';
+import ModalWordsOfTheDay from '../ModalWordsOfTheDay';
 
 
 function Sidebar() {
@@ -16,14 +17,15 @@ function Sidebar() {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
 
+  const [isWordsOfTheDayModal, setIsWordsOfTheDayModal] = useState(false)
 
   const { userData } = useUser()
   return (
     <>
       <SidebarbarToCreateSpace open={open} setOpen={setOpen} />
-
+      <ModalWordsOfTheDay isWordsOfTheDayModal={isWordsOfTheDayModal} setIsWordsOfTheDayModal={setIsWordsOfTheDayModal} />
       <div className="h-full">
-        <div className=" fixed  inset-y-0  left-0   w-[90px] overflow-y-auto pb-4 flex flex-col justify-between  border-r border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-[#191D20] ">
+        <div className=" fixed  inset-y-0  left-0   w-[70px] md:w-[90px] overflow-y-auto pb-4 flex flex-col justify-between  border-r border-gray-200 dark:border-gray-700">
           <nav className="mt-4 flex flex-col justify-between ">
             <ul role="list" className="flex flex-col items-center space-y-2 ">
 
@@ -60,7 +62,7 @@ function Sidebar() {
                   <li key={item.name} className={`${pathname == item.href && "border-l border-blue-400   w-full"}`}>
                     <Link
                       href={item.href}
-                      className={` group w-14 h-14 mx-auto
+                      className={` group w-12 h-12 md:w-14  md:h-14 mx-auto
                     ${pathname === item.href ? 'text-white bg-blue-500 dark:bg-blue-400 ' : 'bg-gray-300 dark:bg-gray-600'}
                   dark:text-white text-gray-900
                     flex 
@@ -76,7 +78,7 @@ function Sidebar() {
                       {/* <Icon className="h-6 w-6 shrink-0" aria-hidden="true" /> */}
                       <button className='mx-auto'>
                         {item.icon()}
-                        
+
                         <span className="sr-only">{item.name}</span>
 
                       </button>
@@ -85,9 +87,37 @@ function Sidebar() {
                   </li>
                 )
               })}
+
             </ul>
           </nav>
           <nav className="mt-4 flex flex-col justify-between items-center">
+            <div className={`my-1 ${pathname !== "/" && "hidden"} mb-4 `}>
+              <div
+                className={` group 
+                    hover:opacity-60
+                    text-gray-200
+                    flex 
+                    rounded-full 
+                    p-3 
+                    text-sm 
+                    leading-6 
+                    font-semibold
+                }
+                 `
+                }
+                onClick={() => setIsWordsOfTheDayModal(!open)}
+              >
+                {/* <Icon className="h-6 w-6 shrink-0" aria-hidden="true" /> */}
+                <button>
+                  <svg className="w-7 h-7" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 1v16M1 9h16" />
+                  </svg>
+                  <span className="sr-only">Words of the day</span>
+
+                </button>
+
+              </div>
+            </div>
             <div>
               <ThemeSwitch />
             </div>

@@ -75,7 +75,10 @@ const Header = () => {
                     {/* <h1 className="text-gray-600 dark:text-white  text-lg font-semibold">Spark talk</h1> */}
                 </div>
                 <div className="flex items-center pr-5">
+                    <span className="hidden md:block">
                     <ThemeSwitch />
+
+                    </span>
                     {session.status == "loading" &&
 
                         <div role="status pl-10">
@@ -87,7 +90,7 @@ const Header = () => {
                         </div>
                     }
                     {session?.status === 'authenticated' && <>
-                        <p className="mr-4 ml-3">Hello, {session?.data?.user?.name}</p>
+                        <p className="mr-4 ml-3 hidden md:block">Hello, {session?.data?.user?.name}</p>
                         <Dropdown
                             placement="bottom-end"
                             className="dark:bg-gray-700 animate-fade-in"

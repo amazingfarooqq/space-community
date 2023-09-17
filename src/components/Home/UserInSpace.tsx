@@ -26,7 +26,7 @@ const UserInSpace = ({ users, user, ownerId }: any) => {
                         </span>
 
                     </div>
-                    <span className={'text-blue-500 dark:text-blue-400 mt-1'} style={{ fontSize: "0.6rem" }}>{ownerId == user.id ? "⭐" : ""}  {user.name?.slice(0, 6)}..</span>
+                    <span className={'mt-1'} style={{ fontSize: "0.6rem" }}>{ownerId == user.id ? "⭐" : ""}  {user.name?.slice(0, 6)}..</span>
                 </div>
             </Tooltip>
             <ModalForUserProfile

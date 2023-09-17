@@ -121,7 +121,7 @@ const page = () => {
             </div> */}
 
 
-            <div className=" mx-auto flex justify-between  z-10 ml-24 px-4 flex-col ">
+            <div className=" mx-auto flex justify-between  z-10 ml-16 md:ml-24 px-4 flex-col ">
                 <Header />
                 <Sidebar />
 

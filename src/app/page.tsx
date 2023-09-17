@@ -15,6 +15,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { useSession } from 'next-auth/react';
 import SidebarToCreateSpace from '@/components/SidebarToCreateSpace';
 import { Spinner } from 'flowbite-react';
+import SidebarbarToCreateSpace from '@/components/SidebarToCreateSpace';
+import { navigation } from '@/components/Header/navigation';
+import { AdjustmentsHorizontalIcon, Bars2Icon, Bars3Icon, Bars4Icon, CameraIcon, HomeIcon, LinkIcon, SpeakerXMarkIcon, StarIcon, TableCellsIcon, XCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import SocialSide from '@/components/Home/SocialSide';
 
 interface User {
   id: string;
@@ -35,15 +39,18 @@ interface Space {
 
 
 export default function Home() {
-  
+  const [open, setOpen] = useState(false)
+
   return (
     <>
-      <main className="birdcontainer min-h-100 flex min-h-screen flex-col mb-0 pb-0 ml-24 px-4" >
+      <main className="birdcontainer min-h-100 flex min-h-screen flex-col mb-0 pb-0 ml-16 md:ml-24 px-4" >
         <Header />
         <Sidebar />
-        <div className="bird-container bird-container--one">
+        <SidebarbarToCreateSpace open={open} setOpen={setOpen} />
+
+        {/* <div className="bird-container bird-container--one">
           <div className="bird bird--one" />
-        </div>
+        </div> */}
         {/* <BGGradient /> */}
 
         {/* <div className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl dark:opacity-50 sm:-top-80 " aria-hidden="true">
@@ -56,13 +63,20 @@ export default function Home() {
           />
         </div> */}
         <div className=" mx-auto pb-10">
-          <h2 className=" py-2 text-2xl  opacity-90">Join Space and start talking or create your own</h2>
+          <h2 className=" py-2 text-2xl  opacity-90 text-center">Language practice community</h2>
+          {/* <h2 className=" py-2 text-2xl  opacity-90 text-center">Join Space and start talking or create your own</h2> */}
         </div>
+        <div className='pb-5 flex flex-wrap gap-2'>
+          <button className="text-sm px-10 font-medium inline-flex items-center transition duration-150 ease-in-out py-2 rounded-md bg-blue-600 dark:bg-blue-500 text-white opacity-90 hover:opacity-80 focus:bg-blue-700" onClick={() => setOpen(true)}>Create space
+          </button>
+        </div>
+
         <div className=" flex flex-wrap gap-5 flex-col lg:flex-row  pb-56">
           <Spaces />
-
-          
         </div>
+
+        <SocialSide />
+
       </main >
 
     </>
