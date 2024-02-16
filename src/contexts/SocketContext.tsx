@@ -26,57 +26,57 @@ export function useSocket() {
 export default function SocketProvider({ children }: { children: any }) {
     const [messages, setMessages] = useState<any>([]);
     const [spaces, setSpaces] = useState<any>([
-        {
-        id: "213123",
-        title: "test",
-        ownerId: "1234",
-        ownerName: "Whats going on",
-        ownerImage:  "/images/persistence.jpg",
-        createdAt: "13 Sep 2023, 12:12:12 Am",
-        ownerData: {bio: "Testing bio", native: "english-en",learning: "urdu-ur", country: "pakistan-pk" ,id: "1234",name: "Whats going on",image: "/images/persistence.jpg" },
-        users: [
-            {bio: "Testing bio", native: "urdu-ur",learning: "english-en", country: "india-in" ,id: "123",name: "Ahmed Sardar",image: "/images/persistence.jpg" },
-            {bio: "Testing bio", native: "urdu-ur",learning: "english-en", country: "india-in" ,id: "123",name: "Ahmed Sardar",image: "/images/persistence.jpg" },
-            {bio: "Testing bio", native: "urdu-ur",learning: "english-en", country: "india-in" ,id: "123",name: "Ahmed Sardar",image: "/images/persistence.jpg" },
-            {bio: "Testing bio", native: "urdu-ur",learning: "english-en", country: "india-in" ,id: "123",name: "Ahmed Sardar",image: "/images/persistence.jpg" },
-            {bio: "Testing bio", native: "english-en",learning: "urdu-ur", country: "pakistan-pk" ,id: "1234",name: "Whats going on",image: "/images/persistence.jpg" },
-        ],
-        level: "Begineer",
-        language: "English",
-        limit: "2"
-    },
-    {
-        id: "213123",
-        title: "Best Video Games of the Decade",
-        ownerId: "31",
-        ownerName: "Ahmed Sardar",
-        ownerImage:  "/images/persistence.jpg",
-        users: [
-            {bio: "Testing bio", native: "urdu-ur",learning: "english-en", country: "Cananda-ca" ,id: "31",name: "Ahmed Sardar",image: "/images/persistence.jpg" },
-            {bio: "Testing bio", native: "urdu-ur",learning: "english-en", country: "United States-us" ,id: "444",name: "Ahmed Sardar",image: "/images/persistence.jpg" },
-            {bio: "Testing bio", native: "english-en",learning: "urdu-ur", country: "China-cn" ,id: "1234",name: "Whats going on",image: "/images/persistence.jpg" },
-            {bio: "Testing bio", native: "english-en",learning: "urdu-ur", country: "China-cn" ,id: "1234",name: "Whats going on",image: "/images/persistence.jpg" },
-        ],
-        level: "Advance",
-        language: "English",
-        limit: "10"
-    },
-    {
-        id: "213123",
-        title: "Useless people",
-        ownerId: "1234",
-        ownerName: "Yasir",
-        ownerImage:  "/images/persistence.jpg",
-        users: [
-            {bio: "~~", native: "Urdu-en",learning: "English-ur", country: "Pakistan-pk" ,id: "1234",name: "Yasir",image: "/images/persistence.jpg" },
-            {bio: "Dont talk to me!", native: "Pashto-ps",learning: "English-en", country: "Afghanistan-af" ,id: "444",name: "Ilham Khan",image: "/images/dummyusers/ilham.jpg" },
-            {bio: "Living but not really.", native: "English-ur",learning: "German-en", country: "United States-us" ,id: "444",name: "Mark",image: "/images/dummyusers/mark.jpg" },
+    //     {
+    //     id: "213123",
+    //     title: "test",
+    //     ownerId: "1234",
+    //     ownerName: "Whats going on",
+    //     ownerImage:  "/images/persistence.jpg",
+    //     createdAt: "13 Sep 2023, 12:12:12 Am",
+    //     ownerData: {bio: "Testing bio", native: "english-en",learning: "urdu-ur", country: "pakistan-pk" ,id: "1234",name: "Whats going on",image: "/images/persistence.jpg" },
+    //     users: [
+    //         {bio: "Testing bio", native: "urdu-ur",learning: "english-en", country: "india-in" ,id: "123",name: "Ahmed Sardar",image: "/images/persistence.jpg" },
+    //         {bio: "Testing bio", native: "urdu-ur",learning: "english-en", country: "india-in" ,id: "123",name: "Ahmed Sardar",image: "/images/persistence.jpg" },
+    //         {bio: "Testing bio", native: "urdu-ur",learning: "english-en", country: "india-in" ,id: "123",name: "Ahmed Sardar",image: "/images/persistence.jpg" },
+    //         {bio: "Testing bio", native: "urdu-ur",learning: "english-en", country: "india-in" ,id: "123",name: "Ahmed Sardar",image: "/images/persistence.jpg" },
+    //         {bio: "Testing bio", native: "english-en",learning: "urdu-ur", country: "pakistan-pk" ,id: "1234",name: "Whats going on",image: "/images/persistence.jpg" },
+    //     ],
+    //     level: "Begineer",
+    //     language: "English",
+    //     limit: "2"
+    // },
+    // {
+    //     id: "213123",
+    //     title: "Best Video Games of the Decade",
+    //     ownerId: "31",
+    //     ownerName: "Ahmed Sardar",
+    //     ownerImage:  "/images/persistence.jpg",
+    //     users: [
+    //         {bio: "Testing bio", native: "urdu-ur",learning: "english-en", country: "Cananda-ca" ,id: "31",name: "Ahmed Sardar",image: "/images/persistence.jpg" },
+    //         {bio: "Testing bio", native: "urdu-ur",learning: "english-en", country: "United States-us" ,id: "444",name: "Ahmed Sardar",image: "/images/persistence.jpg" },
+    //         {bio: "Testing bio", native: "english-en",learning: "urdu-ur", country: "China-cn" ,id: "1234",name: "Whats going on",image: "/images/persistence.jpg" },
+    //         {bio: "Testing bio", native: "english-en",learning: "urdu-ur", country: "China-cn" ,id: "1234",name: "Whats going on",image: "/images/persistence.jpg" },
+    //     ],
+    //     level: "Advance",
+    //     language: "English",
+    //     limit: "10"
+    // },
+    // {
+    //     id: "213123",
+    //     title: "Useless people",
+    //     ownerId: "1234",
+    //     ownerName: "Yasir",
+    //     ownerImage:  "/images/persistence.jpg",
+    //     users: [
+    //         {bio: "~~", native: "Urdu-en",learning: "English-ur", country: "Pakistan-pk" ,id: "1234",name: "Yasir",image: "/images/persistence.jpg" },
+    //         {bio: "Dont talk to me!", native: "Pashto-ps",learning: "English-en", country: "Afghanistan-af" ,id: "444",name: "Ilham Khan",image: "/images/dummyusers/ilham.jpg" },
+    //         {bio: "Living but not really.", native: "English-ur",learning: "German-en", country: "United States-us" ,id: "444",name: "Mark",image: "/images/dummyusers/mark.jpg" },
             
-        ],
-        level: "Advance",
-        language: "English",
-        limit: "3"
-    },
+    //     ],
+    //     level: "Advance",
+    //     language: "English",
+    //     limit: "3"
+    // },
 ]);
     const [currentSpaceData, setCurrentSpaceData] = useState({})
     

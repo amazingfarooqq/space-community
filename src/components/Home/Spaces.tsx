@@ -148,10 +148,10 @@ const Spaces = () => {
 
                             <div className='flex justify-between'>
                                 <div className="text-right  ">
-                                    <div className="text-sm font-medium px-3 py-2 rounded-xl shadow-md bg-gray-200 dark:bg-gray-700  w-20 h-8"></div>
+                                    <div className="text-sm font-medium px-3 py-2 rounded-xl shadow-md bg-gray-200 dark:bg-gray-700  w-20 h-5"></div>
                                 </div>
                                 <div className="text-right ">
-                                    <div className="text-sm font-medium px-3 py-2 rounded-xl shadow-md bg-gray-200 dark:bg-gray-700  w-20 h-8"></div>
+                                    <div className="text-sm font-medium px-3 py-2 rounded-xl shadow-md bg-gray-200 dark:bg-gray-700  w-20 h-5"></div>
                                 </div>
                             </div>
 
