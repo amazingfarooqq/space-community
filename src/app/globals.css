@@ -2,8 +2,136 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap');
+.birdcontainer {
+  z-index: 1;
+  position: relative; 
+  overflow: hidden;
+  display: -webkit-box;
+  display: -ms-flexbox;
+}
 
-body {
-  font-family: 'Manrope', 'sans-serif';
+.bird-container {
+  position: absolute;
+  top: 20%;
+  z-index: 1111;
+  left: -7.5vw;
+  -webkit-transform: scale(0);
+  transform: scale(0);
+  will-change: transform;
+  -webkit-animation-name: fly-right-one;
+  animation-name: fly-right-one;
+  -webkit-animation-timing-function: linear;
+  animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+}
+
+.bird {
+  background-image: url("http://www.iamramraj.com/demo/Flying_birds_CSS_animation_examples/bird-cells.svg");
+  background-size: auto 100%;
+  width: 86px;
+  height: 125px;
+  will-change: background-position;
+  animation-name: fly-cycle;
+  animation-timing-function: steps(10);
+  animation-iteration-count: infinite;
+  animation-duration: 0.5s;
+  animation-delay: -0.5s;
+}
+
+.bird--one {
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-delay: -0.5s;
+  animation-delay: -0.5s;
+}
+
+@keyframes fly-cycle {
+  100% {
+    background-position: -900px 0;
+  }
+}
+
+.bird-container--one {
+  -webkit-animation-duration: 15s;
+  animation-duration: 15s;
+  -webkit-animation-delay: 0;
+  animation-delay: 0;
+}
+
+@keyframes fly-right-one {
+  0% {
+    left: -10%;
+    -webkit-transform: scale(0.3);
+    transform: scale(0.3);
+  }
+
+  10% {
+    left: 10%;
+    -webkit-transform: translateY(2vh) scale(0.4);
+    transform: translateY(2vh) scale(0.4);
+  }
+
+  20% {
+    left: 30%;
+    -webkit-transform: translateY(0vh) scale(0.5);
+    transform: translateY(0vh) scale(0.5);
+  }
+
+  30% {
+    left: 50%;
+    -webkit-transform: translateY(4vh) scale(0.6);
+    transform: translateY(4vh) scale(0.6);
+  }
+
+  40% {
+    left: 70%;
+    -webkit-transform: translateY(2vh) scale(0.6);
+    transform: translateY(2vh) scale(0.6);
+  }
+
+  50% {
+    left: 90%;
+    -webkit-transform: translateY(0vh) scale(0.6);
+    transform: translateY(0vh) scale(0.6);
+  }
+
+  60% {
+    left: 110%;
+    -webkit-transform: translateY(0vh) scale(0.6);
+    transform: translateY(0vh) scale(0.6);
+  }
+
+  100% {
+    left: 110%;
+    opacity: 1;
+    -webkit-transform: translateY(0vh) scale(0.6);
+    transform: translateY(0vh) scale(0.6);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.1s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+  }
+  to {
+      opacity: 1;
+  }
+}
+
+.fade-out {
+  animation: fadeOut 0.5s ease-out;
+}
+
+@keyframes fadeOut {
+  from {
+      opacity: 1;
+  }
+  to {
+      opacity: 0;
+  }
 }

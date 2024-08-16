@@ -61,7 +61,7 @@ const Header = () => {
     }
 
     return (
-        <div className="py-3 z-10 ">
+        <div className="py-3 z-10">
 
 
             <div className="h-12 mx-auto flex justify-between items-center ">
@@ -69,7 +69,7 @@ const Header = () => {
                     {/* <img src="https://www.expesh.com/imgs/logo.png" alt="Logo" className="h-7" /> */}
                     <span className="text-xl ml-1" >
                         {/* <span className="text-blue-500 dark:text-blue-400">spark</span> */}
-                        <span className="text-black dark:text-white "> StaShoe</span>
+                        <span className="text-black dark:text-white "> sparktalk</span>
                     </span>
                     {/* <img src="/images/lightlogopng.png" alt="Logo" className="h-16 mr-2 " /> */}
                     {/* <h1 className="text-gray-600 dark:text-white  text-lg font-semibold">Spark talk</h1> */}
@@ -111,7 +111,7 @@ const Header = () => {
                                 </span>
                             </Dropdown.Header>
                             <Dropdown.Item className="m-0 p-0">
-                                <Link href="/" className="p-4 text-start w-full">Profile</Link>
+                                <Link href="/me" className="p-4 text-start w-full">Profile</Link>
                             </Dropdown.Item>
                             {/* <Dropdown.Item className="m-0 p-0">
                                 <Link href="/me" className="p-4 text-start w-full">Public chat</Link>
