@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from "react";
-import ThemeSwitch from "./ThemeSwitch";
+import ThemeSwitch from "../ThemeSwitch";
 import Link from "next/link";
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { Avatar, Dropdown } from 'flowbite-react';
@@ -61,7 +61,7 @@ const Header = () => {
     }
 
     return (
-        <div className="py-3 z-10">
+        <div className="py-3 z-10 ">
 
 
             <div className="h-12 mx-auto flex justify-between items-center ">
@@ -69,7 +69,7 @@ const Header = () => {
                     {/* <img src="https://www.expesh.com/imgs/logo.png" alt="Logo" className="h-7" /> */}
                     <span className="text-xl ml-1" >
                         {/* <span className="text-blue-500 dark:text-blue-400">spark</span> */}
-                        <span className="text-black dark:text-white "> sparktalk</span>
+                        <span className="text-black dark:text-white "> StaShoe</span>
                     </span>
                     {/* <img src="/images/lightlogopng.png" alt="Logo" className="h-16 mr-2 " /> */}
                     {/* <h1 className="text-gray-600 dark:text-white  text-lg font-semibold">Spark talk</h1> */}
@@ -93,9 +93,14 @@ const Header = () => {
                         <p className="mr-4 ml-3 hidden md:block">Hello, {session?.data?.user?.name}</p>
                         <Dropdown
                             placement="bottom-end"
-                            className="dark:bg-gray-700 animate-fade-in"
+                            className="dark:bg-gray-700 animate-fade-in fade-in"
                             inline
-                            label={<Avatar alt="User settings" bordered img={session?.data?.user?.image || ""} rounded />}
+                            label={<Avatar alt="User settings" 
+                            bordered 
+                            img={session?.data?.user?.image || ""} 
+                            // onError={(e) => { e.target.onerror = null; e.target.src = 'https://www.pngitem.com/pimgs/m/581-5813504_avatar-dummy-png-transparent-png.png' }} 
+                            rounded 
+                            />}
                         >
                             <Dropdown.Header>
                                 <span className="block text-sm">
@@ -106,11 +111,11 @@ const Header = () => {
                                 </span>
                             </Dropdown.Header>
                             <Dropdown.Item className="m-0 p-0">
-                                <Link href="/me" className="p-4 text-start w-full">Profile</Link>
+                                <Link href="/" className="p-4 text-start w-full">Profile</Link>
                             </Dropdown.Item>
-                            <Dropdown.Item className="m-0 p-0">
+                            {/* <Dropdown.Item className="m-0 p-0">
                                 <Link href="/me" className="p-4 text-start w-full">Public chat</Link>
-                            </Dropdown.Item>
+                            </Dropdown.Item> */}
                             <Dropdown.Divider />
                             <Dropdown.Item onClick={() => signOut()}>
                                 Sign out
