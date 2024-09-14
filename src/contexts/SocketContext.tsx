@@ -233,7 +233,9 @@ export default function SocketProvider({ children }: { children: any }) {
 
 
         socketInstance.on("space_msg", (data: any) => {
-            console.log("space_msg", { data });
+            console.log("space_msg", { data: data.status });
+
+            data.status
             if (data) {
                 setMessages((prev: any) => [...prev, data]);
             }

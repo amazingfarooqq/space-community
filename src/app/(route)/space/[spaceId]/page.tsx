@@ -40,11 +40,9 @@ const page = ({ params: { spaceId } }: { params: { spaceId: string; } }) => {
             return spaceData
 
         } catch (error) {
-            console.log({ error });
+            console.log("error", { error });
             toast.error("Space does not exist");
             router.push("/")
-
-
         }
     }
 

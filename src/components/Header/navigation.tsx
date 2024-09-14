@@ -30,9 +30,14 @@ const SearchSvg = () => (
     </svg>
 )
 
+const CoffeeIcon = () => {
+    return <img src="https://seeklogo.com/images/B/buy-me-a-coffee-logo-F1878A1EB2-seeklogo.com.png"/>
+
+}
+
 export const navigation = [
     { name: 'Home', href: '/',  icon: HomeSvg },
-    // { name: 'Public Chat', href: '/publicchat', icon: MultipleUsersSvg },
+    { name: 'Public Chat', href: '#', icon: CoffeeIcon },
     
     // { name: 'Bugs', href: '/community', icon: Bugs },
     // { name: 'Users', href: '/users', icon:  SearchSvg},
