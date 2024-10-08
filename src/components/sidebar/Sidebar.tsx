@@ -26,7 +26,7 @@ function Sidebar() {
       <SidebarbarToCreateSpace open={open} setOpen={setOpen} />
       <ModalWordsOfTheDay isWordsOfTheDayModal={isWordsOfTheDayModal} setIsWordsOfTheDayModal={setIsWordsOfTheDayModal} />
       <div className="h-full">
-        <div className=" fixed  inset-y-0  left-0   w-[70px] md:w-[90px] overflow-y-auto pb-4 flex flex-col justify-between  border-r border-gray-200 dark:border-gray-700">
+        <div className=" fixed  inset-y-0  left-0   w-[70px] md:w-[90px] overflow-y-auto pb-4 flex flex-col justify-between  border-r  border-gray-400 dark:border-gray-700">
           <nav className="mt-4 flex flex-col justify-between ">
             <ul role="list" className="flex flex-col items-center space-y-2 ">
 
@@ -63,8 +63,8 @@ function Sidebar() {
                   <li key={item.name} className={`${pathname == item.href && "border-l border-blue-400   w-full"}`}>
                     <Link
                       href={item.href}
-                      className={` group w-12 h-12 md:w-14  md:h-14 mx-auto
-                    ${pathname === item.href ? 'text-white bg-blue-500 dark:bg-blue-400 ' : 'bg-gray-200 dark:bg-gray-600'}
+                      className={`border  group w-12 h-12 md:w-14  md:h-14 mx-auto
+                    ${pathname === item.href ? 'text-white bg-blue-500 dark:bg-blue-400 ' : 'bg-gray-200 dark:bg-gray-600 border-gray-300 dark:border-transparent'}
                   dark:text-white text-gray-900
                     flex 
                 rounded-full 
@@ -93,7 +93,7 @@ function Sidebar() {
             </ul>
           </nav>
           <nav className="mt-4 flex flex-col justify-between items-center">
-            <div className={`my-1 ${pathname !== "/" && "hidden"} mb-4 `}>
+            <div className={`my-1 mb-4 `}>
               <div
                 className={` group 
                     hover:opacity-60

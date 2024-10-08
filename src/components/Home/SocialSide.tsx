@@ -34,10 +34,12 @@ const SocialSide = () => {
                 ownerImage: "/images/persistence.jpg",
                 createdAt: "13 Sep 2023, 11:30:23",
                 users: [
-                    { id: "123", name: "farooq", image: "/images/persistence.jpg", country: "pakistan-us" },
+                    { id: "123", name: "farooq", image: "/images/persistence.jpg", country: "pakistan-pk" },
                     { id: "44", native: "English-en", learning: "Urdu-ur", country: "Canada-ca", name: "test", image: "/images/persistence.jpg", bio: "nothing" },
                     { id: "44", native: "English-en", learning: "Urdu-ur", country: "Canada-ca", name: "test", image: "/images/persistence.jpg", bio: "nothing" },
-                    { id: "44", native: "English-en", learning: "Urdu-ur", country: "Canada-ca", name: "test", image: "/images/persistence.jpg", bio: "nothing" },
+                    { id: "1231", native: "English-en", learning: "Urdu-ur", country: "Canada-ca", name: "test", image: "/images/persistence.jpg", bio: "nothing" },
+                    { id: "3123", native: "English-en", learning: "Urdu-ur", country: "Canada-ca", name: "test", image: "/images/persistence.jpg", bio: "nothing" },
+                    { id: "123", native: "English-en", learning: "Urdu-ur", country: "Canada-ca", name: "test", image: "/images/persistence.jpg", bio: "nothing" },
                     
                     
                 ],

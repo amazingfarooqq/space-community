@@ -35,7 +35,7 @@ export default function ModalForUserProfile({ user, openUserModal, handleOnClose
                                 {user.learning &&
                                     <div className='font-normal text-gray-500 dark:text-gray-400'>Learning {user.learning?.split("-")[0]}</div>
                                 }
-                                <div className='font-normal text-gray-500 dark:text-gray-400'>Team Blue</div>
+                                {/* <div className='font-normal text-gray-500 dark:text-gray-400'>Team Blue</div> */}
 
                             </div>
 

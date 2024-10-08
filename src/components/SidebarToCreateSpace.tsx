@@ -61,7 +61,7 @@ export default function SidebarbarToCreateSpace({ open, setOpen }: any) {
     }
 
     if (session.status !== "authenticated") {
-      toast.error('You need to login first');
+      toast.error('You need to signup first');
       return
     }
 

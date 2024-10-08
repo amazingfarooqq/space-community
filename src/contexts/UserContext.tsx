@@ -24,6 +24,8 @@ export default function UserProvider({
   const session = useSession()
   const [users, setUsers] = useState<any[]>([])
 
+  console.log({users});
+  
   const fetchUserData = async () => {
     console.log("fetchUserData")
     try {
@@ -31,6 +33,9 @@ export default function UserProvider({
         uuid: session.data?.user?.id
       })
       const data = response.data;
+
+      console.log({data});
+      
       
       const date =  new Date(data.createdAt)
       const options: any = { year: 'numeric', month: 'short', day: 'numeric' };
@@ -57,7 +62,7 @@ export default function UserProvider({
   }
 
   useEffect(() => {
-    // fetchUserss()
+    fetchUsers()
   }, []);
 
 

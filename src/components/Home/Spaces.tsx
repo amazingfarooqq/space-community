@@ -18,7 +18,7 @@ const Spaces = () => {
     const joinSpace = (spaceId: any) => {
 
         if (!userData?.id) {
-            toast.error('You need to login')
+            toast.error('You need to signup')
             return
         }
         // router.push(`/space/${spaceId}`)
