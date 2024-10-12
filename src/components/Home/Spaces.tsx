@@ -8,6 +8,7 @@ import { useUser } from '@/contexts/UserContext'
 import toast from 'react-hot-toast'
 import axios from 'axios'
 import { useSession } from 'next-auth/react'
+import Link from 'next/link'
 
 const Spaces = () => {
     const { userData }: any = useUser()
@@ -108,12 +109,12 @@ const Spaces = () => {
                             </div>
                             <div className="text-right  z-100 bottom-3 right-3   ">
                                 {space.users.length < space.limit ?
-                                    <button onClick={() => joinSpace(space.id)}
+                                    <Link href={`/space/${space.id}`}
                                         className="text-sm font-medium inline-flex items-center transition duration-150 ease-in-out group border px-4 py-2 rounded-xl border-blue-200 dark:border-gray-600 border-dashed hover:text-blue-400 ">Join space
                                         <svg className="w-4 h-4 ml-2 tracking-normal group-hover:translate-x-0.5 transition-transform duration-150 ease-in-out ml-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
                                         </svg>
-                                    </button> :
+                                    </Link> :
                                     <div
                                         className="text-sm font-medium text-gray-700 dark:text-red-400 inline-flex items-center transition duration-150 ease-in-out group  py-2 rounded-xl text-red-500 ">Space is Full
                                     </div>
