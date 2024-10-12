@@ -42,11 +42,9 @@ const UserIconn = () => {
 
 export const navigation = [
     { name: 'Home', href: '/',  icon: HomeSvg },
-    { name: 'Public Chat', href: '#', icon: CoffeeIcon },
-    
     { name: 'Bugs', href: '/community', icon: Bugs },
-    { name: 'Users', href: '/users', icon:  UserIconn},
+    { name: 'Users', href: '/users', icon:  MultipleUsersSvg},
+    { name: 'Buy Me a Coffee', href: '#', icon: CoffeeIcon },
     // { name: 'Teams', href: '/teams', icon:  Bugs},
-
     // { name: 'Create Post', href: '/createpost', icon: PlusSvg },
 ]

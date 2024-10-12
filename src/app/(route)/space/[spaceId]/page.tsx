@@ -119,12 +119,8 @@ const page = ({ params: { spaceId } }: { params: { spaceId: string; } }) => {
         try {
 
             let msgData = {
-                text: txt,
-                uuid: userData.id,
-                spaceId: spaceId,
-                name: userData.name,
-                image: userData.image,
-                status: "sent",
+                text: txt, uuid: userData.id, spaceId: spaceId,
+                name: userData.name, image: userData.image, status: "sent",
                 createdAt: `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`,
             }
 
@@ -143,7 +139,6 @@ const page = ({ params: { spaceId } }: { params: { spaceId: string; } }) => {
 
     const leaveSpace = async () => {
         try {
-
             const response = await axios.delete(`/api/spaces/leaveSpace`, {
                 data: {
                     spaceId: spaceId,
@@ -161,10 +156,8 @@ const page = ({ params: { spaceId } }: { params: { spaceId: string; } }) => {
         }
     }
 
-
-    const closeChatbox = () => {
-        setIsChatBox(false)
-    }
+    const closeChatbox = () => setIsChatBox(false)
+    
 
 
     return (
@@ -177,23 +170,17 @@ const page = ({ params: { spaceId } }: { params: { spaceId: string; } }) => {
                     <div className="bg-transparent w-24 h-24 absolute animate-pulse rounded-full shadow-xl" />
                     <img src="/images/logoemoji.png" alt="Logo" className="text-blue-900  h-16 w-16" />
                 </section>
-                                            
             }
             {currentSpaceData?.id &&
                 <div className="h-screen flex " >
                     <div className={`lg:w-full w-full flex flex-col justify-between  `}>
                         <RightSide currentSpaceData={currentSpaceData} isChatBox={isChatBox} leaveSpace={leaveSpace} handleChatBox={handleChatBox} handleRightSide={handleRightSide} />
                     </div>
-
-
-
                     {isChatBox &&
                         <div className={`absolute right-0 lg:relative  w-full sm:w-[400px] lg:w-[500px]  border border-gray-300 dark:bg-[#1e272d] dark:border-gray-700  pb-2  justify-between flex flex-col h-[calc(100vh)]`}>
                             <Chatbox messages={messages} sendMessage={sendMessage} closeChatbox={closeChatbox}/>
                         </div>
                     }
-
-
                 </div>
             }
         </div>
