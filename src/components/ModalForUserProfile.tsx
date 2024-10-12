@@ -1,17 +1,62 @@
 'use client';
 
 import { Avatar, Button, Modal } from 'flowbite-react';
+import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 
 export default function ModalForUserProfile({ user, openUserModal, handleOnClose }: any) {
 
     const [isFollowed, setIsFollowed] = useState(false)
-    const followUser = () => {
+    const followUser = (userId) => {
         setIsFollowed(true)
+
+        handleFollow(userId)
     }
     const unfollowUser = () => {
         setIsFollowed(false)
     }
+
+    const { data: session } = useSession()
+    const [following, setFollowing] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
+
+
+    const handleFollow = async (userId: any) => {
+        console.log({ session, userId });
+        if (!session) {
+            //   router.push('/login')
+            return
+        }
+
+
+        setIsLoading(true)
+
+        try {
+
+            if (!session?.user?.email) return;
+            const response = await fetch('/api/spaces/followUser', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId, currentUserEmail: session.user.email }),
+            })
+
+            console.log("added");
+            
+
+            if (!response.ok) {
+                throw new Error('Failed to follow user')
+            }
+
+            setFollowing(true)
+        } catch (error) {
+            console.error('Error following user:', error)
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
     return (
         <>
             <Modal dismissible show={openUserModal} size="md" popup onClose={handleOnClose}>
@@ -68,7 +113,7 @@ export default function ModalForUserProfile({ user, openUserModal, handleOnClose
                                         >
                                             Following
                                         </button> :
-                                        <button onClick={followUser}
+                                        <button onClick={() => followUser(user.id)}
                                             className="bg-blue-500 active:bg-pink-600 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150"
                                             type="button"
                                         >

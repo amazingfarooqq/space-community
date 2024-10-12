@@ -7,9 +7,13 @@ export async function GET(
 ) {
     try {
 
-        const data = await prisma.user.findMany();
+        const data = await prisma.user.findMany({
+            include: {
+              following: true,
+              followedBy: true,
+            },
+          })
         
-
         return NextResponse.json(data);
     } catch (error) {
         console.log('[USERS_GET]', error);

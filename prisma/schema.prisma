@@ -17,8 +17,6 @@ model User {
   emailVerified   DateTime?
   image           String?
   country         String?
-  followers       String?
-  following       String?
   native          String?
   learning        String?
   bio             String?
@@ -30,6 +28,12 @@ model User {
   
   spacesIds String[] @db.ObjectId
   spaces   Space[] @relation(fields: [spacesIds], references: [id])
+
+  followingIds String[] @db.ObjectId
+  followedByIds String[] @db.ObjectId
+
+  following User[] @relation("UserFollows", fields: [followingIds], references: [id])
+  followedBy User[] @relation("UserFollows", fields: [followedByIds], references: [id])
 }
 
 model Account {

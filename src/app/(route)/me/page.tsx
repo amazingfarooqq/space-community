@@ -2,7 +2,7 @@
 
 import Header from '@/components/Header/Header'
 import Sidebar from '@/components/sidebar/Sidebar'
-import { Avatar, Spinner } from 'flowbite-react'
+import { Avatar, Button, Spinner } from 'flowbite-react'
 import { useSession } from 'next-auth/react'
 import React, { useEffect, useMemo, useState } from 'react'
 import countryList from 'react-select-country-list'
@@ -25,15 +25,14 @@ const page = () => {
 
     const [isLoading, setIsLoading] = useState(true)
 
-
-
     const session = useSession()
     const { userData, setUserData }: any = useUser()
     const router = useRouter()
 
+    console.log({ userData });
+
     useEffect(() => {
         const change = () => {
-
 
             setName(userData?.name || "")
             setBio(userData?.bio || "")
@@ -95,7 +94,6 @@ const page = () => {
 
         !data && ""
 
-
         try {
             setIsLoading(true)
 
@@ -107,62 +105,98 @@ const page = () => {
             setIsLoading(false)
             toast.error("there was some error in updating")
             console.log({ error });
-
         }
     }
 
 
-    // session.status == "loading" && toast.error("Loading..")
-    session.status == "unauthenticated" && router.push("/")
-    session.status == "authenticated" && !userData?.id && router.push("/")
+    const [profileSection, setProfileSection] = useState(true)
+    const [followersSection, setFollowersSection] = useState(false)
+    const [followingSection, setFollowingSection] = useState(false)
+
+    const handleProfileSection = () => {
+        setProfileSection(true)
+        setFollowersSection(false)
+        setFollowingSection(false)
+    }
+    const handleFollowersSection = () => {
+        setProfileSection(false)
+        setFollowersSection(true)
+        setFollowingSection(false)
+    }
+    const handleFollowingSection = () => {
+        setProfileSection(false)
+        setFollowersSection(false)
+        setFollowingSection(true)
+    }
+
+    // session.status == "unauthenticated" && router.push("/")
+    // session.status == "authenticated" && !userData?.id && router.push("/")
+
     return (
-        <>
-            <MainLayout>
-                <section className="relative py-10 ">
-                    <div className="container mx-auto px-4">
-                        <div className="relative flex flex-col min-w-0 break-words  w-full mb-6 shadow-xl rounded-xl] py-10">
-                            <div className="px-6">
-                                <div className="flex flex-wrap">
-                                    <div className="w-full lg:w-3/12 px-4 flex">
-                                        <div className="relative">
-                                            <Avatar size="xl" rounded bordered img={userData?.image || ""} />
-                                        </div>
-                                    </div>
+        <MainLayout>
+            <div className="min-h-screen max-w-screen-xl sm:mx-8 mb-6 shadow-xl rounded-xl py-10">
+                <div className='px-6'>
+                    <div className="flex flex-wrap mt-10">
+                        <div className="w-full lg:w-3/12 px-4 flex">
+                            <div className="relative">
+                                <Avatar size="xl" rounded bordered img={userData?.image || ""} />
+                            </div>
+                        </div>
 
-                                    <div className="w-full lg:w-9/12 px-4 lg:order-1">
-                                        <div className="flex flex-wrap py-4 lg:pt-4 pt-8">
-                                            <div className="mr-4 p-3">
-                                                <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">
-                                                    {userData?.native?.split("-")[0] || "English"}
-                                                </span>
-                                                <span className="text-sm text-blueGray-400">Native</span>
-                                            </div>
-                                            {userData?.learning &&
-                                                <div className="mr-4 p-3">
-                                                    <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">
-                                                        {userData?.learning?.split("-")[0]}
-
-                                                    </span>
-                                                    <span className="text-sm text-blueGray-400">Learning</span>
-                                                </div>
-                                            }
-                                            <div className="lg:mr-4 p-3">
-                                                <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">
-                                                    89
-                                                </span>
-                                                <span className="text-sm text-blueGray-400">Followers</span>
-                                            </div>
-                                            <div className="lg:mr-4 p-3">
-                                                <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">
-                                                    32
-                                                </span>
-                                                <span className="text-sm text-blueGray-400">Following</span>
-                                            </div>
-                                        </div>
-                                    </div>
+                        <div className="w-full lg:w-9/12 px-4 lg:order-1">
+                            <div className="flex flex-wrap py-4 lg:pt-4 pt-8">
+                                <div className="mr-4 p-3">
+                                    <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">
+                                        {userData?.native?.split("-")[0] || "English"}
+                                    </span>
+                                    <span className="text-sm text-blueGray-400">Native</span>
                                 </div>
-                                <div className=" mt-12">
-                                    <div className='flex gap-10 flex-wrap'>
+                                {userData?.learning &&
+                                    <div className="mr-4 p-3">
+                                        <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">
+                                            {userData?.learning?.split("-")[0]}
+
+                                        </span>
+                                        <span className="text-sm text-blueGray-400">Learning</span>
+                                    </div>
+                                }
+                                <div className="lg:mr-4 p-3">
+                                    <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">
+                                        {userData?.followedByIds?.length}
+                                    </span>
+                                    <span className="text-sm text-blueGray-400">Followers</span>
+                                </div>
+                                <div className="lg:mr-4 p-3">
+                                    <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">
+                                        {userData?.following?.length}
+
+                                    </span>
+                                    <span className="text-sm text-blueGray-400">Following</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 className="border-b py-6 text-4xl font-semibold">Settings</h1>
+                    <div className="">
+
+                        <div className="flex gap-2 py-4">
+                           
+                            <Button className={`outline-none
+                                ${ profileSection ? "bg-blue-500 text-white" : "bg-blue-100 text-black"}
+                                `} onClick={handleProfileSection}>Profile</Button>
+                                <Button className={` 
+                                ${ followersSection ? "bg-blue-500 text-white" : "bg-blue-100 text-black"}
+                                `} onClick={handleFollowersSection}>Followers</Button>
+                                <Button className={` 
+                                ${ followingSection ? "bg-blue-500 text-white" : "bg-blue-100 text-black"}
+                                `} onClick={handleFollowingSection}>Following</Button>
+                        </div>
+
+                        {/* profile */}
+                        {profileSection &&
+                            <div className="overflow-hidden rounded-x sm:shadow">
+                                <div className=" ">
+                                    <div className=''>
                                         <h3 className="text-4xl font-semibold leading-normal mb-2 mb-2">
                                             {userData?.name}
                                         </h3>
@@ -181,6 +215,14 @@ const page = () => {
                                     {userData?.bio && <p className="mb-2">Bio: {userData?.bio}</p>}
 
                                 </div>
+                                <p className="py-2 text-xl font-semibold">Email Address</p>
+                                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                                    <p className="text-gray-600">
+                                        Your email address is <strong>{userData?.email}</strong>
+                                    </p>
+
+                                </div>
+
                                 <div className="mt-10 py-10 border-t border-blueGray-200">
                                     <div className='flex flex-col gap-3 flex-wrap'>
                                         <div className=" w-80 text-start">
@@ -229,36 +271,114 @@ const page = () => {
                                         </div>
                                     </div>
 
-                                        <div className="py-6 mt-32 sm:mt-0">
-                                            {isLoading ?
-                                                <button
-                                                    disabled
-                                                    className="bg-blue-500 text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150 opacity-50"
-                                                    type="button"
-                                                >
-                                                    <span className='flex gap-2'>
-                                                        <Spinner size="sm" />
-                                                        <span>Loading</span>
-                                                    </span>
-                                                </button>
-                                                :
-                                                <button
-                                                    onClick={handleSave}
-                                                    className="bg-blue-500 active:bg-pink-600 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150"
-                                                    type="button"
-                                                >
-                                                    Save changes
-                                                </button>
-                                            }
-                                        </div>
+                                    <div className="py-6 mt-32 sm:mt-0">
+                                        {isLoading ?
+                                            <button
+                                                disabled
+                                                className="bg-blue-500 text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150 opacity-50"
+                                                type="button"
+                                            >
+                                                <span className='flex gap-2'>
+                                                    <Spinner size="sm" />
+                                                    <span>Loading</span>
+                                                </span>
+                                            </button>
+                                            :
+                                            <button
+                                                onClick={handleSave}
+                                                className="bg-blue-500 active:bg-pink-600 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150"
+                                                type="button"
+                                            >
+                                                Save changes
+                                            </button>
+                                        }
+                                    </div>
 
                                 </div>
+
                             </div>
-                        </div>
+                        }
+
+                        {/* followers */}
+                        {followersSection &&
+                            <div className="py-6 flex flex-wrap gap-5 flex-row  ">
+
+                                {userData?.followedBy?.map((item: any) => {
+                                    return (
+                                        <section className="w-64 bg-gray-100 dark:bg-[#20354b] rounded-2xl px-8 py-6 shadow-lg">
+                                            <div className="flex items-center justify-between">
+                                                <span className="text-gray-400 text-sm">{item.createdAt}</span>
+                                            </div>
+                                            <div className="mt-6 w-fit">
+                                                <Avatar bordered size="lg" img={item.image} />
+                                            </div>
+                                            <div className="mt-4 ">
+                                                <h2 className="text-blue-400 font-bold text-2xl tracking-wide">
+                                                    {item.name}
+                                                </h2>
+                                                <p>Web Developer</p>
+                                            </div>
+                                            <p className="text-emerald-400 font-semibold mt-2.5"> Active</p>
+                                            <div className='flex flex-wrap gap-2 '>
+                                                <p className="text-xs font-semibold mt-2.5"> Followers 100</p>
+                                                <p className="text-xs font-semibold mt-2.5"> Following 2</p>
+                                            </div>
+                                            <div className="h-1 w-full bg-black mt-4 rounded-full">
+                                                <div className="h-1 rounded-full w-full bg-blue-500 " />
+                                            </div>
+                                        </section>
+
+                                    )
+                                })}
+
+                            </div>
+                        }
+
+                        {/* following */}
+                        {followingSection &&
+                        <div className="py-6 flex flex-wrap gap-5 flex-row  ">
+
+                        {userData?.following?.map((item: any) => {
+                            return (
+                                <section className="w-64 bg-gray-100 dark:bg-[#20354b] rounded-2xl px-8 py-6 shadow-lg">
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-gray-400 text-sm">{item.createdAt}</span>
+                                    </div>
+                                    <div className="mt-6 w-fit">
+                                        <Avatar bordered size="lg" img={item.image} />
+                                    </div>
+                                    <div className="mt-4 ">
+                                        <h2 className="text-blue-400 font-bold text-2xl tracking-wide">
+                                            {item.name}
+                                        </h2>
+                                        <p>Web Developer</p>
+                                    </div>
+                                    <p className="text-emerald-400 font-semibold mt-2.5"> Active</p>
+                                    <div className='flex flex-wrap gap-2 '>
+                                        <p className="text-xs font-semibold mt-2.5"> Followers 100</p>
+                                        <p className="text-xs font-semibold mt-2.5"> Following 2</p>
+                                    </div>
+                                    <div className="h-1 w-full bg-black mt-4 rounded-full">
+                                        <div className="h-1 rounded-full w-full bg-blue-500 " />
+                                    </div>
+                                </section>
+
+                            )
+                        })}
+
                     </div>
-                </section>
-            </MainLayout>
-        </>
+                        }
+                    </div>
+
+                </div>
+            </div>
+
+
+
+
+
+
+        </MainLayout>
 
     )
 

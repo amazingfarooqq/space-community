@@ -46,13 +46,7 @@ const Spaces = () => {
                                     <div className=" mb-1 flex gap-1">
                                         <h3 className="text-gray-600 dark:text-white font-semibold">{space.language}</h3>
                                         <span className='text-sm opacity-70 flex items-center '>
-
                                             {space.users.length} /{space.limit}
-                                            {/* {space.users?.length < space.limit &&
-                                                <svg className="w-4 h-4 ml-1 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12.079 4.839a3 3 0 0 0-4.255.1M11 18h1.083A3.916 3.916 0 0 0 16 14.083V7A6 6 0 1 0 4 7v7m7 4v-1a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1Zm-7-4V8H3a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h1Zm12-6h1a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-1V8Z" />
-                                                </svg>
-                                            } */}
                                         </span>
                                     </div>
                                     <div className="mb-3 lg:mb-0 text-blue-500 dark:text-blue-400 font-semibold" title={space.title}>
@@ -64,10 +58,7 @@ const Spaces = () => {
                                         placement="bottom-end"
                                         inline
                                         label=""
-                                        className='w-36'
-
-                                    >
-
+                                        className='w-36'>
                                         <div className='px-3 py-2 text-center flex justify-center'>
                                             <img src={space?.ownerImage} className='w-14 h-14 rounded-full border' alt="" />
                                         </div>
@@ -77,7 +68,6 @@ const Spaces = () => {
 
                                         {space?.ownerId == session?.data?.user?.id &&
                                             <div className='text-center'>
-
                                                 <button className='px-3  pb-2 py-1 rounded w-100 text-center' onClick={() => deleteSpace(space.id)}>
                                                     <span className=''>Remove Space</span>
                                                 </button>

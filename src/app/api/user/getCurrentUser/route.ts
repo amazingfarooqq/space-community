@@ -13,7 +13,11 @@ export async function POST(
         const data = await prisma.user.findUnique({
             where: {
                 id: uuid
-            }
+            },
+            include: {
+                following: true,
+                followedBy: true,
+            },
         });
 
 

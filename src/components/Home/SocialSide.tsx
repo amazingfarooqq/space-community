@@ -4,9 +4,11 @@ import { Bars2Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Avatar } from 'flowbite-react'
 import React, { useState } from 'react'
 import ModalForActiveSpace from '../ModalForActiveSpace'
+import { useUser } from '@/contexts/UserContext'
 
 const SocialSide = () => {
     const [socialBar, setSocialBar] = useState(false)
+    const { userData }: any = useUser()
 
     const [isMessages, setIsMessages] = useState(true)
     const openIsMessages = () => {
@@ -79,24 +81,30 @@ const SocialSide = () => {
                                         className="block text-sm py-4 px-4 ring-gray-400 focus:ring-gray-400 w-full bg-gray-100 border-none border-gray-300 outline-none dark:border-gray-700 dark:bg-gray-800"
                                     />
                                 </div>
-                                {[1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3].map((item,index) => {
+                                {userData?.following?.map((item:any,index:any) => {
+                                    const countryValue = item?.country?.split("-")[1]
+                                    const countryLabel = item?.country?.split("-")[0]
+                                    console.log({countryValue, countryLabel});
+                                    console.log({country: item?.country});
+                                    
                                     return (
                                         <div className='flex gap-1 p-3 hover:bg-gray-300  dark:hover:bg-gray-600 cursor-pointer'>
                                             <div className="relative">
-                                                <img className={`cursor-pointer h-10 w-10 rounded-full ring-1 ring-white dark:ring-blue-400 mr-1`} src="images/persistence.jpg" alt="" />
+                                                <img className={`cursor-pointer h-10 w-10 rounded-full ring-1 ring-white dark:ring-blue-400 mr-1`} src={item.image} alt="" />
                                                 <span className="bottom-0 right-1 absolute   rounded-full text-2xl">
-                                                    <img className='w-3' src={`/images/flags/pk.png`} alt="" />
+                                                    <img className='w-3' src={`/images/flags/${countryValue}.png`} alt="" />
                                                 </span>
 
                                             </div>
                                             <div className='flex flex-col justify-center'>
-                                                <div className='text-sm  '>Farooq Dad</div>
-                                                <div className='text-sm font-normal items-center text-gray-500 dark:text-gray-400 flex justify-center align-center gap-1'>
+                                                <div className='text-sm  '>{item.name}</div>
+                                                <div className='text-sm  '>{countryLabel}</div>
+                                                {/* <div className='text-sm font-normal items-center text-gray-500 dark:text-gray-400 flex justify-center align-center gap-1'>
                                                     {index % 7 ?
                                                     "" : <div className='h-2 w-2 bg-red-400 rounded-full'></div>
                                                     }
                                                     <div>I was looking for you</div>
-                                                </div>
+                                                </div> */}
 
                                             </div>
 
