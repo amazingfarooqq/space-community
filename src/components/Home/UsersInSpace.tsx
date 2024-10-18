@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import UserInSpace from './UserInSpace';
 
-const UsersInSpace = ({ users, ownerId }: any) => {
+const UsersInSpace = ({ users, ownerId, index }: any) => {
 
     const sortedUsers = [...users].filter(user => user); // Create a copy of users array and remove undefined values
 
@@ -17,7 +17,7 @@ const UsersInSpace = ({ users, ownerId }: any) => {
         <>
             {sortedUsers?.map((user: any, imgIndex: any) => {
                 return imgIndex < 10 && (
-                    <UserInSpace users={users} user={user} ownerId={ownerId} />
+                    <UserInSpace users={users} imgIndex={imgIndex} user={user} ownerId={ownerId} />
                 )
             })}
         </>

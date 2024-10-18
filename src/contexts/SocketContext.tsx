@@ -172,6 +172,10 @@ export default function SocketProvider({ children }: { children: any }) {
             // }
         });
 
+        socketInstance.on("followUpdate", (data: any) => {
+            console.log("followUpdate", { data });
+        })
+
         socketInstance.on("createSpace", (data: any) => {
             console.log("createSpace", data);
             setSpaces((prev: any) => {

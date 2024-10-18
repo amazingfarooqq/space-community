@@ -84,8 +84,8 @@ const Spaces = () => {
                             </div>
                         </div>
 
-                        <div className="flex flex-wrap px-4 py-3 ">
-                            {space.users.length > 0 && <UsersInSpace users={space.users} ownerId={space.ownerId} />}
+                        <div className="flex flex-wrap gap-1 px-4 py-3 ">
+                            {space.users.length > 0 && <UsersInSpace users={space.users} ownerId={space.ownerId} index={index}/>}
                             {space.users?.length && space.users.length > 9 ?
                                 <div className="inline-block h-10 w-10 rounded-full ring-2 ring-white flex items-center justify-center dark:ring-[#272F34] bg-slate-100 dark:bg-gray-600  dark:text-gray-200" style={{ fontSize: '0.8rem' }}>
                                     {space.users.length}

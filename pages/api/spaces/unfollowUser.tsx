@@ -1,38 +1,40 @@
-import { NextApiRequest, NextApiResponse } from 'next'
-import { getServerSession } from 'next-auth/next'
+import { NextApiRequest } from 'next'
 import prisma from '@/libs/prismadb'
+import { NextApiResponseServerIo } from '../../../types'
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponseServerIo) {
   if (req.method !== 'POST') {
     return res.status(405).end()
   }
 
   try {
 
+    console.log('req.body', req.body)
+
     const { userId, currentUserEmail } = req.body
 
     if (!userId || typeof userId !== 'string') {
-        return res.status(400).json({ message: 'Invalid user ID' })
+      return res.status(400).json({ message: 'Invalid user ID' })
     }
 
     const currentUser = await prisma.user.findUnique({
-        where: {
-            email: currentUserEmail,
-        },
+      where: {
+        email: currentUserEmail,
+      },
     })
 
     if (!currentUser) {
       return res.status(404).json({ message: 'Current user not found' })
     }
 
-    const userToFollow = await prisma.user.findUnique({
+    const userToUnfollow = await prisma.user.findUnique({
       where: {
         id: userId,
       },
     })
 
-    if (!userToFollow) {
-      return res.status(404).json({ message: 'User to follow not found' })
+    if (!userToUnfollow) {
+      return res.status(404).json({ message: 'User to unfollow not found' })
     }
 
     const updatedUser = await prisma.user.update({
@@ -41,7 +43,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       },
       data: {
         followingIds: {
-          push: userId,
+          set: currentUser.followingIds.filter(id => id !== userId),
         },
       },
       include: {
@@ -56,17 +58,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       },
       data: {
         followedByIds: {
-          push: currentUser.id,
+          set: userToUnfollow.followedByIds.filter(id => id !== currentUser.id),
         },
       },
     })
 
     // res?.socket?.server?.io?.emit("followUpdate", {
-        //     updatedUser: updatedUser,
-        //     followersCount: 23,
-        //     action: 'follow',
-        //     followerId: currentUser.id,
-        // });
+    //     updatedUser: updatedUser,
+    //     followersCount: 12,
+    //     action: 'unfollow',
+    //     followerId: currentUser.id,
+    // });
 
     return res.status(200).json(updatedUser)
   } catch (error) {
